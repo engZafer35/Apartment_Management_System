@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 4:36:16 PM
-* #File Name    : EventMessage.cpp 
-* #File Path    : /GezGör/Application/src/EventMessage.cpp
+* #Date         : Oct 22, 2019 - 9:25:53 PM
+* #File Name    : EventProducer.cpp 
+* #File Path    : /GezGor/Application/src/EventProducer.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
+#include "EventProducer.hpp"
 #include "EventMessage.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
@@ -37,48 +38,33 @@
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace event
 {
-EventMsg::EventMsg(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter, U32 leng)
-                   : m_event{event}, m_source{source}, m_priority{priority}, m_value{parameter}, m_leng{leng}, m_queueNum{-1}
+
+IEventPoroducer::~IEventPoroducer(void)
+{}
+
+void IEventPoroducer::setQueue(EventQueue *eventQueue)
 {
+    // don't need to check null pointer. Because it will checked in throwEvent()
+    m_pQueue = eventQueue;
 }
 
-EVENTS EventMsg::getEvent(void) const
+void IEventPoroducer::throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter, U32 leng)
 {
-    return m_event;
-}
-
-EVENT_SOURCE EventMsg::getEventSource(void) const
-{
-    return m_source;
-}
-
-EVENT_PRIORITY EventMsg::getEventPriority(void) const
-{
-    return m_priority;
-}
-
-void* EventMsg::getValue(void)
-{
-    return m_value;
+    if (NULL_PTR != m_pQueue)
+    {
+        m_pQueue->throwEvent(new EventMsg(event, source, priority, parameter, leng));
+    }
 }
 
 
-U32 EventMsg::getLeng(void) const
-{
-    return m_leng;
-}
-
-U32 EventMsg::getQueueNum(void) const
-{
-    return m_queueNum;
-}
-
-///** \brief set queue number */
-//void EventMsg::setQueueNum(S32 num)
+//void IEventPoroducer::start(void)
 //{
-//    m_queueNum = num;
+//    if (FALSE == m_started)
+//    {
+//        m_started = TRUE;
+//        m_exit = FALSE;
+//    }
 //}
 
 }//namespace event
-
 /******************************** End Of File *********************************/
