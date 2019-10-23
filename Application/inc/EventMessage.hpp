@@ -40,7 +40,7 @@ public:
      * \param address of value,
      * \param value leng
      */
-    EventMsg(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *value, U32 leng);
+    EventMsg(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter, U32 leng);
 
     /** \brief get event ID */
     EVENTS          getEvent(void) const;
