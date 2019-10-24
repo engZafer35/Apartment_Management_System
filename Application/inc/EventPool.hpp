@@ -13,10 +13,11 @@
 #ifndef __EVENT_POOL_HPP__
 #define __EVENT_POOL_HPP__
 /*********************************INCLUDES*************************************/
-#include <EventProducer.hpp>
 #include <vector>
 
+#include "EventProducer.hpp"
 #include "EventQueue.hpp"
+#include "TimerEventProducer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -35,17 +36,52 @@ namespace event
 
 class EventPool // TODO: make singleton
 {
+public:
+    /** \brief All supported event producers list*/
+    typedef enum
+    {
+        EN_EVENT_PRODUCER_1, //EN_EVENT_KEYPAD
+        EN_EVENT_PRODUCER_2, //EN_EVENT_UART
+        EN_EVENT_PRODUCER_3, //EN_EVENT_TIMER
+    }EVENT_PRODUCER_LIST;
+
+    /** \brief event producer command */
+    typedef enum
+    {
+        EN_PRODUCER_STOP,
+        EN_PRODUCER_START,
+        EN_PRODUCER_PAUSE,
+        EN_PRODUCER_RESUME,
+    }EVENT_PRODUCER_COMMAND;
 
 public:
-    void loadEventProducer(IEventPoroducer *producer);
-    void startProducers(void);
-    void stopProducers(void);
 
-    void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);
+    /**
+     * \brief  build all event producers that system need
+     * \return if everything is OK, return RET_SUCCES(0)
+     *         otherwise return RET_FAILURE(-1)
+     */
+    RETURN_STATUS buidSysEventProducer(void);
 
+    /** \brief start all producer to create event */
+    RETURN_STATUS startProducers(void);
+
+    /** \brief stop all producer */
+    RETURN_STATUS stopProducers(void);
+
+    /**
+     * \brief send command to producer
+     * \param producer list. User can send more than one producer
+     * \param producer command
+     * */
+    RETURN_STATUS producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd);
+
+public:
+    /** Event Producer will load all event in this event queue*/
+    EventQueue eventQueue;
 private:
-    EventQueue m_eventQueue;
-    std::vector<IEventPoroducer *> evetProducerList;
+
+    TimerEventProducer *tEventProducer;
 };
 
 }//namespace event

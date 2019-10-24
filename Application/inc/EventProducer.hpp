@@ -16,6 +16,11 @@
 #include "EventQueue.hpp"
 #include "EventList.hpp"
 #include "Singleton.hpp"
+
+#ifdef __linux
+#include <pthread.h>
+#include <thread>
+#endif
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -32,47 +37,58 @@
 namespace event
 {
 
-class IEventPoroducer // todo: make singletons
+class IEventProducer // todo: make singletons
 {
 public:
+    IEventProducer(void);
     /** \brief destructor */
-    virtual ~IEventPoroducer(void);
+    virtual ~IEventProducer(void);
 
     /** \brief All event producer will load its event into event queue */
     void setQueue(EventQueue *eventQueue);
 
-    /** \brief start event producer */
-    virtual void start(void) = 0;
-
-    /** \brief stop event producer */
-    virtual void stop(void) = 0;
-
     /** \brief pause event producer */
-    virtual void pause(void) = 0;
+    virtual void pause(void);
 
     /** \brief resume event producer */
-    virtual void resume(void) = 0;
+    virtual void resume(void);
+
+public:  /** ****** Pure virtual Functions ****** */
+    /** \brief start event producer */
+    virtual void start(void);
+
+    /** \brief stop event producer */
+    virtual void stop(void);
 
     /** \brief doControl event producer */
     virtual void doControl(void) = 0;
 
-    /** \brief loopControl event producer */
-    virtual void loopControl(void) = 0;
+    /** \brief run event producer */
+    void loopControl(void);
 
 protected:
     /** \brief throw event */
     void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);
 
+    /** \brief lock section */
+    void enterSection(void);
+
+    /** \brief unlock section */
+    void leaveSection(void);
+
 protected:
     EventQueue *m_pQueue;
 
-//private:
-//    bool m_exit;
-//    bool m_paused;
-//    bool m_started;
 private:
-    virtual void enterSection(void) = 0;  /// ----------------------->>> here
-    virtual void leaveSection(void) = 0;  /// ----------------------->>> here
+
+#ifdef __linux
+    pthread_mutex_t m_mutexEvent;
+    pthread_t       m_threadControl;
+#endif
+
+    bool m_exit;
+    bool m_paused;
+    bool m_started;
 };
 
 }//namespace event

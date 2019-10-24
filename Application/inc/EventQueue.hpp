@@ -14,6 +14,10 @@
 /*********************************INCLUDES*************************************/
 #include <deque>
 
+#ifdef __linux
+#include <pthread.h>
+#endif
+
 #include "GlobalDefinitions.hpp"
 #include "EventMessage.hpp"
 /******************************* NAME SPACE ***********************************/
@@ -38,7 +42,7 @@ public:
     EventQueue(void);
 
     /** \brief throw event */
-    EventMsg *waithEvent(U32 timeoutMs, U32 eventSource);
+    EventMsg *waithEvent(U32 timeoutMs, U32 eventSource) const;
 
     /** \brief create new event*/
     RETURN_STATUS throwEvent(EventMsg *event);
@@ -46,15 +50,23 @@ public:
     /** \brief delete event with queue number*/
     RETURN_STATUS deleteEvent(U32 queNum);
 
+    /** \brief delete event with queue number*/
+    RETURN_STATUS deleteEvent(EventMsg *event);
+
     /** \brief delete all event that have same event ID */
     RETURN_STATUS deleteEvents(EVENTS eventID);
 
     /** \brief delete all pending events*/
     RETURN_STATUS deleteAllEvent(void);
+private:
+    void enterSection(void);
+
+    void leaveSection(void);
 
 private:
     typedef std::deque<EventMsg *> QEvents;
     QEvents qEvents;
+    pthread_mutex_t *m_mutexEvent;
 };
 
 }//namespace event

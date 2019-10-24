@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Oct 24, 2019 - 8:34:58 AM
+* #File Name    : TimerEventProducer.cpp 
+* #File Path    : /GezGor/Application/src/TimerEventProducer.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,8 +11,9 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
-#include "EventMessage.hpp"
+#include "TimerEventProducer.hpp"
+#include <unistd.h>
+#include <iostream>
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -39,43 +40,28 @@
 namespace event
 {
 
-RETURN_STATUS EventPool::buidSysEventProducer(void)
+//void TimerEventProducer::start(void)
+//{
+//
+//}
+
+void TimerEventProducer::doControl(void)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    static int z[256];
+    static int x = 0;
+    ::sleep(1);
 
-    tEventProducer = new TimerEventProducer();
-    tEventProducer->setQueue(&eventQueue);
-    tEventProducer->pause();
-    tEventProducer->start();
-    tEventProducer->resume();
+    z[x] = x;
 
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
-
-    return retVal;
+    std::cout << x << " timer event throw" << std::endl;
+    throwEvent(EN_EVENT_1, EN_SOURCE_3, EN_PRIORITY_2, &(z[x]), sizeof(x));
+    x++;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
-{
-    RETURN_STATUS retVal = RET_SUCCECC;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::stopProducers(void)
-{
-    RETURN_STATUS retVal = RET_SUCCECC;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
-{
-    RETURN_STATUS retVal = RET_SUCCECC;
-
-    return retVal;
-}
+//void TimerEventProducer::run(void)
+//{
+//
+//}
 
 }//namespace event
 /******************************** End Of File *********************************/

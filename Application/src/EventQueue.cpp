@@ -31,20 +31,42 @@
 /***************************** CLASS VARIABLES ********************************/
 
 /***************************** CLASS PRIVATE METHOD ***************************/
+namespace event
+{
 
+void EventQueue::enterSection(void)
+{
+#ifdef __linux
+    ::pthread_mutex_lock(m_mutexEvent);
+#endif
+}
+
+void EventQueue::leaveSection(void)
+{
+#ifdef __linux
+    ::pthread_mutex_unlock(m_mutexEvent);
+#endif
+}
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
-{
+
 /** \brief constructor */
 EventQueue::EventQueue(void)
-{}
+{
+    m_mutexEvent = new ::pthread_mutex_t();
+    ::pthread_mutex_init(m_mutexEvent, 0);
+}
 
 /** \brief throw event */
-EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource)
+EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource) const
 {
     EventMsg *retEvent = NULL_PTR;
+
+    if (FALSE == qEvents.empty()) // is not empty
+    {
+        retEvent = qEvents.front();
+    }
 
     return retEvent;
 }
@@ -54,8 +76,38 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 {
     RETURN_STATUS retVal = RET_SUCCECC;
 
-    event->m_queueNum = 0; // TODO: set queue number
+    enterSection();
 
+    if (FALSE == qEvents.empty()) // is not empty
+    {
+        std::deque<EventMsg *>::iterator it = qEvents.begin();
+        EVENT_PRIORITY np = event->getEventPriority();
+        U32 size = qEvents.size();
+
+        for (U32 i = 0; i < size; i++)
+        {
+            //find position
+            if ( qEvents.at(i)->getEventPriority() < np)
+            {
+                it += i;
+                qEvents.insert(it,event);
+                break;
+            }
+            else if (i == (size-1))
+            {
+                //event priority smaller, push end of list
+                qEvents.push_back(event);
+                break;
+            }
+        }
+    }
+    else
+    {
+        //event priority smaller, push end of list
+        qEvents.push_back(event);
+    }
+
+    leaveSection();
     return retVal;
 }
 
@@ -73,6 +125,34 @@ RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
     RETURN_STATUS retVal = RET_SUCCECC;
 
     return retVal;
+}
+
+/** \brief delete event with queue number*/
+RETURN_STATUS EventQueue::deleteEvent(EventMsg *event)
+{
+
+    enterSection();
+
+    if (FALSE == qEvents.empty()) // is not empty
+    {
+        std::deque<EventMsg *>::iterator it = qEvents.begin();
+        U32 size = qEvents.size();
+
+        for (U32 i = 0; i < size; i++)
+        {
+            if ((*it) == event)
+            {
+                qEvents.erase(it);           
+                event = NULL_PTR;
+            }
+
+            it++;
+        }
+    }
+
+    leaveSection();
+
+    return RET_SUCCECC;
 }
 
 /** \brief delete all pending events*/

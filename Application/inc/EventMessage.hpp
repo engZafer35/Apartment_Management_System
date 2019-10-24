@@ -62,9 +62,6 @@ public:
 
 private:
 
-    /** \note EventQueue::throwEvent() will set m_queueNum */
-    friend class EventQueue;
-
     EVENTS          m_event;
     EVENT_SOURCE    m_source;
     EVENT_PRIORITY  m_priority;
