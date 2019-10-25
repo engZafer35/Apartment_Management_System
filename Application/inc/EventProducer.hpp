@@ -36,7 +36,7 @@
 /********************************* CLASS **************************************/
 namespace event
 {
-
+//TODO: saf sanal sınıf yapılıp linux ve Bare metale göre bu sınıf türeyecek
 class IEventProducer // todo: make singletons
 {
 public:

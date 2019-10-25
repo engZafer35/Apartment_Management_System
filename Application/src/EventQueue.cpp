@@ -128,7 +128,7 @@ RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
 }
 
 /** \brief delete event with queue number*/
-RETURN_STATUS EventQueue::deleteEvent(EventMsg *event)
+RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
 {
 
     enterSection();
@@ -140,10 +140,11 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg *event)
 
         for (U32 i = 0; i < size; i++)
         {
-            if ((*it) == event)
+            if ((*it) == (*event))
             {
                 qEvents.erase(it);           
-                event = NULL_PTR;
+                *event = NULL_PTR;
+                break;
             }
 
             it++;

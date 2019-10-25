@@ -51,7 +51,7 @@ public:
     RETURN_STATUS deleteEvent(U32 queNum);
 
     /** \brief delete event with queue number*/
-    RETURN_STATUS deleteEvent(EventMsg *event);
+    RETURN_STATUS deleteEvent(EventMsg **event);
 
     /** \brief delete all event that have same event ID */
     RETURN_STATUS deleteEvents(EVENTS eventID);

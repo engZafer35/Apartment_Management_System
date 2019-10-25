@@ -37,6 +37,33 @@ private:
     NonCopyable& operator=(const NonCopyable&);
 };
 
+
+class Mutex_Lock
+{
+    Mutex_Lock(void)
+    {
+        ::pthread_mutex_init(&m_sync, 0);
+    }
+
+    ~Mutex_Lock(void)
+    {
+        ::pthread_mutex_destroy(&m_sync);
+    }
+
+    void lock(void)
+    {
+        ::pthread_mutex_lock(&m_sync);
+    }
+
+    void unlock(void)
+    {
+        ::pthread_mutex_unlock(&m_sync);
+    }
+
+private:
+    pthread_mutex_t m_sync;
+};
+
 class Mutex : NonCopyable
 {
 public:
