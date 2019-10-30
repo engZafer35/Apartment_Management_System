@@ -41,7 +41,7 @@ namespace event
 
 RETURN_STATUS EventPool::buidSysEventProducer(void)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     tEventProducer = new TimerEventProducer();
     tEventProducer->setQueue(&eventQueue);
@@ -58,21 +58,21 @@ RETURN_STATUS EventPool::buidSysEventProducer(void)
 
 RETURN_STATUS EventPool::startProducers(void)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
 
 RETURN_STATUS EventPool::stopProducers(void)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
 
 RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }

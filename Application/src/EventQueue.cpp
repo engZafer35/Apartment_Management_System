@@ -74,7 +74,7 @@ EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource) const
 /** \brief throw event */
 RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     enterSection();
 
@@ -114,7 +114,7 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 /** \brief delete event with queue number*/
 RETURN_STATUS EventQueue::deleteEvent(U32 queNum)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
@@ -122,7 +122,7 @@ RETURN_STATUS EventQueue::deleteEvent(U32 queNum)
 /** \brief delete all event that have same event ID */
 RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
@@ -153,13 +153,13 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
 
     leaveSection();
 
-    return RET_SUCCECC;
+    return SUCCESS;
 }
 
 /** \brief delete all pending events*/
 RETURN_STATUS EventQueue::deleteAllEvent(void)
 {
-    RETURN_STATUS retVal = RET_SUCCECC;
+    RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }

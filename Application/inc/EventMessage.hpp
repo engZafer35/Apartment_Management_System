@@ -57,9 +57,6 @@ public:
     /** \brief get value length */
     U32             getLeng(void) const;
 
-    /** \brief get queue number*/
-    U32             getQueueNum(void) const;
-
 private:
 
     EVENTS          m_event;
@@ -67,7 +64,6 @@ private:
     EVENT_PRIORITY  m_priority;
     void*           m_value;
     U32             m_leng;
-    S32             m_queueNum;
 };
 
 }//namespace event

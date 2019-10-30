@@ -37,7 +37,6 @@ int main(void)
     event::EventPool eventPool;
     event::EventMsg *event = NULL_PTR;
 
-
     eventPool.buidSysEventProducer();
 
     while(1)
@@ -48,7 +47,6 @@ int main(void)
         event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
         while(NULL_PTR != event)
         {
-
             if (NULL != event)
             {
     //            std::cout <<"event ıd" << event->getEvent() << std::endl;
