@@ -37,7 +37,7 @@ int main(void)
     event::EventPool eventPool;
     event::EventMsg *event = NULL_PTR;
 
-    eventPool.buidSysEventProducer();
+    eventPool.buildEventProducer();
 
     while(1)
     {

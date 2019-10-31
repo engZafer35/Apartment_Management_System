@@ -61,7 +61,6 @@ void* EventMsg::getValue(void)
     return m_value;
 }
 
-
 U32 EventMsg::getLeng(void) const
 {
     return m_leng;

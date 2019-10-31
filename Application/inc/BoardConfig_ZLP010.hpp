@@ -1,25 +1,36 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Oct 31, 2019 - 3:21:13 PM
+* #File Name    : BoardConfig_ZLP010.hpp
+* #File Path    : /GezGor/Application/inc/BoardConfig_ZLP010.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __BOARD_CONFIG_ZLP010_HPP__
+#define __BOARD_CONFIG_ZLP010_HPP__
 /*********************************INCLUDES*************************************/
-#include "GeneralBoardConfig.hpp"
-#include "GlobalDefinitions.hpp"
-/******************************* NAME SPACE ***********************************/
 
+/******************************* NAME SPACE ***********************************/
+namespace board
+{
+#define BOARD_NAME              "GEZGOR-MOTION"
+#define BOARD_VERSION           "V0.1.0"
+#define BOARD_FILE_NAME         "BoardConfig_ZLP010.hPP"
+#define WORKING_PLATFORM_PC     (001)
+#define _WORKING_PLATFORM       WORKING_PLATFORM_PC
+#define _PLATFORM_NAME          "LINUX-PC"
+#define _MCU_BIT_SIZE           (64)
+#define MCU_CORE                "Linux-PC"
+#define MCU_PART_NUM            "Linux-PC"
+#define LINUX_PLATFORM
+
+}//namespace board
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,6 +41,6 @@
 
 /********************************* CLASS **************************************/
 
-#endif /* __PROJECT_CONF_HPP__ */
+#endif /* __BOARD_CONFIG_ZLP010_HPP__ */
 
 /********************************* End Of File ********************************/

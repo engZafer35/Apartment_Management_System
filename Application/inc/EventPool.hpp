@@ -15,9 +15,9 @@
 /*********************************INCLUDES*************************************/
 #include <vector>
 
-#include "EventProducer.hpp"
 #include "EventQueue.hpp"
 #include "TimerEventProducer.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -34,7 +34,7 @@
 namespace event
 {
 
-class EventPool // TODO: make singleton
+class EventPool : private NonCopyable // TODO: make singleton
 {
 public:
     /** \brief All supported event producers list*/
@@ -61,7 +61,7 @@ public:
      * \return if everything is OK, return RET_SUCCES(0)
      *         otherwise return RET_FAILURE(-1)
      */
-    RETURN_STATUS buidSysEventProducer(void);
+    RETURN_STATUS buildEventProducer(void);
 
     /** \brief start all producer to create event */
     RETURN_STATUS startProducers(void);
@@ -81,7 +81,7 @@ public:
     EventQueue eventQueue;
 private:
 
-    TimerEventProducer *tEventProducer;
+    TimerEventProducer *m_tEventProducer;
 };
 
 }//namespace event

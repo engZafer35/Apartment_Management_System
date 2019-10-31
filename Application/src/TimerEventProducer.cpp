@@ -40,6 +40,8 @@
 namespace event
 {
 
+TimerEventProducer::TimerEventProducer(void){}
+
 //void TimerEventProducer::start(void)
 //{
 //

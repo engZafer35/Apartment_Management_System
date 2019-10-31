@@ -31,28 +31,23 @@ template<class T>
 class Singleton : NonCopyable
 {
 public:
-    Singleton()
+    Singleton(void)
     {
+        MutexLockFunc mutex;
         if(nullptr == m_instance)
         {
             m_instance = static_cast<T*>(this);
         }
     }
 
-    ~Singleton()
+    ~Singleton(void)
     {
-        if(nullptr != m_instance)
-        {
-            m_instance = nullptr;
-        }
+        m_instance = nullptr;
     }
 
-    static T* getInstance()
+    static T* getInstance(void)
     {
-        if (m_instance == nullptr)
-        {
-            return m_instance;
-        }
+        return m_instance;
     }
 
 private:

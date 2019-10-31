@@ -12,14 +12,15 @@
 #ifndef __EVENT_QUEUE_HPP__
 #define __EVENT_QUEUE_HPP__
 /*********************************INCLUDES*************************************/
+#include "ProjectConf.hpp"
 #include <deque>
 
-#ifdef __linux
+#ifdef LINUX_PLATFORM
 #include <pthread.h>
 #endif
 
-#include "GlobalDefinitions.hpp"
 #include "EventMessage.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -58,15 +59,14 @@ public:
 
     /** \brief delete all pending events*/
     RETURN_STATUS deleteAllEvent(void);
-private:
-    void enterSection(void);
-
-    void leaveSection(void);
 
 private:
+
+    MutexLockLasting m_mutex;
+
     typedef std::deque<EventMsg *> QEvents;
     QEvents qEvents;
-    pthread_mutex_t *m_mutexEvent;
+
 };
 
 }//namespace event

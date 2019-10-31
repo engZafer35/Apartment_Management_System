@@ -13,14 +13,18 @@
 #ifndef __EVENT_PRODUCER_HPP__
 #define __EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
-#include "EventQueue.hpp"
-#include "EventList.hpp"
-#include "Singleton.hpp"
+#include "ProjectConf.hpp"
 
-#ifdef __linux
+#ifdef LINUX_PLATFORM
 #include <pthread.h>
 #include <thread>
 #endif
+
+#include "EventQueue.hpp"
+#include "EventList.hpp"
+#include "Utility.hpp"
+
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -37,7 +41,7 @@
 namespace event
 {
 //TODO: saf sanal sınıf yapılıp linux ve Bare metale göre bu sınıf türeyecek
-class IEventProducer // todo: make singletons
+class IEventProducer : private NonCopyable
 {
 public:
     IEventProducer(void);
@@ -70,19 +74,13 @@ protected:
     /** \brief throw event */
     void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);
 
-    /** \brief lock section */
-    void enterSection(void);
-
-    /** \brief unlock section */
-    void leaveSection(void);
-
 protected:
     EventQueue *m_pQueue;
 
 private:
+    MutexLockLasting m_mutex;
 
-#ifdef __linux
-    pthread_mutex_t m_mutexEvent;
+#ifdef LINUX_PLATFORM
     pthread_t       m_threadControl;
 #endif
 
@@ -90,6 +88,21 @@ private:
     bool m_paused;
     bool m_started;
 };
+
+/**
+ * \brief  create any event porducer
+ *         just one event producer should be created.
+ *         So that all event producer will created in the template function.
+ * \return address of event producer
+ */
+template<typename T>
+inline T* getEventProducer(void)
+{
+    MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
+
+    static T producer;
+    return &producer;
+}
 
 }//namespace event
 

@@ -36,7 +36,7 @@ static void *threadControlFunction(void *arg)
         producer->loopControl();
     }
 
-#ifdef __linux__
+#ifdef LINUX_PLATFORM
     pthread_exit(NULL);
 #endif
 }
@@ -51,21 +51,6 @@ static void *threadControlFunction(void *arg)
 /***************************** CLASS PROTECTED METHOD *************************/
 namespace event
 {
-/** \brief lock section */
-void IEventProducer::enterSection(void)
-{
-#ifdef __linux
-    ::pthread_mutex_lock(&m_mutexEvent);
-#endif
-}
-
-/** \brief unlock section */
-void IEventProducer::leaveSection(void)
-{
-#ifdef __linux
-    ::pthread_mutex_unlock(&m_mutexEvent);
-#endif
-}
 
 /** \brief throw event */
 void IEventProducer::throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter, U32 leng)
@@ -80,22 +65,11 @@ void IEventProducer::throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORIT
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace event
 {
-IEventProducer::IEventProducer(void): m_pQueue{0}, m_exit{0}, m_paused{0}, m_started{0}
-{
-#ifdef __linux
-    m_threadControl = 0;
-    ::pthread_mutex_init(&m_mutexEvent, 0);
-#endif
-
-}
+IEventProducer::IEventProducer(void): m_pQueue{0}, m_exit{0}, m_paused{0}, m_started{0}, m_threadControl{0}
+{}
 
 IEventProducer::~IEventProducer(void)
-{
-    stop();
-#ifdef __linux
-    ::pthread_mutex_destroy(&m_mutexEvent);
-#endif
-}
+{}
 
 /** \brief All event producer will load its event into event queue */
 void IEventProducer::setQueue(EventQueue *eventQueue)
@@ -108,13 +82,13 @@ void IEventProducer::loopControl(void)
 {
     while (true)
     {
-        enterSection();
+        m_mutex.lock();
         if (m_exit)
         {
-            leaveSection();
+            m_mutex.unlock();
             break;
         }
-        leaveSection();
+        m_mutex.unlock();
 
         doControl();
     }
@@ -127,7 +101,7 @@ void IEventProducer::start(void)
         m_started = TRUE;
         m_exit    = FALSE;
 
-#ifdef __linux
+#ifdef LINUX_PLATFORM
 //        std::thread uartListenerThread = std::thread(&IEventProducer::run, this);
         ::pthread_create(&m_threadControl, 0, threadControlFunction, this);
 #endif
@@ -141,13 +115,13 @@ void IEventProducer::stop(void)
         m_started = FALSE;
         if (m_paused == FALSE)
         {
-            enterSection();
+            m_mutex.lock();
         }
 
         m_exit = TRUE;
-        leaveSection();
+        m_mutex.unlock();
 
-#ifdef __linux
+#ifdef LINUX_PLATFORM
     ::pthread_join(m_threadControl, NULL);
 #endif
     }
@@ -158,7 +132,7 @@ void IEventProducer::pause(void)
 {
     if (m_paused == FALSE)
     {
-        enterSection();
+        m_mutex.lock();
         m_paused = TRUE;
     }
 }
@@ -168,7 +142,7 @@ void IEventProducer::resume(void)
 {
     if (m_paused == TRUE)
     {
-        leaveSection();
+        m_mutex.unlock();
         m_paused = FALSE;
     }
 }

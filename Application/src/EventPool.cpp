@@ -12,7 +12,6 @@
 
 /********************************* INCLUDES ***********************************/
 #include "EventPool.hpp"
-#include "EventMessage.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -39,15 +38,15 @@
 namespace event
 {
 
-RETURN_STATUS EventPool::buidSysEventProducer(void)
+RETURN_STATUS EventPool::buildEventProducer(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    tEventProducer = new TimerEventProducer();
-    tEventProducer->setQueue(&eventQueue);
-    tEventProducer->pause();
-    tEventProducer->start();
-    tEventProducer->resume();
+    m_tEventProducer = getEventProducer<TimerEventProducer>(); /** < create timer event producer >*/
+    m_tEventProducer->setQueue(&eventQueue);
+    m_tEventProducer->pause();
+    m_tEventProducer->start();
+    m_tEventProducer->resume();
 
     //TODO: create all event producers
     //TODO: give event queue handle to event producers

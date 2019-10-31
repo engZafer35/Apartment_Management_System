@@ -33,30 +33,13 @@
 /***************************** CLASS PRIVATE METHOD ***************************/
 namespace event
 {
-
-void EventQueue::enterSection(void)
-{
-#ifdef __linux
-    ::pthread_mutex_lock(m_mutexEvent);
-#endif
-}
-
-void EventQueue::leaveSection(void)
-{
-#ifdef __linux
-    ::pthread_mutex_unlock(m_mutexEvent);
-#endif
-}
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
 
 /** \brief constructor */
 EventQueue::EventQueue(void)
-{
-    m_mutexEvent = new ::pthread_mutex_t();
-    ::pthread_mutex_init(m_mutexEvent, 0);
-}
+{}
 
 /** \brief throw event */
 EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource) const
@@ -76,7 +59,7 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    enterSection();
+    m_mutex.lock(); //lock section
 
     if (FALSE == qEvents.empty()) // is not empty
     {
@@ -107,31 +90,36 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
         qEvents.push_back(event);
     }
 
-    leaveSection();
+    m_mutex.unlock(); //unlock section
     return retVal;
 }
 
 /** \brief delete event with queue number*/
 RETURN_STATUS EventQueue::deleteEvent(U32 queNum)
 {
+    m_mutex.lock(); // lock section
     RETURN_STATUS retVal = SUCCESS;
 
+    m_mutex.unlock();// unlock section
     return retVal;
 }
 
 /** \brief delete all event that have same event ID */
 RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
 {
+    m_mutex.lock(); // lock section
     RETURN_STATUS retVal = SUCCESS;
 
+    m_mutex.unlock();// unlock section
     return retVal;
 }
 
 /** \brief delete event with queue number*/
 RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
 {
+    RETURN_STATUS retVal = FAILURE;
 
-    enterSection();
+    m_mutex.lock(); // lock section
 
     if (FALSE == qEvents.empty()) // is not empty
     {
@@ -144,23 +132,24 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
             {
                 qEvents.erase(it);           
                 *event = NULL_PTR;
+                retVal = SUCCESS;
                 break;
             }
-
             it++;
         }
     }
 
-    leaveSection();
-
-    return SUCCESS;
+    m_mutex.unlock();// unlock section
+    return retVal;
 }
 
 /** \brief delete all pending events*/
 RETURN_STATUS EventQueue::deleteAllEvent(void)
 {
+    m_mutex.lock(); // lock section
     RETURN_STATUS retVal = SUCCESS;
 
+    m_mutex.unlock();// unlock section
     return retVal;
 }
 

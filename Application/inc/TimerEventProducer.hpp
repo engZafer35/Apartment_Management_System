@@ -31,6 +31,20 @@ namespace event
 class TimerEventProducer : public IEventProducer
 {
 
+private:
+    /** Constructor */
+    TimerEventProducer(void);
+
+    /**
+     * \brief create TimerEventProducer
+     *        just one timer producer should be created.
+     *        So that all event producer will created in the
+     *        template function.
+     * \return address of TimerEventProducer
+     */
+    template<typename T>
+    friend T* getEventProducer(void);
+
 public:
 //    void start(void) override;
 
@@ -40,8 +54,6 @@ public:
 //    /** \brief loopControl event producer */
 //    void run(void) override;
 };
-
-
 
 }//namespace timer
 /********************************* CLASS **************************************/

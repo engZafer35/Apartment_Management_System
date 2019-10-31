@@ -31,6 +31,7 @@ class NonCopyable
 {
 protected:
     NonCopyable(void){}
+    virtual ~NonCopyable(void){}
 
 private:
     NonCopyable(const NonCopyable&);
@@ -38,33 +39,34 @@ private:
 };
 
 
-class Mutex_Lock
+class MutexLockLasting : private NonCopyable
 {
-    Mutex_Lock(void)
+public:
+    MutexLockLasting(void)
     {
-        ::pthread_mutex_init(&m_sync, 0);
+        ::pthread_mutex_init(&m_mutex, 0);
     }
 
-    ~Mutex_Lock(void)
+    ~MutexLockLasting(void)
     {
-        ::pthread_mutex_destroy(&m_sync);
+        ::pthread_mutex_destroy(&m_mutex);
     }
 
     void lock(void)
     {
-        ::pthread_mutex_lock(&m_sync);
+        ::pthread_mutex_lock(&m_mutex);
     }
 
     void unlock(void)
     {
-        ::pthread_mutex_unlock(&m_sync);
+        ::pthread_mutex_unlock(&m_mutex);
     }
 
 private:
-    pthread_mutex_t m_sync;
+    pthread_mutex_t m_mutex;
 };
 
-class Mutex : NonCopyable
+class Mutex : virtual NonCopyable
 {
 public:
     Mutex(void)
@@ -72,14 +74,14 @@ public:
         ::pthread_mutex_init(&m_sync, 0);
     }
 
-    ~Mutex(void)
+    virtual ~Mutex(void)
     {
         ::pthread_mutex_destroy(&m_sync);
     }
 
     friend class MutexLock;
 
-private:
+protected:
     void lock(void)
     {
         ::pthread_mutex_lock(&m_sync);
@@ -109,6 +111,22 @@ public:
 
 private:
     Mutex& m_mutex;
+};
+
+
+class MutexLockFunc : virtual Mutex
+{
+public:
+    MutexLockFunc()
+    {
+        lock();
+    }
+
+    ~MutexLockFunc()
+    {
+        unlock();
+    }
+
 };
 
 #endif /* __UTILITY_HPP__ */
