@@ -57,20 +57,13 @@ public:
     /** \brief get value length */
     U32             getLeng(void) const;
 
-    /** \brief get queue number*/
-    U32             getQueueNum(void) const;
-
 private:
-
-    /** \note EventQueue::throwEvent() will set m_queueNum */
-    friend class EventQueue;
 
     EVENTS          m_event;
     EVENT_SOURCE    m_source;
     EVENT_PRIORITY  m_priority;
     void*           m_value;
     U32             m_leng;
-    S32             m_queueNum;
 };
 
 }//namespace event

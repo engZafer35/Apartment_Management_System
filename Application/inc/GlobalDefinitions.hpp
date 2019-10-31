@@ -26,9 +26,6 @@ extern "C" {
 //Select project mcu bit size
 #define MCU_BIT_SIZE_DEF (MCU_32BIT)
 
-#define FAILURE (-1)
-#define SUCCESS (0)
-
 #ifndef FALSE
     #define FALSE 0
     #define TRUE  1
@@ -138,8 +135,8 @@ typedef void (*VoidCallback)(void);
 /*******************************TYPE DEFINITIONS ******************************/
 typedef enum _RETURN_STATUS
 {
-    RET_FAILURE = FAILURE,
-    RET_SUCCECC = SUCCESS
+    FAILURE = -1,
+    SUCCESS = 0
 }RETURN_STATUS;
 /************************* GLOBAL VARIBALE REFERENCES *************************/
 

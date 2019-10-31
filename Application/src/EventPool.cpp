@@ -35,5 +35,46 @@
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
+namespace event
+{
 
+RETURN_STATUS EventPool::buildEventProducer(void)
+{
+    RETURN_STATUS retVal = SUCCESS;
+
+    m_tEventProducer = getEventProducer<TimerEventProducer>(); /** < create timer event producer >*/
+    m_tEventProducer->setQueue(&eventQueue);
+    m_tEventProducer->pause();
+    m_tEventProducer->start();
+    m_tEventProducer->resume();
+
+    //TODO: create all event producers
+    //TODO: give event queue handle to event producers
+    //TODO: stop all event producers
+
+    return retVal;
+}
+
+RETURN_STATUS EventPool::startProducers(void)
+{
+    RETURN_STATUS retVal = SUCCESS;
+
+    return retVal;
+}
+
+RETURN_STATUS EventPool::stopProducers(void)
+{
+    RETURN_STATUS retVal = SUCCESS;
+
+    return retVal;
+}
+
+RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
+{
+    RETURN_STATUS retVal = SUCCESS;
+
+    return retVal;
+}
+
+}//namespace event
 /******************************** End Of File *********************************/

@@ -12,10 +12,15 @@
 #ifndef __EVENT_QUEUE_HPP__
 #define __EVENT_QUEUE_HPP__
 /*********************************INCLUDES*************************************/
+#include "ProjectConf.hpp"
 #include <deque>
 
-#include "GlobalDefinitions.hpp"
+#ifdef LINUX_PLATFORM
+#include <pthread.h>
+#endif
+
 #include "EventMessage.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -38,13 +43,16 @@ public:
     EventQueue(void);
 
     /** \brief throw event */
-    EventMsg *waithEvent(U32 timeoutMs, U32 eventSource);
+    EventMsg *waithEvent(U32 timeoutMs, U32 eventSource) const;
 
     /** \brief create new event*/
     RETURN_STATUS throwEvent(EventMsg *event);
 
     /** \brief delete event with queue number*/
     RETURN_STATUS deleteEvent(U32 queNum);
+
+    /** \brief delete event with queue number*/
+    RETURN_STATUS deleteEvent(EventMsg **event);
 
     /** \brief delete all event that have same event ID */
     RETURN_STATUS deleteEvents(EVENTS eventID);
@@ -53,8 +61,12 @@ public:
     RETURN_STATUS deleteAllEvent(void);
 
 private:
+
+    MutexLockLasting m_mutex;
+
     typedef std::deque<EventMsg *> QEvents;
     QEvents qEvents;
+
 };
 
 }//namespace event

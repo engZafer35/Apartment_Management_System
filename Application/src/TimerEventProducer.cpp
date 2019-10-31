@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 2:43:17 PM
-* #File Name    : main.cpp 
-* #File Path    : /GezGör/Application/src/main.cpp
+* #Date         : Oct 24, 2019 - 8:34:58 AM
+* #File Name    : TimerEventProducer.cpp 
+* #File Path    : /GezGor/Application/src/TimerEventProducer.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,9 +11,9 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include <iostream>
+#include "TimerEventProducer.hpp"
 #include <unistd.h>
-#include "EventPool.hpp"
+#include <iostream>
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -29,38 +29,41 @@
 /***************************** STATIC FUNCTIONS  ******************************/
 
 /***************************** PUBLIC FUNCTIONS  ******************************/
-int main(void)
+
+/***************************** CLASS VARIABLES ********************************/
+
+/***************************** CLASS PRIVATE METHOD ***************************/
+
+/***************************** CLASS PROTECTED METHOD *************************/
+
+/***************************** CLASS PUBLIC METHOD ****************************/
+namespace event
 {
 
-    std::cout << "Hello --- GezGor" << std::endl;
+TimerEventProducer::TimerEventProducer(void){}
 
-    event::EventPool eventPool;
-    event::EventMsg *event = NULL_PTR;
+//void TimerEventProducer::start(void)
+//{
+//
+//}
 
-    eventPool.buildEventProducer();
+void TimerEventProducer::doControl(void)
+{
+    static int z[256];
+    static int x = 0;
+    ::sleep(1);
 
-    while(1)
-    {
-        if (!event)
-        ::sleep(5);
+    z[x] = x;
 
-        event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
-        while(NULL_PTR != event)
-        {
-            if (NULL != event)
-            {
-    //            std::cout <<"event ıd" << event->getEvent() << std::endl;
-    //            std::cout <<"event source" << event->getEventSource() << std::endl;
-    //            std::cout << "event pr" <<event->getEventPriority() << std::endl;
-                std::cout << "add: " << event <<" event value: " << *(static_cast<int*>(event->getValue())) << std::endl;
-
-                eventPool.eventQueue.deleteEvent(&event);
-                event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
-            }
-        }
-
-    }
-
-    return 0;
+    std::cout << x << " timer event throw" << std::endl;
+    throwEvent(EN_EVENT_1, EN_SOURCE_3, EN_PRIORITY_2, &(z[x]), sizeof(x));
+    x++;
 }
+
+//void TimerEventProducer::run(void)
+//{
+//
+//}
+
+}//namespace event
 /******************************** End Of File *********************************/

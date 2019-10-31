@@ -38,9 +38,8 @@
 namespace event
 {
 EventMsg::EventMsg(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter, U32 leng)
-                   : m_event{event}, m_source{source}, m_priority{priority}, m_value{parameter}, m_leng{leng}, m_queueNum{-1}
-{
-}
+                   : m_event{event}, m_source{source}, m_priority{priority}, m_value{parameter}, m_leng{leng}
+{}
 
 EVENTS EventMsg::getEvent(void) const
 {
@@ -62,22 +61,10 @@ void* EventMsg::getValue(void)
     return m_value;
 }
 
-
 U32 EventMsg::getLeng(void) const
 {
     return m_leng;
 }
-
-U32 EventMsg::getQueueNum(void) const
-{
-    return m_queueNum;
-}
-
-///** \brief set queue number */
-//void EventMsg::setQueueNum(S32 num)
-//{
-//    m_queueNum = num;
-//}
 
 }//namespace event
 
