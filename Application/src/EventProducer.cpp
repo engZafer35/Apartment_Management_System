@@ -65,8 +65,12 @@ void IEventProducer::throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORIT
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace event
 {
-IEventProducer::IEventProducer(void): m_pQueue{0}, m_exit{0}, m_paused{0}, m_started{0}, m_threadControl{0}
-{}
+IEventProducer::IEventProducer(void): m_pQueue{0}, m_exit{0}, m_paused{0}, m_started{0}
+{
+#ifdef LINUX_PLATFORM
+    m_threadControl = 0;
+#endif
+}
 
 IEventProducer::~IEventProducer(void)
 {}

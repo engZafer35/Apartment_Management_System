@@ -15,11 +15,6 @@
 /*********************************INCLUDES*************************************/
 #include "ProjectConf.hpp"
 
-#ifdef LINUX_PLATFORM
-#include <pthread.h>
-#include <thread>
-#endif
-
 #include "EventQueue.hpp"
 #include "EventList.hpp"
 #include "Utility.hpp"
@@ -77,16 +72,18 @@ protected:
 protected:
     EventQueue *m_pQueue;
 
+    BOOL m_exit;
+    bool m_paused;
+    bool m_started;
+
 private:
-    MutexLockLasting m_mutex;
+    MutexLock m_mutex;
 
 #ifdef LINUX_PLATFORM
     pthread_t       m_threadControl;
 #endif
 
-    bool m_exit;
-    bool m_paused;
-    bool m_started;
+
 };
 
 /**

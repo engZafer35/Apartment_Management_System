@@ -1,26 +1,23 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 1, 2019 - 11:32:52 AM
+* #File Name    : BareMetalUtil.hpp
+* #File Path    : /GezGor/Application/inc/BareMetalUtil.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __APPLICATION_INC_BAREMETALUTIL_HPP__
+#define __APPLICATION_INC_BAREMETALUTIL_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
 
-#include "../../Drivers/Platform/GeneralPlatformConfig.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +27,25 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class Mutex
+{
+public:
+    Mutex(void)
+    { /* for Bare-Metal*/}
 
-#endif /* __PROJECT_CONF_HPP__ */
+    virtual ~Mutex(void)
+    { /* for Bare-Metal*/}
+
+public:
+    void _lock(void)
+    { /* for Bare-Metal*/ }
+
+    void _unlock(void)
+    {  /* for Bare-Metal*/ }
+};
+}//namespace board
+#endif /* __APPLICATION_INC_BAREMETALUTIL_HPP__ */
 
 /********************************* End Of File ********************************/

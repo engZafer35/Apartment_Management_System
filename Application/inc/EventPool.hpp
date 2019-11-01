@@ -77,7 +77,7 @@ public:
     RETURN_STATUS producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd);
 
 public:
-    /** Event Producer will load all event in this event queue*/
+    /** Event Producers will load events in this event queue*/
     EventQueue eventQueue;
 private:
 

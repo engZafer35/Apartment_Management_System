@@ -47,7 +47,7 @@ int main(void)
         event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
         while(NULL_PTR != event)
         {
-            if (NULL != event)
+            if (NULL_PTR != event)
             {
     //            std::cout <<"event ıd" << event->getEvent() << std::endl;
     //            std::cout <<"event source" << event->getEventSource() << std::endl;
