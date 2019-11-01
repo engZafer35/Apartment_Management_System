@@ -42,7 +42,7 @@ RETURN_STATUS EventPool::buildEventProducer(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    m_tEventProducer = TimerEventProducer::getInstance(); /** < create timer event producer >*/
+    m_tEventProducer = TimerEventProducer::getInstance<platform::EN_TIMER_1>(); /** < create timer event producer >*/
     m_tEventProducer->setQueue(&eventQueue);
     m_tEventProducer->pause();
     m_tEventProducer->start();

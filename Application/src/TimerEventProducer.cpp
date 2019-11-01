@@ -2,7 +2,7 @@
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
 * #Date         : Oct 24, 2019 - 8:34:58 AM
-* #File Name    : TimerEventProducer.cpp 
+* #File Name    : TimerEventProducer.cpp
 * #File Path    : /GezGor/Application/src/TimerEventProducer.cpp
 *******************************************************************************/
 /******************************************************************************
@@ -37,9 +37,7 @@ static void *threadControlFunction(void *arg)
         producer->loopControl();
     }
 
-#ifdef LINUX_PLATFORM
     pthread_exit(NULL);
-#endif
 }
 
 }//namespace event
@@ -48,7 +46,7 @@ static void *threadControlFunction(void *arg)
 /***************************** CLASS VARIABLES ********************************/
 namespace event
 {
-TimerEventProducer *TimerEventProducer::producer = NULL_PTR;
+
 }//namespace event
 /***************************** CLASS PRIVATE METHOD ***************************/
 
@@ -85,11 +83,7 @@ void TimerEventProducer::start(void)
         m_exit    = FALSE;
 
         //TODO: if platform bare-metal, register interrupt system
-
-#ifdef LINUX_PLATFORM
-//        std::thread uartListenerThread = std::thread(&IEventProducer::run, this);
         ::pthread_create(&m_threadControl, 0, threadControlFunction, this);
-#endif
     }
 }
 /** \brief stop event producer */
@@ -106,9 +100,7 @@ void TimerEventProducer::stop(void)
         m_exit = TRUE;
         m_mutex.unlock();
 
-#ifdef LINUX_PLATFORM
     ::pthread_join(m_threadControl, NULL);
-#endif
     }
 }
 
@@ -132,22 +124,7 @@ void TimerEventProducer::resume(void)
     }
 }
 
-TimerEventProducer *TimerEventProducer::getInstance(void)
-{
-    MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
 
-    if (NULL_PTR == producer)
-    {
-        producer = new TimerEventProducer();
-    }
-
-    return producer;
-}
-
-//void TimerEventProducer::start(void)
-//{
-//
-//}
 
 void TimerEventProducer::doControl(void)
 {
@@ -161,11 +138,6 @@ void TimerEventProducer::doControl(void)
     throwEvent(EN_EVENT_1, EN_SOURCE_3, EN_PRIORITY_2, &(z[x]), sizeof(x));
     x++;
 }
-
-//void TimerEventProducer::run(void)
-//{
-//
-//}
 
 }//namespace event
 /******************************** End Of File *********************************/

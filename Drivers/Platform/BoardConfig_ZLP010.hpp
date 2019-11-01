@@ -35,7 +35,15 @@ namespace platform
 /**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
-
+namespace platform
+{
+typedef enum
+{
+    EN_TIMER_1,
+    EN_TIMER_2,
+    EN_TIMER_3
+}SYSTEM_TIMERS;
+}//namespace platform
 /************************* GLOBAL VARIBALE REFERENCES *************************/
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
