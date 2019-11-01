@@ -78,7 +78,7 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
             }
             else if (i == (size-1))
             {
-                //event priority smaller, push end of list
+                //event priority smallest, push end of list
                 qEvents.push_back(event);
                 break;
             }

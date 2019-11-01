@@ -1,26 +1,23 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 1, 2019 - 10:54:57 AM
+* #File Name    : LinuxPlatformUtil.hpp
+* #File Path    : /GezGor/Application/inc/LinuxPlatformUtil.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __LINUX_PLATFORM_UTIL_HPP__
+#define __LINUX_PLATFORM_UTIL_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-
-#include "../../Drivers/Platform/GeneralPlatformConfig.hpp"
+#include <mutex>
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +27,30 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class Mutex
+{
+public:
+    Mutex(void){}
 
-#endif /* __PROJECT_CONF_HPP__ */
+    virtual ~Mutex(void){}
+
+public:
+    void _lock(void)
+    {
+        mtx.lock();
+    }
+
+    void _unlock(void)
+    {
+        mtx.unlock();
+    }
+
+private:
+    std::mutex mtx;
+};
+}//namespace platform
+#endif /* __LINUX_PLATFORM_UTIL_HPP__ */
 
 /********************************* End Of File ********************************/

@@ -1,34 +1,22 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 31, 2019 - 3:21:13 PM
-* #File Name    : BoardConfig_ZLP010.hpp
-* #File Path    : /GezGor/Application/inc/BoardConfig_ZLP010.hpp
+* #Date         : Nov 1, 2019 - 11:30:48 AM
+* #File Name    : PlatformBareMetal.hpp
+* #File Path    : /GezGor/Application/inc/PlatformBareMetal.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __BOARD_CONFIG_ZLP010_HPP__
-#define __BOARD_CONFIG_ZLP010_HPP__
+#ifndef __PLATFORM_BARE_METAL_HPP__
+#define __PLATFORM_BARE_METAL_HPP__
 /*********************************INCLUDES*************************************/
-
+#include "../Platform/BareMetalUtil.hpp"
+#include "../Platform/BoardConfig_ZBM010.hpp"
 /******************************* NAME SPACE ***********************************/
-namespace board
-{
-#define BOARD_NAME              "GEZGOR-MOTION"
-#define BOARD_VERSION           "V0.1.0"
-#define BOARD_FILE_NAME         "BoardConfig_ZLP010.hPP"
-#define WORKING_PLATFORM_PC     (001)
-#define _WORKING_PLATFORM       WORKING_PLATFORM_PC
-#define _PLATFORM_NAME          "LINUX-PC"
-#define _MCU_BIT_SIZE           (64)
-#define MCU_CORE                "Linux-PC"
-#define MCU_PART_NUM            "Linux-PC"
-#define LINUX_PLATFORM
 
-}//namespace board
 /**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
@@ -41,6 +29,6 @@ namespace board
 
 /********************************* CLASS **************************************/
 
-#endif /* __BOARD_CONFIG_ZLP010_HPP__ */
+#endif /* __PLATFORM_BARE_METAL_HPP__ */
 
 /********************************* End Of File ********************************/

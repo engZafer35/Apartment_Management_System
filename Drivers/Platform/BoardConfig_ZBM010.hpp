@@ -1,26 +1,39 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 1, 2019 - 11:32:01 AM
+* #File Name    : BoardConfig_ZBM010.hpp
+* #File Path    : /GezGor/Application/inc/BoardConfig_ZBM010.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
-/*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
+#ifndef __APPLICATION_INC_BOARDCONFIG_ZBM010_HPP__
+#define __APPLICATION_INC_BOARDCONFIG_ZBM010_HPP__
+/*****************************************************************************/
+namespace platform
+{
+#define BOARD_NAME              "GEZGOR-MOTION"
+#define BOARD_VERSION           "V0.1.0"
+#define BOARD_FILE_NAME         "BoardConfig_ZBMP010.hPP"
+#define WORKING_PLATFORM_PC     (001)
+#define _WORKING_PLATFORM       WORKING_PLATFORM_STM
+#define _PLATFORM_NAME          "Bare-Metal_STM"
+#define _MCU_BIT_SIZE           (32)
+#define MCU_CORE                "CORTEX-M4"
+#define MCU_PART_NUM            "STM32F405RGT6"
+#define BARE_METAL
 
-#include "../../Drivers/Platform/GeneralPlatformConfig.hpp"
+}//namespace board
+
+/*********************************INCLUDES*************************************/
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -31,6 +44,6 @@
 
 /********************************* CLASS **************************************/
 
-#endif /* __PROJECT_CONF_HPP__ */
+#endif /* __APPLICATION_INC_BOARDCONFIG_ZBM010_HPP__ */
 
 /********************************* End Of File ********************************/

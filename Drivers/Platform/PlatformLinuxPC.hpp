@@ -1,26 +1,24 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 1, 2019 - 9:10:41 AM
+* #File Name    : PlatformLinux.hpp
+* #File Path    : /GezGor/Application/inc/PlatformLinuxPC.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __PLATFORM_LINUX_PC_HPP__
+#define __PLATFORM_LINUX_PC_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-
-#include "../../Drivers/Platform/GeneralPlatformConfig.hpp"
+#include "../Platform/BoardConfig_ZLP010.hpp"
+#include "../Platform/LinuxPlatformUtil.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -31,6 +29,6 @@
 
 /********************************* CLASS **************************************/
 
-#endif /* __PROJECT_CONF_HPP__ */
+#endif /* __PLATFORM_LINUX_PC_HPP__ */
 
 /********************************* End Of File ********************************/

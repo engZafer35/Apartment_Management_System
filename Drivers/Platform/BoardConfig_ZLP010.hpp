@@ -1,49 +1,37 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 31, 2019 - 3:02:23 PM
-* #File Name    : GeneralBoardConfig.hpp
-* #File Path    : /GezGor/Application/inc/GeneralBoardConfig.hpp
+* #Date         : Oct 31, 2019 - 3:21:13 PM
+* #File Name    : BoardConfig_ZLP010.hpp
+* #File Path    : /GezGor/Application/inc/BoardConfig_ZLP010.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __GENERAL_BOARD_CONFIG_HPP__
-#define __GENERAL_BOARD_CONFIG_HPP__
+#ifndef __BOARD_CONFIG_ZLP010_HPP__
+#define __BOARD_CONFIG_ZLP010_HPP__
+/******************************************************************************/
+namespace platform
+{
+#define BOARD_NAME              "GEZGOR-MOTION"
+#define BOARD_VERSION           "V0.1.0"
+#define BOARD_FILE_NAME         "BoardConfig_ZLP010.hPP"
+#define WORKING_PLATFORM_PC     (001)
+#define _WORKING_PLATFORM       WORKING_PLATFORM_PC
+#define _PLATFORM_NAME          "LINUX-PC"
+#define _MCU_BIT_SIZE           (64)
+#define MCU_CORE                "Linux-PC"
+#define MCU_PART_NUM            "Linux-PC"
+#define LINUX_PLATFORM
+
+}//namespace platform
+
 /*********************************INCLUDES*************************************/
 
 /******************************* NAME SPACE ***********************************/
-namespace board
-{
-#define PLATFORM_LINUX_PC       (1)
-#define PLATFORM_LINUX_EMB      (2)
-#define PLATFORM_FREERTOS       (3)
-#define PLATFORM_BARE_METAL     (4)
 
-/* add new platform, don't change queue*/
-
-/** ******* <! select platform > ******* */
-#define CURRENT_PLATFORM    (PLATFORM_LINUX_PC)
-//#define CURRENT_PLATFORM   (PLATFORM_LINUX_EMB)
-//#define CURRENT_PLATFORM   (PLATFORM_FREERTOS)
-//#define CURRENT_PLATFORM   (PLATFORM_BARE_METAL)
-
-
-#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
-    #include "BoardConfig_ZLP010.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
-    #include "BoardConfig_ZLE010.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
-    #include "BoardConfig_ZB010.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
-    #include "BoardConfig_ZR010.hpp"
-#else
-    #error "!!! Current Platform is undefined. Check GeneralBoardConfig.h file !!!"
-#endif
-
-}//namespace board
 /**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
@@ -56,6 +44,6 @@ namespace board
 
 /********************************* CLASS **************************************/
 
-#endif /* __GENERAL_BOARD_CONFIG_HPP__ */
+#endif /* __BOARD_CONFIG_ZLP010_HPP__ */
 
 /********************************* End Of File ********************************/

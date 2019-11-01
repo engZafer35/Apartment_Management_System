@@ -13,7 +13,7 @@
 #ifndef __UTILITY_HPP__
 #define __UTILITY_HPP__
 /*********************************INCLUDES*************************************/
-#include <pthread.h>
+#include "ProjectConf.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -38,95 +38,52 @@ private:
     NonCopyable& operator=(const NonCopyable&);
 };
 
-
-class MutexLockLasting : private NonCopyable
+class MutexLock : private platform::Mutex, private NonCopyable
 {
 public:
-    MutexLockLasting(void)
-    {
-        ::pthread_mutex_init(&m_mutex, 0);
-    }
-
-    ~MutexLockLasting(void)
-    {
-        ::pthread_mutex_destroy(&m_mutex);
-    }
+    MutexLock(void){}
+    ~MutexLock(void){}
 
     void lock(void)
     {
-        ::pthread_mutex_lock(&m_mutex);
+        _lock();
     }
 
     void unlock(void)
     {
-        ::pthread_mutex_unlock(&m_mutex);
+        _unlock();
     }
-
-private:
-    pthread_mutex_t m_mutex;
 };
 
-class Mutex : virtual NonCopyable
-{
-public:
-    Mutex(void)
-    {
-        ::pthread_mutex_init(&m_sync, 0);
-    }
+//class MutexLock : NonCopyable
+//{
+//public:
+//    MutexLock(Mutex& mutex) : m_mutex(mutex)
+//    {
+//        m_mutex.lock();
+//    }
+//
+//    ~MutexLock()
+//    {
+//        m_mutex.unlock();
+//    }
+//
+//private:
+//    Mutex& m_mutex;
+//};
 
-    virtual ~Mutex(void)
-    {
-        ::pthread_mutex_destroy(&m_sync);
-    }
-
-    friend class MutexLock;
-
-protected:
-    void lock(void)
-    {
-        ::pthread_mutex_lock(&m_sync);
-    }
-
-    void unlock(void)
-    {
-        ::pthread_mutex_unlock(&m_sync);
-    }
-
-private:
-    pthread_mutex_t m_sync;
-};
-
-class MutexLock : NonCopyable
-{
-public:
-    MutexLock(Mutex& mutex) : m_mutex(mutex)
-    {
-        m_mutex.lock();
-    }
-
-    ~MutexLock()
-    {
-        m_mutex.unlock();
-    }
-
-private:
-    Mutex& m_mutex;
-};
-
-
-class MutexLockFunc : virtual Mutex
+class MutexLockFunc : virtual platform::Mutex, private NonCopyable
 {
 public:
     MutexLockFunc()
     {
-        lock();
+        _lock();
     }
 
     ~MutexLockFunc()
     {
-        unlock();
+        _unlock();
     }
-
 };
 
 #endif /* __UTILITY_HPP__ */
