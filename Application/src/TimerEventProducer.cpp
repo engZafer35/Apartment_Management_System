@@ -27,7 +27,22 @@
 /********************************** VARIABLES *********************************/
 
 /***************************** STATIC FUNCTIONS  ******************************/
+namespace event
+{
+static void *threadControlFunction(void *arg)
+{
+    IEventProducer *producer = (IEventProducer *)arg;
+    if (producer)
+    {
+        producer->loopControl();
+    }
 
+#ifdef LINUX_PLATFORM
+    pthread_exit(NULL);
+#endif
+}
+
+}//namespace event
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
@@ -43,8 +58,79 @@ TimerEventProducer *TimerEventProducer::producer = NULL_PTR;
 namespace event
 {
 
-TimerEventProducer::TimerEventProducer(void){}
+TimerEventProducer::TimerEventProducer(void) : m_exit{0}, m_paused{0}, m_started{0} , m_threadControl{0} {}
 
+void TimerEventProducer::loopControl(void)
+{
+    while (true)
+    {
+        m_mutex.lock();
+        if (m_exit)
+        {
+            m_mutex.unlock();
+            break;
+        }
+        m_mutex.unlock();
+
+        doControl();
+    }
+}
+
+
+void TimerEventProducer::start(void)
+{
+    if (FALSE == m_started)
+    {
+        m_started = TRUE;
+        m_exit    = FALSE;
+
+        //TODO: if platform bare-metal, register interrupt system
+
+#ifdef LINUX_PLATFORM
+//        std::thread uartListenerThread = std::thread(&IEventProducer::run, this);
+        ::pthread_create(&m_threadControl, 0, threadControlFunction, this);
+#endif
+    }
+}
+/** \brief stop event producer */
+void TimerEventProducer::stop(void)
+{
+    if (TRUE == m_started)
+    {
+        m_started = FALSE;
+        if (m_paused == FALSE)
+        {
+            m_mutex.lock();
+        }
+
+        m_exit = TRUE;
+        m_mutex.unlock();
+
+#ifdef LINUX_PLATFORM
+    ::pthread_join(m_threadControl, NULL);
+#endif
+    }
+}
+
+/** \brief pause event producer */
+void TimerEventProducer::pause(void)
+{
+    if (m_paused == FALSE)
+    {
+        m_mutex.lock();
+        m_paused = TRUE;
+    }
+}
+
+/** \brief resume event producer */
+void TimerEventProducer::resume(void)
+{
+    if (m_paused == TRUE)
+    {
+        m_mutex.unlock();
+        m_paused = FALSE;
+    }
+}
 
 TimerEventProducer *TimerEventProducer::getInstance(void)
 {

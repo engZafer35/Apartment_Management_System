@@ -44,26 +44,26 @@ public:
     virtual ~IEventProducer(void);
 
     /** \brief All event producer will load its event into event queue */
-    void setQueue(EventQueue *eventQueue);
+    virtual void setQueue(EventQueue *eventQueue);
 
     /** \brief pause event producer */
-    virtual void pause(void);
+    virtual void pause(void) = 0;
 
     /** \brief resume event producer */
-    virtual void resume(void);
+    virtual void resume(void) = 0;
 
-public:  /** ****** Pure virtual Functions ****** */
+  /** ****** Pure virtual Functions ****** */
     /** \brief start event producer */
-    virtual void start(void);
+    virtual void start(void) = 0;
 
     /** \brief stop event producer */
-    virtual void stop(void);
+    virtual void stop(void) = 0;
 
     /** \brief doControl event producer */
     virtual void doControl(void) = 0;
 
     /** \brief run event producer */
-    void loopControl(void);
+    virtual void loopControl(void) = 0;
 
 protected:
     /** \brief throw event */
@@ -71,19 +71,6 @@ protected:
 
 protected:
     EventQueue *m_pQueue;
-
-    BOOL m_exit;
-    BOOL m_paused;
-    BOOL m_started;
-
-private:
-    MutexLock m_mutex;
-
-#ifdef LINUX_PLATFORM
-    pthread_t       m_threadControl;
-#endif
-
-
 };
 
 }//namespace event

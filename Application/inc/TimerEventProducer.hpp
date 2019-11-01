@@ -57,9 +57,34 @@ public:
 
 //    /** \brief loopControl event producer */
 //    void run(void) override;
+    /** \brief pause event producer */
+     void pause(void) override;
+
+    /** \brief resume event producer */
+     void resume(void) override;
+
+  /** ****** Pure virtual Functions ****** */
+    /** \brief start event producer */
+     void start(void) override;
+
+    /** \brief stop event producer */
+     void stop(void) override;
+
+    /** \brief run event producer */
+     void loopControl(void) override;
 
 private:
     static TimerEventProducer *producer;
+    BOOL m_exit;
+    BOOL m_paused;
+    BOOL m_started;
+
+private:
+    MutexLock m_mutex;
+
+#ifdef LINUX_PLATFORM
+    pthread_t       m_threadControl;
+#endif
 };
 
 }//namespace timer

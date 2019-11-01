@@ -26,22 +26,22 @@
 /********************************** VARIABLES *********************************/
 
 /***************************** STATIC FUNCTIONS  ******************************/
-namespace event
-{
-static void *threadControlFunction(void *arg)
-{
-    IEventProducer *producer = (IEventProducer *)arg;
-    if (producer)
-    {
-        producer->loopControl();
-    }
-
-#ifdef LINUX_PLATFORM
-    pthread_exit(NULL);
-#endif
-}
-
-}//namespace event
+//namespace event
+//{
+//static void *threadControlFunction(void *arg)
+//{
+//    IEventProducer *producer = (IEventProducer *)arg;
+//    if (producer)
+//    {
+//        producer->loopControl();
+//    }
+//
+//#ifdef LINUX_PLATFORM
+//    pthread_exit(NULL);
+//#endif
+//}
+//
+//}//namespace event
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
@@ -51,7 +51,6 @@ static void *threadControlFunction(void *arg)
 /***************************** CLASS PROTECTED METHOD *************************/
 namespace event
 {
-
 /** \brief throw event */
 void IEventProducer::throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter, U32 leng)
 {
@@ -65,12 +64,7 @@ void IEventProducer::throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORIT
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace event
 {
-IEventProducer::IEventProducer(void): m_pQueue{0}, m_exit{0}, m_paused{0}, m_started{0}
-{
-#ifdef LINUX_PLATFORM
-    m_threadControl = 0;
-#endif
-}
+IEventProducer::IEventProducer(void): m_pQueue{0} {}
 
 IEventProducer::~IEventProducer(void) {}
 
@@ -79,75 +73,6 @@ void IEventProducer::setQueue(EventQueue *eventQueue)
 {
     // don't need to check null pointer. Because it will checked in throwEvent()
     m_pQueue = eventQueue;
-}
-
-void IEventProducer::loopControl(void)
-{
-    while (true)
-    {
-        m_mutex.lock();
-        if (m_exit)
-        {
-            m_mutex.unlock();
-            break;
-        }
-        m_mutex.unlock();
-
-        doControl();
-    }
-}
-
-void IEventProducer::start(void)
-{
-    if (FALSE == m_started)
-    {
-        m_started = TRUE;
-        m_exit    = FALSE;
-
-#ifdef LINUX_PLATFORM
-//        std::thread uartListenerThread = std::thread(&IEventProducer::run, this);
-        ::pthread_create(&m_threadControl, 0, threadControlFunction, this);
-#endif
-    }
-}
-/** \brief stop event producer */
-void IEventProducer::stop(void)
-{
-    if (TRUE == m_started)
-    {
-        m_started = FALSE;
-        if (m_paused == FALSE)
-        {
-            m_mutex.lock();
-        }
-
-        m_exit = TRUE;
-        m_mutex.unlock();
-
-#ifdef LINUX_PLATFORM
-    ::pthread_join(m_threadControl, NULL);
-#endif
-    }
-}
-
-/** \brief pause event producer */
-void IEventProducer::pause(void)
-{
-    if (m_paused == FALSE)
-    {
-        m_mutex.lock();
-        m_paused = TRUE;
-    }
-}
-
-/** \brief resume event producer */
-void IEventProducer::resume(void)
-{
-    if (m_paused == TRUE)
-    {
-        m_mutex.unlock();
-        m_paused = FALSE;
-    }
 }
 
 }//namespace event
