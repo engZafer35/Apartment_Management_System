@@ -42,10 +42,14 @@ private:
      *        template function.
      * \return address of TimerEventProducer
      */
-    template<typename T>
-    friend T* getEventProducer(void);
 
 public:
+    /**
+     * \brief  create TimerEventProducer(singleton)
+     * \return address of TimerEventProducer
+     */
+    static TimerEventProducer *getInstance(void);
+
 //    void start(void) override;
 
     /** \brief doControl event producer */
@@ -53,6 +57,9 @@ public:
 
 //    /** \brief loopControl event producer */
 //    void run(void) override;
+
+private:
+    static TimerEventProducer *producer;
 };
 
 }//namespace timer

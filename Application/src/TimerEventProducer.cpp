@@ -31,7 +31,10 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
+namespace event
+{
+TimerEventProducer *TimerEventProducer::producer = NULL_PTR;
+}//namespace event
 /***************************** CLASS PRIVATE METHOD ***************************/
 
 /***************************** CLASS PROTECTED METHOD *************************/
@@ -41,6 +44,19 @@ namespace event
 {
 
 TimerEventProducer::TimerEventProducer(void){}
+
+
+TimerEventProducer *TimerEventProducer::getInstance(void)
+{
+    MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
+
+    if (NULL_PTR == producer)
+    {
+        producer = new TimerEventProducer();
+    }
+
+    return producer;
+}
 
 //void TimerEventProducer::start(void)
 //{

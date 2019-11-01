@@ -72,8 +72,7 @@ IEventProducer::IEventProducer(void): m_pQueue{0}, m_exit{0}, m_paused{0}, m_sta
 #endif
 }
 
-IEventProducer::~IEventProducer(void)
-{}
+IEventProducer::~IEventProducer(void) {}
 
 /** \brief All event producer will load its event into event queue */
 void IEventProducer::setQueue(EventQueue *eventQueue)

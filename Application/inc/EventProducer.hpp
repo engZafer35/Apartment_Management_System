@@ -36,7 +36,7 @@
 namespace event
 {
 //TODO: saf sanal sınıf yapılıp linux ve Bare metale göre bu sınıf türeyecek
-class IEventProducer : private NonCopyable
+class IEventProducer : private virtual NonCopyable
 {
 public:
     IEventProducer(void);
@@ -73,8 +73,8 @@ protected:
     EventQueue *m_pQueue;
 
     BOOL m_exit;
-    bool m_paused;
-    bool m_started;
+    BOOL m_paused;
+    BOOL m_started;
 
 private:
     MutexLock m_mutex;
@@ -85,21 +85,6 @@ private:
 
 
 };
-
-/**
- * \brief  create any event porducer
- *         just one event producer should be created.
- *         So that all event producer will created in the template function.
- * \return address of event producer
- */
-template<typename T>
-inline T* getEventProducer(void)
-{
-    MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
-
-    static T producer;
-    return &producer;
-}
 
 }//namespace event
 
