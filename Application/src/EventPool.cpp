@@ -37,16 +37,18 @@
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace event
 {
+EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+{
 
+}
 RETURN_STATUS EventPool::buildEventProducer(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    m_tEventProducer = TimerEventProducer::getInstance<platform::EN_TIMER_1>(); /** < create timer event producer >*/
+    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
     m_tEventProducer->setQueue(&eventQueue);
     m_tEventProducer->pause();
     m_tEventProducer->start();
-    m_tEventProducer->resume();
 
     //TODO: create all event producers
     //TODO: give event queue handle to event producers

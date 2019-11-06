@@ -13,13 +13,9 @@
 #ifndef __EVENT_PRODUCER_HPP__
 #define __EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
-#include "ProjectConf.hpp"
-
 #include "EventQueue.hpp"
 #include "EventList.hpp"
 #include "Utility.hpp"
-
-
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -49,10 +45,6 @@ public:
     /** \brief pause event producer */
     virtual void pause(void) = 0;
 
-    /** \brief resume event producer */
-    virtual void resume(void) = 0;
-
-  /** ****** Pure virtual Functions ****** */
     /** \brief start event producer */
     virtual void start(void) = 0;
 

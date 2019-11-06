@@ -16,8 +16,8 @@
 #include <vector>
 
 #include "EventQueue.hpp"
-#include "TimerEventProducer.hpp"
 #include "Utility.hpp"
+#include "TimerEventProducer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -56,6 +56,8 @@ public:
 
 public:
 
+    EventPool(void);
+
     /**
      * \brief  build all event producers that system need
      * \return if everything is OK, return RET_SUCCES(0)
@@ -80,7 +82,6 @@ public:
     /** Event Producers will load events in this event queue*/
     EventQueue eventQueue;
 private:
-
     TimerEventProducer *m_tEventProducer;
 };
 
