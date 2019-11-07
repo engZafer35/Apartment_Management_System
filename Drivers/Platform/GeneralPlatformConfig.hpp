@@ -3,7 +3,7 @@
 * #Revision     : 1.0
 * #Date         : Oct 31, 2019 - 3:02:23 PM
 * #File Name    : GeneralBoardConfig.hpp
-* #File Path    : /GezGor/Application/inc/GeneralPlatformConfig.hpp
+* #File Path    : /GezGor/Drivers/Platform/GeneralPlatformConfig.hpp
 *******************************************************************************/
 
 /******************************************************************************

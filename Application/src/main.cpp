@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
+#include "TimerEventProducer.hpp"
 #include <iostream>
 #include <unistd.h>
 #include "EventPool.hpp"
@@ -29,6 +30,10 @@
 /***************************** STATIC FUNCTIONS  ******************************/
 
 /***************************** PUBLIC FUNCTIONS  ******************************/
+void foo(void)
+{
+
+}
 int main(void)
 {
 
@@ -39,27 +44,35 @@ int main(void)
 
     eventPool.buildEventProducer();
 
-    while(1)
-    {
-        if (!event)
-        ::sleep(5);
+    TIMER(event::TIMER_ENG_1)(400);
 
-        event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
-        while(NULL_PTR != event)
-        {
-            if (NULL_PTR != event)
-            {
-    //            std::cout <<"event ıd" << event->getEvent() << std::endl;
-    //            std::cout <<"event source" << event->getEventSource() << std::endl;
-    //            std::cout << "event pr" <<event->getEventPriority() << std::endl;
-                std::cout << "add: " << event <<" event value: " << *(static_cast<int*>(event->getValue())) << std::endl;
+    TIMER_1(100);
+    TIMER_1(500, foo, event::EN_PRIORITY_MED);
 
-                eventPool.eventQueue.deleteEvent(&event);
-                event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
-            }
-        }
+    TIMER_1(event::EN_TIMER_BIT, 500);
+    TIMER_1(event::EN_TIMER_BIT, 500, foo, event::EN_PRIORITY_MED);
 
-    }
+//    while(1)
+//    {
+//        if (!event)
+//        ::sleep(5);
+//
+//        event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
+//        while(NULL_PTR != event)
+//        {
+//            if (NULL_PTR != event)
+//            {
+//    //            std::cout <<"event ıd" << event->getEvent() << std::endl;
+//    //            std::cout <<"event source" << event->getEventSource() << std::endl;
+//    //            std::cout << "event pr" <<event->getEventPriority() << std::endl;
+//                std::cout << "add: " << event <<" event value: " << *(static_cast<int*>(event->getValue())) << std::endl;
+//
+//                eventPool.eventQueue.deleteEvent(&event);
+//                event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
+//            }
+//        }
+//
+//    }
 
     return 0;
 }

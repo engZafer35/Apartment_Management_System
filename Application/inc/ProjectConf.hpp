@@ -14,8 +14,7 @@
 #define __PROJECT_CONF_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-
-#include "../../Drivers/Platform/GeneralPlatformConfig.hpp"
+#include "GeneralPlatformConfig.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/

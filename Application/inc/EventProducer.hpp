@@ -13,13 +13,9 @@
 #ifndef __EVENT_PRODUCER_HPP__
 #define __EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
-#include "ProjectConf.hpp"
-
 #include "EventQueue.hpp"
 #include "EventList.hpp"
 #include "Utility.hpp"
-
-
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -36,7 +32,7 @@
 namespace event
 {
 //TODO: saf sanal sınıf yapılıp linux ve Bare metale göre bu sınıf türeyecek
-class IEventProducer : private NonCopyable
+class IEventProducer : private virtual NonCopyable
 {
 public:
     IEventProducer(void);
@@ -44,62 +40,31 @@ public:
     virtual ~IEventProducer(void);
 
     /** \brief All event producer will load its event into event queue */
-    void setQueue(EventQueue *eventQueue);
+    virtual void setQueue(EventQueue *eventQueue);
 
     /** \brief pause event producer */
-    virtual void pause(void);
+    virtual void pause(void) = 0;
 
-    /** \brief resume event producer */
-    virtual void resume(void);
-
-public:  /** ****** Pure virtual Functions ****** */
     /** \brief start event producer */
-    virtual void start(void);
+    virtual void start(void) = 0;
 
     /** \brief stop event producer */
-    virtual void stop(void);
+    virtual void stop(void) = 0;
 
-    /** \brief doControl event producer */
-    virtual void doControl(void) = 0;
-
-    /** \brief run event producer */
-    void loopControl(void);
+//    /** \brief doControl event producer */
+//    virtual void doControl(void) = 0;
 
 protected:
+
+    /** \brief run event producer */
+    virtual void loop(void) = 0;
+
     /** \brief throw event */
     void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);
 
 protected:
     EventQueue *m_pQueue;
-
-    BOOL m_exit;
-    bool m_paused;
-    bool m_started;
-
-private:
-    MutexLock m_mutex;
-
-#ifdef LINUX_PLATFORM
-    pthread_t       m_threadControl;
-#endif
-
-
 };
-
-/**
- * \brief  create any event porducer
- *         just one event producer should be created.
- *         So that all event producer will created in the template function.
- * \return address of event producer
- */
-template<typename T>
-inline T* getEventProducer(void)
-{
-    MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
-
-    static T producer;
-    return &producer;
-}
 
 }//namespace event
 

@@ -123,10 +123,7 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
 
     if (FALSE == qEvents.empty()) // is not empty
     {
-        std::deque<EventMsg *>::iterator it = qEvents.begin();
-        U32 size = qEvents.size();
-
-        for (U32 i = 0; i < size; i++)
+        for (QEvents::iterator it = qEvents.begin(); it != qEvents.end(); ++it)
         {
             if ((*it) == (*event))
             {
@@ -135,7 +132,6 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
                 retVal = SUCCESS;
                 break;
             }
-            it++;
         }
     }
 
