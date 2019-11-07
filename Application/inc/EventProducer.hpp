@@ -51,13 +51,14 @@ public:
     /** \brief stop event producer */
     virtual void stop(void) = 0;
 
-    /** \brief doControl event producer */
-    virtual void doControl(void) = 0;
-
-    /** \brief run event producer */
-    virtual void loopControl(void) = 0;
+//    /** \brief doControl event producer */
+//    virtual void doControl(void) = 0;
 
 protected:
+
+    /** \brief run event producer */
+    virtual void loop(void) = 0;
+
     /** \brief throw event */
     void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);
 

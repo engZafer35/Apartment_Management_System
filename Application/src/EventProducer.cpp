@@ -26,22 +26,7 @@
 /********************************** VARIABLES *********************************/
 
 /***************************** STATIC FUNCTIONS  ******************************/
-//namespace event
-//{
-//static void *threadControlFunction(void *arg)
-//{
-//    IEventProducer *producer = (IEventProducer *)arg;
-//    if (producer)
-//    {
-//        producer->loopControl();
-//    }
-//
-//#ifdef LINUX_PLATFORM
-//    pthread_exit(NULL);
-//#endif
-//}
-//
-//}//namespace event
+
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/

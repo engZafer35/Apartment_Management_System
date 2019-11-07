@@ -30,6 +30,10 @@
 /***************************** STATIC FUNCTIONS  ******************************/
 
 /***************************** PUBLIC FUNCTIONS  ******************************/
+void foo(void)
+{
+
+}
 int main(void)
 {
 
@@ -40,29 +44,20 @@ int main(void)
 
     eventPool.buildEventProducer();
 
-    event::Timer tx(400);
+    TIMER(event::TIMER_ENG_1)(400);
 
-    event::Timer::deleteTimer(&tx);
+    TIMER_1(100);
+    TIMER_1(500, foo, event::EN_PRIORITY_MED);
 
-    TIMER_EVENT(event::TIMER_ENG_1).deleteTimer( event::EN_TIMER_BIT);
-
-    event::Timer ty(event::EN_TIMER_BIT, 400);
-
-//    ((*event::TimerEventProducer_::getInstance<event::TIMER_ENG_1>()) += event::Timer(400, TRUE, NULL_PTR, event::EN_PRIORITY_LOW));
-
-    TIMER_EVENT(event::TIMER_ENG_1) << tx;
-
-
-//    PERIODIC_TM_EVENT(event::TIMER_ENG_1) << tx << tx;
-
-
+    TIMER_1(event::EN_TIMER_BIT, 500);
+    TIMER_1(event::EN_TIMER_BIT, 500, foo, event::EN_PRIORITY_MED);
 
 //    while(1)
 //    {
 //        if (!event)
 //        ::sleep(5);
 //
-//        event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
+//        event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
 //        while(NULL_PTR != event)
 //        {
 //            if (NULL_PTR != event)
@@ -73,7 +68,7 @@ int main(void)
 //                std::cout << "add: " << event <<" event value: " << *(static_cast<int*>(event->getValue())) << std::endl;
 //
 //                eventPool.eventQueue.deleteEvent(&event);
-//                event = eventPool.eventQueue.waithEvent(200, EN_SOURCE_3);
+//                event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
 //            }
 //        }
 //

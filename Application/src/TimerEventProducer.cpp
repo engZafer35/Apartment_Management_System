@@ -37,38 +37,45 @@ namespace event
 
 TimerEventProducer::TimerEventProducer(/*const Platform *pl*/): m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
 {
+    //TODO: register HW timer
 }
-
+/***************************** CLASS PROTECTED METHOD *************************/
 /**
  * \brief this method invoked by time engine system. It can be hardware timer unit,
  *        so don't handle alot of jobs in callback function. If you Just set a flag
  *        in callback function, we will be happy. Thanks
  */
-void TimerEventProducer::cbProducer(void)
+void TimerEventProducer::loop(void)
 {
     if(TRUE == m_started)
     {
-        if (FALSE == m_qTimers.empty())
+        U32 size = m_qTimers.size();
+        if (size > 0)
         {
-            U32 size = m_qTimers.size();
-
-            for (U32 i = 0; i < size; i++)
+            for (QTimers::iterator it = m_qTimers.begin(); it != m_qTimers.end(); ++it)
             {
-                if (m_qTimers[i]->m_timeMs > 0)
+                if ((*it)->m_timeMs > 0)
                 {
-                    m_qTimers[i]->m_timeMs -= m_timerEnginePeriod; //decrease timer value
+                    (*it)->m_timeMs -= m_timerEnginePeriod; //decrease timer value
 
-                    if (m_qTimers[i]->m_timeMs < m_timerEnginePeriod) //check timer done
+                    if ((*it)->m_timeMs < m_timerEnginePeriod) //check timer done
                     {
-                        throwEvent(EN_EVENT_USER_TIMER, EN_SOURCE_TIMER, m_qTimers[i]->m_priority, \
-                                   &(m_qTimers[i]->m_timerID), sizeof(m_qTimers[i]->m_timerID));
+                        throwEvent(EN_EVENT_USER_TIMER, EN_SOURCE_TIMER, (*it)->m_priority, \
+                                   &((*it)->m_timerID), sizeof((*it)->m_timerID) );
 
-                        //if periodic timer, reload timer
-                        m_qTimers[i]->m_timeMs = m_qTimers[i]->m_isContinue ? m_qTimers[i]->m_timeMsCopy : 0;
-
-                        if (NULL_PTR != m_qTimers[i]->cbFunc)
+                        if (NULL_PTR != (*it)->cbFunc)
                         {
-                            m_qTimers[i]->cbFunc(); //invoke callback function.
+                            (*it)->cbFunc(); //invoke callback function.
+                        }
+
+                        if ((*it)->m_isContinue) //if periodic timer, reload timer
+                        {
+                            (*it)->m_timeMs = (*it)->m_timeMsCopy;
+                        }
+                        else
+                        {
+                            m_qTimers.erase(it); //delete one shot timer.
+                            --it; //after erase queue came back 1 steep . so it must be on same position
                         }
                     }
                 }
@@ -76,19 +83,7 @@ void TimerEventProducer::cbProducer(void)
         }
     }
 }
-
-}//namespace event
-/***************************** CLASS PROTECTED METHOD *************************/
-
 /***************************** CLASS PUBLIC METHOD ****************************/
-
-namespace event
-{
-/** \brief run event producer */
-void TimerEventProducer::loopControl(void)
-{
-}
-
 /** \brief start event producer */
 void TimerEventProducer::start(void)
 {
@@ -123,48 +118,83 @@ void TimerEventProducer::pause(void)
     m_mutex.unlock();
 }
 
-/** \brief doControl event producer */
-void TimerEventProducer::doControl(void)
+/**
+ * \brief create one shot timer
+ * \param timeMs
+ * \param cb when timer done, timer producer will invoke callback function
+ * \param priority
+ */
+U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY priority)
 {
+    m_mutex.lock(); //enter section
+
+    struct TimerData *td = new struct TimerData;
+
+    td->cbFunc       = cb;
+    td->m_timeMs     = timeMs;
+    td->m_timeMsCopy = timeMs;
+    td->m_priority   = priority;
+    td->m_isContinue = FALSE;
+
+    m_qTimers.push_back(td); //add timer to list
+
+    //give timer ID for one shot timer
+    td->m_timerID = EN_TIMER_MAX_NUM + m_qTimers.size();
+
+    m_mutex.unlock();////leave section
+
+    return SUCCESS;
 }
 
-/** \brief add new timer(copy) */
-TimerEventProducer &TimerEventProducer::operator <<(Timer *timer)
+/**
+ * \brief create periodic timer
+ * \param timer ID
+ * \param timeMs
+ * \param cb when timer done, timer producer will invoke callback function
+ * \param priority
+ */
+void TimerEventProducer::operator ()(TimerID tmID, U32 timeMs, VoidCallback cb, EVENT_PRIORITY priority)
 {
+    m_mutex.lock(); //enter section
 
-    //TODO: add list
-    return *this;
+    struct TimerData *td = new struct TimerData;
+
+    td->cbFunc       = cb;
+    td->m_timeMs     = timeMs;
+    td->m_timeMsCopy = timeMs;
+    td->m_priority   = priority;
+    td->m_isContinue = FALSE;
+    td->m_timerID    = tmID;
+
+    m_qTimers.push_back(td); //add timer to list
+
+    m_mutex.unlock(); //leave section
 }
 
-/** \brief add new timer(copy) */
-TimerEventProducer &TimerEventProducer::operator <<(Timer timer)
+RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
 {
-    /** just allow to copy periodic timer */
-    if (TRUE == timer.m_isContinue)
+    m_mutex.lock(); //enter section
+
+    RETURN_STATUS retVal = FAILURE;
+
+    QTimers::iterator it = m_qTimers.begin();
+    U32 size = m_qTimers.size();
+
+    for (U32 i = 0; i < size; i++)
     {
-        Timer *tm = new Timer(timer); //copy constructor
-
-        std::cout << tm->m_timeMs << std::endl;
-
-        *this << tm;
+        if ((*it)->m_timerID == tmID)
+        {
+            if((*it)->m_timerID)
+            m_qTimers.erase(it);
+            retVal = SUCCESS;
+            break;
+        }
+        it++;
     }
 
-    return *this;
-}
+    m_mutex.unlock(); //leave section
 
-/** \brief delete timer */
-TimerEventProducer &TimerEventProducer::deleteTimer(Timer *timer)
-{
-    //TODO: find and delete timer from queue
-    //TODO: set timerID = 0;
-    return *this;
-}
-
-TimerEventProducer &TimerEventProducer::deleteTimer(TimerID tmID)
-{
-    //TODO: find and delete timer from queue
-    //TODO: set timerID = 0;
-    return *this;
+    return retVal;
 }
 
 }//namespace event

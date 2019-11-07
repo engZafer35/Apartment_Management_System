@@ -7,7 +7,23 @@
 *******************************************************************************/
 
 /******************************************************************************
+* How To Use:
+* 1- TimerEventProducer is singleton class. When timer producer created, it can
+*    register to hardware timer itself by given platform argument.
+* 2- After initialize, invoke setQueue() function. If timer event occur timer
+*    producer will load related event in this queue
+* 3- Last, invoke start() function to start timer event producer
+* 4- TIMER_1, TIMER_2, TIMER_3, TIMER macros can be used create new timer.
 * 
+******* Examples:
+*                      Create One Shot Timer
+* TIMER_1(100);
+* TIMER_1(500, foo, event::EN_PRIORITY_MED);
+*
+*                      Create Periodic Timer
+* TIMER_1(event::EN_TIMER_BIT, 500);
+* TIMER_1(event::EN_TIMER_BIT, 500, foo, event::EN_PRIORITY_MED);
+*
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
 #ifndef __TIMER_EVENT_PRODUCER_HPP___ //todo:
@@ -27,8 +43,11 @@ namespace event
  * \brief after created periodic Timer, load to timer event producer
  * \note  return type is TimerEventProducer
  */
-#define TIMER_EVENT(id) (*(event::TimerEventProducer::getInstance<id>()))
+#define TIMER(id) (*(event::TimerEventProducer::getInstance<id>()))
 
+#define TIMER_1   TIMER(event::TIMER_ENG_1) /** <! load timer to timer engine 1*/
+#define TIMER_2   TIMER(event::TIMER_ENG_2) /** <! load timer to timer engine 2*/
+#define TIMER_3   TIMER(event::TIMER_ENG_3) /** <! load timer to timer engine 3*/
 }
 /*******************************TYPE DEFINITIONS ******************************/
 namespace event
@@ -38,7 +57,7 @@ typedef enum _TIMER_ID
     TIMER_ENG_1,
     TIMER_ENG_2,
     TIMER_ENG_3,
-}TIMER_ID;
+}TIMER_ENG;
 }//namespace event
 /************************* GLOBAL VARIBALE REFERENCES *************************/
 
@@ -47,60 +66,6 @@ typedef enum _TIMER_ID
 /********************************* CLASS **************************************/
 namespace event
 {
-class TimerEventProducer;
-
-/**
- * \brief class timer. when user need timer, Timer object should be created
- */
-class Timer
-{
-public:
-    /**
-     * \brief one shot timer Constructor
-     * \param timeMs
-     * \param cb when timer done, timer producer will invoke callback function
-     * \param priority
-     */
-    Timer(U32 timeMs, VoidCallback cb = NULL_PTR, EVENT_PRIORITY priority = EN_PRIORITY_LOW);
-
-    /**
-     * \brief periodic timer constructor
-     * \param timer ID
-     * \param timeMs
-     * \param cb when timer done, timer producer will invoke callback function
-     * \param priority
-     */
-    Timer(TimerID tmID, U32 timeMs, VoidCallback cb = NULL_PTR, EVENT_PRIORITY priority = EN_PRIORITY_LOW);
-
-    virtual ~Timer(void);
-
-    /** \brief delete timer */
-    static RETURN_STATUS deleteTimer(Timer *tm);
-
-    /**
-     * \brief get created timer ID
-     * \return if timer could not be created return -1 ID
-     */
-    U32 getTimerID(void) const;
-
-    /** \brief check manually timer Done */
-    BOOL isTimerOK(void) const;
-
-private:
-    U32         m_timeMs;
-    BOOL        m_isContinue;
-    U32         m_timerID;
-    const U32   m_timeMsCopy;
-    EVENT_PRIORITY m_priority;
-
-    VoidCallback cbFunc;
-
-    /** \brief timer producer need to reach m_timeMs, m_isContinue, m_timerID, cbFunc */
-    friend TimerEventProducer;
-};
-
-
-
 
 class TimerEventProducer : public IEventProducer
 {
@@ -112,23 +77,28 @@ public:
      *         user can create other timer.
      * \return address of TimerEventProducer
      */
-    template<TIMER_ID ID>
+    template<TIMER_ENG ID>
     static TimerEventProducer *getInstance(void);
 
-    /** \brief add new timer(copy) */
-    TimerEventProducer &operator <<(Timer *timer);
+    /**
+     * \brief create one shot timer
+     * \param timeMs
+     * \param cb when timer done, timer producer will invoke callback function
+     * \param priority
+     */
+    U32 operator ()(U32 timeMs, VoidCallback cb = NULL_PTR, EVENT_PRIORITY priority = EN_PRIORITY_LOW);
 
-    /** \brief add new timer(copy) */
-    TimerEventProducer &operator <<(Timer timer);
+    /**
+     * \brief create periodic timer
+     * \param timer ID
+     * \param timeMs
+     * \param cb when timer done, timer producer will invoke callback function
+     * \param priority
+     */
+    void operator ()(TimerID tmID, U32 timeMs, VoidCallback cb = NULL_PTR, EVENT_PRIORITY priority = EN_PRIORITY_LOW);
 
     /** \brief delete timer */
-    TimerEventProducer &deleteTimer(Timer *timer);
-
-    /** \brief delete timer */
-    TimerEventProducer &deleteTimer(TimerID tmID);
-
-    /** \brief run event producer */
-    void loopControl(void) override;
+    RETURN_STATUS cancelTimer(S32 tmID);
 
     /** \brief start event producer */
     void start(void) override;
@@ -139,16 +109,25 @@ public:
     /** \brief pause event producer */
     void pause(void) override;
 
-    /** \brief doControl event producer */
-    void doControl(void) override;
+public:
+    /** \brief run event producer */
+    void loop(void) override;
 
-private:
     TimerEventProducer(/*const Platform *pl*/);
-    void cbProducer(void); //This function will be invoked by timer engine
-
 private:
+
+    struct TimerData
+    {
+        U32   m_timeMs;
+        BOOL  m_isContinue;
+        S32   m_timerID;
+        U32   m_timeMsCopy;
+        EVENT_PRIORITY m_priority;
+        VoidCallback cbFunc;
+    };
+
     /** All user timer will stored here*/
-    typedef std::deque<Timer *> QTimers;
+    typedef std::deque<struct TimerData *> QTimers;
     QTimers m_qTimers;
 
     const U32 m_timerEnginePeriod;
@@ -156,19 +135,19 @@ private:
     //TODO:Const Platform *m_pl;
 
     /** pointer for each timer */
-    template<TIMER_ID ID>
+    template<TIMER_ENG ID>
     static TimerEventProducer *m_producer;
 
     MutexLock m_mutex;
 
-    BOOL m_started;
-    BOOL m_exit;
+    BOOL volatile m_started;
+    BOOL volatile m_exit;
 };
 
-template<TIMER_ID ID>
+template<TIMER_ENG ID>
 TimerEventProducer *TimerEventProducer::m_producer = NULL_PTR;
 
-template<TIMER_ID ID>
+template<TIMER_ENG ID>
 extern inline TimerEventProducer *TimerEventProducer::getInstance(/*const Platform *pl*/)
 {
     MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
