@@ -12,7 +12,6 @@
 
 /********************************* INCLUDES ***********************************/
 #include <TimerEventProducer.hpp>
-#include <iostream> //TODO:
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -47,6 +46,8 @@ TimerEventProducer::TimerEventProducer(/*const Platform *pl*/): m_timerEnginePer
  */
 void TimerEventProducer::loop(void)
 {
+    m_mutex.lock(); //enter section, don't allow to add new timer when loop checking the timer status.
+
     if(TRUE == m_started)
     {
         U32 size = m_qTimers.size();
@@ -82,6 +83,8 @@ void TimerEventProducer::loop(void)
             }
         }
     }
+
+    m_mutex.unlock();
 }
 /***************************** CLASS PUBLIC METHOD ****************************/
 /** \brief start event producer */

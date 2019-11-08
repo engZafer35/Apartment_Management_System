@@ -39,7 +39,7 @@ public:
     EventQueue(void);
 
     /** \brief throw event */
-    EventMsg *waithEvent(U32 timeoutMs, U32 eventSource) const;
+    EventMsg *waithEvent(U32 timeoutMs, U32 eventSource);
 
     /** \brief create new event*/
     RETURN_STATUS throwEvent(EventMsg *event);
