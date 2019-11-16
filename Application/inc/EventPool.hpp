@@ -13,8 +13,6 @@
 #ifndef __EVENT_POOL_HPP__
 #define __EVENT_POOL_HPP__
 /*********************************INCLUDES*************************************/
-#include <vector>
-
 #include "EventQueue.hpp"
 #include "Utility.hpp"
 #include "TimerEventProducer.hpp"
@@ -55,8 +53,10 @@ public:
     }EVENT_PRODUCER_COMMAND;
 
 public:
-
+    /** \brief constructor */
     EventPool(void);
+
+    ~EventPool(void);
 
     /**
      * \brief  build all event producers that system need

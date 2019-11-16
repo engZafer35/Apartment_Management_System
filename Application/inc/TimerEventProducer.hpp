@@ -26,8 +26,8 @@
 *
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __TIMER_EVENT_PRODUCER_HPP___ //todo:
-#define __TIMER_EVENT_PRODUCER_HPP___
+#ifndef __TIMER_EVENT_PRODUCER_HPP__
+#define __TIMER_EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
 #include "ProjectConf.hpp"
 #include "Utility.hpp"
@@ -67,6 +67,7 @@ typedef enum _TIMER_ID
 namespace event
 {
 
+/** \brief Timer event producer. Singleton design. */
 class TimerEventProducer : public IEventProducer
 {
 public:
@@ -109,11 +110,11 @@ public:
     /** \brief pause event producer */
     void pause(void) override;
 
-public:
+private:
     /** \brief run event producer */
     void loop(void) override;
 
-    TimerEventProducer(/*const Platform *pl*/);
+    TimerEventProducer(void);
 private:
 
     struct TimerData
@@ -132,7 +133,7 @@ private:
 
     const U32 m_timerEnginePeriod;
 
-    //TODO:Const Platform *m_pl;
+    platform::Platform *m_platform;
 
     /** pointer for each timer */
     template<TIMER_ENG ID>
@@ -140,8 +141,8 @@ private:
 
     MutexLock m_mutex;
 
-    BOOL volatile m_started;
-    BOOL volatile m_exit;
+    volatile BOOL m_started;
+    volatile BOOL m_exit;
 };
 
 template<TIMER_ENG ID>
@@ -154,7 +155,7 @@ extern inline TimerEventProducer *TimerEventProducer::getInstance(/*const Platfo
 
     if (NULL_PTR == m_producer<ID>)
     {
-        m_producer<ID> = new TimerEventProducer(/*const Platform *pl*/);
+        m_producer<ID> = new TimerEventProducer();
     }
 
     return m_producer<ID>;

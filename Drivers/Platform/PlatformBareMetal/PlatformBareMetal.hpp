@@ -1,19 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 1, 2019 - 11:30:48 AM
+* #File Name    : PlatformBareMetal.hpp
+* #File Path    : /GezGor/Application/inc/PlatformBareMetal.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __PLATFORM_BARE_METAL_HPP__
+#define __PLATFORM_BARE_METAL_HPP__
 /*********************************INCLUDES*************************************/
-#include "Utility.hpp"
+#include "BareMetalUtil.hpp"
+#include "BoardConfig_ZBM010.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -27,34 +28,7 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
-{
-public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
-
-private:
-    static T* m_instance;
-};
-
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+#endif /* __PLATFORM_BARE_METAL_HPP__ */
 
 /********************************* End Of File ********************************/

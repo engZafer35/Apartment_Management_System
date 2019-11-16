@@ -1,18 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 16, 2019 - 11:37:47 PM
+* #File Name    : IClock.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IClock.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __DRIVERS_PLATFORM_INC_ICLOCK_HPP__
+#define __DRIVERS_PLATFORM_INC_ICLOCK_HPP__
 /*********************************INCLUDES*************************************/
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
@@ -27,34 +29,21 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
+namespace platform
+{
+/**
+ *  \brief interface class for MCU clock
+ */
+class IClock
 {
 public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
-
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
-
-private:
-    static T* m_instance;
+    virtual ~IClock(void){}
+    /** \brief init mcu clock */
+    virtual RETURN_STATUS init(void) = 0;
 };
 
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
+}//namespace platform
 
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+#endif /* __DRIVERS_PLATFORM_INC_ICLOCK_HPP__ */
 
 /********************************* End Of File ********************************/

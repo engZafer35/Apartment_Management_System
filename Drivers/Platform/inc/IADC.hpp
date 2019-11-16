@@ -1,18 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 16, 2019 - 11:40:05 PM
+* #File Name    : IADC.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IADC.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __IADC_HPP__
+#define __IADC_HPP__
 /*********************************INCLUDES*************************************/
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
@@ -27,34 +29,24 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
+namespace platform
+{
+/**
+ * \brief interface class for ADC
+ */
+class IADC
 {
 public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
+    virtual ~IADC(void){}
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
+    /** \brief init ADC channel */
+    virtual RETURN_STATUS init(void) = 0;
 
-private:
-    static T* m_instance;
+    /** \brief read ADC value */
+    virtual U32 read(void) = 0;
 };
 
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+}//namespace platform
+#endif /* __IADC_HPP__ */
 
 /********************************* End Of File ********************************/

@@ -1,20 +1,21 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 1, 2019 - 11:30:48 AM
-* #File Name    : PlatformBareMetal.hpp
-* #File Path    : /GezGor/Application/inc/PlatformBareMetal.hpp
+* #Date         : Nov 16, 2019 - 11:38:50 PM
+* #File Name    : ICommPeripheral.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/ICommPeripheral.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PLATFORM_BARE_METAL_HPP__
-#define __PLATFORM_BARE_METAL_HPP__
+#ifndef __ICOMMPERIPHERAL_HPP__
+#define __ICOMMPERIPHERAL_HPP__
 /*********************************INCLUDES*************************************/
-#include "../Platform/BareMetalUtil.hpp"
-#include "../Platform/BoardConfig_ZBM010.hpp"
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -28,7 +29,34 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+/**
+ *  \brief interface class for all communication peripheral.
+ *         for example UART, CAN
+ */
+class ICommPeripheral
+{
+public:
+    virtual ~ICommPeripheral(void){}
 
-#endif /* __PLATFORM_BARE_METAL_HPP__ */
+    /** \brief init related communication peripheral*/
+    virtual RETURN_STATUS init(void) = 0;
+
+    /** \brief send data*/
+    virtual RETURN_STATUS send(const void *buff, U32 size, U32 timeout) = 0;
+
+    /** \brief receive data*/
+    virtual RETURN_STATUS receive(void *buff, U32 size, U32 timeout) = 0;
+
+protected:
+    /** \brief hardware receive interrupt callback function */
+    virtual void cbReceive(void) = 0;
+
+    /** \brief hardware send interrupt callback function */
+    virtual void cbSend(void) = 0;
+};
+}//namespace platform
+#endif /* __ICOMMPERIPHERAL_HPP__ */
 
 /********************************* End Of File ********************************/

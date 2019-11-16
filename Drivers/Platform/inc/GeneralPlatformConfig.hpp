@@ -1,20 +1,46 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Oct 31, 2019 - 3:02:23 PM
+* #File Name    : GeneralBoardConfig.hpp
+* #File Path    : /GezGor/Drivers/Platform/GeneralPlatformConfig.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __GENERAL_PLATFORM_CONFIG_HPP__
+#define __GENERAL_PLATFORM_CONFIG_HPP__
+
 /*********************************INCLUDES*************************************/
-#include "Utility.hpp"
+
 /******************************* NAME SPACE ***********************************/
+#define PLATFORM_LINUX_PC       (1)
+#define PLATFORM_LINUX_EMB      (2)
+#define PLATFORM_FREERTOS       (3)
+#define PLATFORM_BARE_METAL     (4)
+/* add new platform, don't change queue*/
+
+/** ******* < select platform > ******* */
+#define CURRENT_PLATFORM    (PLATFORM_LINUX_PC)
+//#define CURRENT_PLATFORM   (PLATFORM_LINUX_EMB)
+//#define CURRENT_PLATFORM   (PLATFORM_FREERTOS)
+//#define CURRENT_PLATFORM   (PLATFORM_BARE_METAL)
+
+#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
+    #include "PlatformLinuxPC.hpp"
+#elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
+    #include "BoardConfig_ZLE010.hpp"
+#elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
+    #include "../Platform/PlatformBareMetal.hpp"
+#elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
+    #include "BoardConfig_ZFR010.hpp"
+#else
+    #error "!!! Current Platform is undefined. Check GeneralBoardConfig.h file !!!"
+#endif
+
+#include "Platform.hpp"
 
 /**************************** MACRO DEFINITIONS *******************************/
 
@@ -27,34 +53,7 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
-{
-public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
-
-private:
-    static T* m_instance;
-};
-
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+#endif /* __GENERAL_PLATFORM_CONFIG_HPP__ */
 
 /********************************* End Of File ********************************/

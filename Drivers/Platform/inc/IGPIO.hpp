@@ -1,18 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 16, 2019 - 11:41:10 PM
+* #File Name    : IGPIO.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IGPIO.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __IGPIO_HPP__
+#define __IGPIO_HPP__
 /*********************************INCLUDES*************************************/
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
@@ -27,34 +29,29 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
+namespace platform
+{
+/**
+ * \brief interface class for GPIO operations
+ */
+class IGPIO
 {
 public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
+    virtual ~IGPIO(void){}
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
+    /** init all gpio */
+    virtual void init(void) = 0;
 
-private:
-    static T* m_instance;
+    /** read gpio*/
+    virtual BOOL read(void) = 0;
+
+    /** write gpio*/
+    virtual RETURN_STATUS write(BOOL status) = 0;
+
+    /** set callback function for external interrupt*/
+    virtual void setCB(VoidCallback cbFunc) = 0;
 };
-
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+}//namespace platform
+#endif /* __IGPIO_HPP__ */
 
 /********************************* End Of File ********************************/

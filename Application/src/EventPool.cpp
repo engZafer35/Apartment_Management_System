@@ -41,6 +41,15 @@ EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
 {
 
 }
+
+EventPool::~EventPool(void)
+{
+    if (NULL_PTR != m_tEventProducer)
+    {
+        delete m_tEventProducer;
+    }
+}
+
 RETURN_STATUS EventPool::buildEventProducer(void)
 {
     RETURN_STATUS retVal = SUCCESS;

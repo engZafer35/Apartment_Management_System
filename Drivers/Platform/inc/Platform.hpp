@@ -1,19 +1,26 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 11, 2019 - 1:21:34 PM
+* #File Name    : Platform.hpp
+* #File Path    : /GezGor/Drivers/Platform/Platform.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __PLATFORM_INTERFACE_HPP__
+#define __PLATFORM_INTERFACE_HPP__
 /*********************************INCLUDES*************************************/
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
 #include "Utility.hpp"
+
+#include "IDevices.hpp"
+#include "IConsole.hpp"
+#include "ISystem.hpp"
+#include "IFileSystem.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -27,34 +34,22 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
+namespace platform
+{
+
+class Platform : public Singleton<Platform>
 {
 public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
+    IDevices    *devices;
+    IConsole    *console;
+    ISystem     *system;
+    IFileSystem *fileSys;
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
-
-private:
-    static T* m_instance;
+public:
+    RETURN_STATUS openDevices(void);
 };
 
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+}//namespace platform
+#endif /* __PLATFORM_INTERFACE_HPP__ */
 
 /********************************* End Of File ********************************/

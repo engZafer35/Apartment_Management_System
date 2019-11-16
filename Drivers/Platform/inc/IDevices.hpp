@@ -1,19 +1,27 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 16, 2019 - 11:43:48 PM
+* #File Name    : IDevices.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IDevices.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __IDEVICES_HPP__
+#define __IDEVICES_HPP__
 /*********************************INCLUDES*************************************/
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
 #include "Utility.hpp"
+
+#include "IClock.hpp"
+#include "ICommPeripheral.hpp"
+#include "IADC.hpp"
+#include "IGPIO.hpp"
+#include "ITimer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -27,34 +35,25 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
+namespace platform
+{
+/**
+ * \brief All system devices will created in this class
+ */
+class IDevices
 {
 public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
+    virtual ~IDevices(void){}
+    virtual RETURN_STATUS openDevices(void) = 0;
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
-
-private:
-    static T* m_instance;
+public:
+    IClock          *clock;
+    ICommPeripheral *uart;
+    IADC            *adc;
+    IGPIO           *gpio;
+    ITimer          *timer;
 };
-
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+}//namespace platform
+#endif /* __IDEVICES_HPP__ */
 
 /********************************* End Of File ********************************/

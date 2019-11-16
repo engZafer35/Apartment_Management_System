@@ -1,18 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 16, 2019 - 11:34:33 PM
+* #File Name    : ISystem.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/ISystem.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __DRIVERS_PLATFORM_INC_ISYSTEM_HPP__
+#define __DRIVERS_PLATFORM_INC_ISYSTEM_HPP__
 /*********************************INCLUDES*************************************/
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
@@ -27,34 +29,23 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
+namespace platform
+{
+class ISystem
 {
 public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
+    virtual ~ISystem(void){}
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
+    /** \brief update system */
+    virtual RETURN_STATUS update(void) = 0;
 
-private:
-    static T* m_instance;
+    /** \brief restart */
+    virtual void restart(void) = 0;
+
+    /** \brief enter sleep mode */
+    virtual void sleepMode(void) = 0;
 };
-
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+}//namespace platform
+#endif /* __DRIVERS_PLATFORM_INC_ISYSTEM_HPP__ */
 
 /********************************* End Of File ********************************/

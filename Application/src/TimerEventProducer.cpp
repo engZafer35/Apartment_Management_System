@@ -34,8 +34,10 @@
 namespace event
 {
 
-TimerEventProducer::TimerEventProducer(/*const Platform *pl*/): m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
+TimerEventProducer::TimerEventProducer(void): m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
 {
+    m_platform = platform::Platform::getInstance(); //get platform instance
+
     //TODO: register HW timer
 }
 /***************************** CLASS PROTECTED METHOD *************************/
@@ -46,7 +48,7 @@ TimerEventProducer::TimerEventProducer(/*const Platform *pl*/): m_timerEnginePer
  */
 void TimerEventProducer::loop(void)
 {
-    m_mutex.lock(); //enter section, don't allow to add new timer when loop checking the timer status.
+    m_mutex.lock(); //enter section, don't allow to add new timer when checking the timers status.
 
     if(TRUE == m_started)
     {
@@ -188,7 +190,7 @@ RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
 
     for (U32 i = 0; i < size; i++)
     {
-        if ((*it)->m_timerID == tmID)
+        if ((*it)->m_timerID == tmID) //find timer
         {
             m_qTimers.erase(it);
             retVal = SUCCESS;

@@ -1,18 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 11:20:44 PM
-* #File Name    : Singleton.hpp
-* #File Path    : /GezGor/Resources/inc/Singleton.hpp
+* #Date         : Nov 16, 2019 - 11:36:37 PM
+* #File Name    : IFileSystem.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IFileSystem.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __UTILITY_SINGLETON_HPP__
-#define __UTILITY_SINGLETON_HPP__
+#ifndef __IFILESYSTEM_HPP__
+#define __IFILESYSTEM_HPP__
 /*********************************INCLUDES*************************************/
+#include "GlobalDefinitions.hpp"
+#include "Singleton.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
@@ -27,34 +29,29 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
-class Singleton : virtual NonCopyable
+namespace platform
+{
+class IFileSystem
 {
 public:
-    virtual ~Singleton(void)
-    {
-        delete m_instance;
-        m_instance = nullptr;
-    }
+    virtual ~IFileSystem(void){}
 
-    static T* getInstance(void)
-    {
-        MutexLockFunc mutex; //guarantee to create just one object
-        if(NULL_PTR == m_instance)
-        {
-            m_instance = new T;
-        }
-        return m_instance;
-    }
+    virtual RETURN_STATUS init(void) = 0;
 
-private:
-    static T* m_instance;
+    virtual RETURN_STATUS open(void) = 0;
+
+    virtual RETURN_STATUS close(void) = 0;
+
+    virtual U32 write(const void *buff, U32 len) = 0;
+
+    virtual U32 read(void *buff, U32 len) = 0;
+
+    virtual RETURN_STATUS seek(void) = 0;
+
+    virtual RETURN_STATUS rename(void) = 0;
 };
+}//namespace platform
 
-template<class T>
-T* Singleton<T>::m_instance = nullptr;
-
-
-#endif /* __UTILITY_SINGLETON_HPP__ */
+#endif /* __IFILESYSTEM_HPP__ */
 
 /********************************* End Of File ********************************/
