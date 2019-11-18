@@ -13,8 +13,11 @@
 #ifndef __PLATFORM_LINUX_PC_HPP__
 #define __PLATFORM_LINUX_PC_HPP__
 /*********************************INCLUDES*************************************/
+#include "LinuxPlatformUtility.hpp"
 #include "BoardConfig_ZLP010.hpp"
-#include "LinuxPlatformUtil.hpp"
+
+#include "DevicesLinux.hpp" //add linux devices
+#include "ConsoleLinux.hpp" //add linux console
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/

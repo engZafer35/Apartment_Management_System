@@ -1,19 +1,21 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 16, 2019 - 11:40:05 PM
-* #File Name    : IADC.hpp
-* #File Path    : /GezGor/Drivers/Platform/inc/IADC.hpp
+* #Date         : Nov 17, 2019 - 11:23:14 PM
+* #File Name    : ConsoleLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/ConsoleLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __IADC_HPP__
-#define __IADC_HPP__
+#ifndef __CONSOLE_LINUX_HPP__
+#define __CONSOLE_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
+#include "IConsole.hpp"
+#include "Utility.hpp"
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -29,22 +31,35 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
+
 /**
- * \brief interface class for ADC
+ * \brief Manage Linux console
  */
-class IADC
+class ConsoleLinux : public IConsole, private NonCopyable
 {
 public:
-    virtual ~IADC(void){}
+    ~ConsoleLinux(void);
 
-    /** \brief init ADC channel */
-    virtual RETURN_STATUS init(void) = 0;
+    /** \brief get instance, singleton class*/
+    static ConsoleLinux* getInstance(void);
 
-    /** \brief read ADC value */
-    virtual U32 read(void) = 0;
+    /** \brief init console */
+    RETURN_STATUS init(void) override;
+
+    /**
+     * \brief set console status
+     * \param set TRUE to active console
+     */
+    RETURN_STATUS consoleStatus(BOOL status) override;
+
+private:
+    ConsoleLinux(void);
+
+private:
+    static ConsoleLinux* m_instance;
 };
 
 }//namespace platform
-#endif /* __IADC_HPP__ */
+#endif /* __CONSOLE_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

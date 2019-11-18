@@ -14,8 +14,7 @@
 #define __DRIVERS_PLATFORM_INC_ICLOCK_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "Singleton.hpp"
-#include "Utility.hpp"
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/

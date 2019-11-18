@@ -1,19 +1,21 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 16, 2019 - 11:40:05 PM
-* #File Name    : IADC.hpp
-* #File Path    : /GezGor/Drivers/Platform/inc/IADC.hpp
+* #Date         : Nov 17, 2019 - 11:16:29 PM
+* #File Name    : DevicesLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/DevicesLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __IADC_HPP__
-#define __IADC_HPP__
+#ifndef __DEVICES_LINUX_HPP__
+#define __DEVICES_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
+#include "Utility.hpp"
+#include "IDevices.hpp"
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -29,22 +31,31 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
+
 /**
- * \brief interface class for ADC
+ * \brief Linux Pc peripheral devices, Singleton Class
  */
-class IADC
+class DevicesLinux : public IDevices, private NonCopyable
 {
 public:
-    virtual ~IADC(void){}
+    ~DevicesLinux(void);
 
-    /** \brief init ADC channel */
-    virtual RETURN_STATUS init(void) = 0;
+    /** brief Open devices to use it */
+    RETURN_STATUS openDevices(void) override;
 
-    /** \brief read ADC value */
-    virtual U32 read(void) = 0;
+public:
+    /** \brief get instance, singleton class*/
+    static DevicesLinux* getInstance(void);
+
+private:
+    DevicesLinux(void);
+
+private:
+    static DevicesLinux* m_instance;
+    BOOL isDevicesInit;
 };
 
 }//namespace platform
-#endif /* __IADC_HPP__ */
+#endif /* __DEVICES_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

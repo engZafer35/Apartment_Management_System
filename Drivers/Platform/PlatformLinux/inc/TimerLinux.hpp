@@ -1,19 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 16, 2019 - 11:40:05 PM
-* #File Name    : IADC.hpp
-* #File Path    : /GezGor/Drivers/Platform/inc/IADC.hpp
+* #Date         : Nov 17, 2019 - 12:43:24 PM
+* #File Name    : TimerLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/TimerLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __IADC_HPP__
-#define __IADC_HPP__
+#ifndef __TIMER_LINUX_HPP__
+#define __TIMER_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
+#include "ITimer.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -29,22 +30,38 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-/**
- * \brief interface class for ADC
- */
-class IADC
+class TimerLinux : public ITimer, private NonCopyable
 {
 public:
-    virtual ~IADC(void){}
+    ~TimerLinux(void);
 
-    /** \brief init ADC channel */
-    virtual RETURN_STATUS init(void) = 0;
+    /** \brief get instance, singleton class*/
+    static TimerLinux* getInstance(void);
 
-    /** \brief read ADC value */
-    virtual U32 read(void) = 0;
+    /** \brief init TimerLinux */
+    RETURN_STATUS init(void) override;
+
+    /**
+     * \brief Delay ms
+     * \param time ms
+     */
+    void delayMs(U32 timeMs) const override;
+
+    /**
+     * \brief  Get system tick counter value
+     * \return current system tick counter value
+     */
+    U32 getSysTickCounter(void) const override;
+
+private:
+     TimerLinux(void);
+
+private:
+     static TimerLinux* m_instance;
+
 };
 
 }//namespace platform
-#endif /* __IADC_HPP__ */
+#endif /* __TIMER_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

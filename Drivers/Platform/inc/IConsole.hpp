@@ -14,8 +14,6 @@
 #define __ICONSOLE_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "Singleton.hpp"
-#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -43,8 +41,9 @@ public:
      * \brief set console status
      *  \param set TRUE to active console
      */
-    virtual void consoleStatus(BOOL status) = 0;
+    virtual RETURN_STATUS consoleStatus(BOOL status) = 0;
 };
-#endif /* __ICONSOLE_HPP__ */
 }//namespace platform
+
+#endif /* __ICONSOLE_HPP__ */
 /********************************* End Of File ********************************/

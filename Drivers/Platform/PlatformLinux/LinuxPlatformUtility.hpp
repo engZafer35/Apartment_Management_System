@@ -1,34 +1,19 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 11, 2019 - 1:21:34 PM
-* #File Name    : Platform.hpp
-* #File Path    : /GezGor/Drivers/Platform/Platform.hpp
+* #Date         : Nov 1, 2019 - 10:54:57 AM
+* #File Name    : LinuxPlatformUtility.hpp
+* #File Path    : /GezGor/Application/inc/LinuxPlatformUtility.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PLATFORM_INTERFACE_HPP__
-#define __PLATFORM_INTERFACE_HPP__
+#ifndef __LINUX_PLATFORM_UTILITY_HPP__
+#define __LINUX_PLATFORM_UTILITY_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-
-#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
-    #include "PlatformLinuxPC.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
-    #include "BoardConfig_ZLE010.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
-    #include "PlatformBareMetal.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
-    #include "BoardConfig_ZFR010.hpp"
-#endif
-
-#include "IDevices.hpp"
-#include "IConsole.hpp"
-#include "ISystem.hpp"
-#include "IFileSystem.hpp"
+#include <mutex>
 
 /******************************* NAME SPACE ***********************************/
 
@@ -45,31 +30,84 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-
-class Platform //: public Singleton<Platform>
+class Mutex
 {
 public:
-    ~Platform(void);
+    Mutex(void){}
 
-    /** \brief get instance, singleton class*/
-    static Platform* getInstance(void);
-
-    RETURN_STATUS openDevices(void);
+    virtual ~Mutex(void){}
 
 public:
-    IDevices * const devices = DevicesLinux::getInstance();
-    IConsole * const console = ConsoleLinux::getInstance();
-    ISystem  * const system  = NULL_PTR;
-    IFileSystem * const fileSys = NULL_PTR;
+    void _lock(void)
+    {
+        mtx.lock();
+    }
+
+    void _unlock(void)
+    {
+        mtx.unlock();
+    }
 
 private:
-    Platform(void);
+    std::mutex mtx;
+};
 
+
+class MutexLock : private Mutex
+{
+public:
+    MutexLock(void){}
+    ~MutexLock(void){}
+
+    void lock(void)
+    {
+        _lock();
+    }
+
+    void unlock(void)
+    {
+        _unlock();
+    }
 private:
-    static Platform* m_instance;
+    MutexLock(const MutexLock&);
+    MutexLock& operator=(const MutexLock&);
+};
+
+//class MutexLock : NonCopyable
+//{
+//public:
+//    MutexLock(Mutex& mutex) : m_mutex(mutex)
+//    {
+//        m_mutex.lock();
+//    }
+//
+//    ~MutexLock()
+//    {
+//        m_mutex.unlock();
+//    }
+//
+//private:
+//    Mutex& m_mutex;
+//};
+
+class MutexLockFunc : virtual Mutex
+{
+public:
+    MutexLockFunc()
+    {
+        _lock();
+    }
+
+    ~MutexLockFunc()
+    {
+        _unlock();
+    }
+private:
+    MutexLockFunc(const MutexLockFunc&);
+    MutexLockFunc& operator=(const MutexLockFunc&);
 };
 
 }//namespace platform
-#endif /* __PLATFORM_INTERFACE_HPP__ */
+#endif /* __LINUX_PLATFORM_UTILITY_HPP__ */
 
 /********************************* End Of File ********************************/

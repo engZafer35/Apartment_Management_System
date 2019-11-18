@@ -1,19 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 16, 2019 - 11:40:05 PM
-* #File Name    : IADC.hpp
-* #File Path    : /GezGor/Drivers/Platform/inc/IADC.hpp
+* #Date         : Nov 17, 2019 - 10:24:42 PM
+* #File Name    : GpioLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/GpioLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __IADC_HPP__
-#define __IADC_HPP__
+#ifndef __GPIO_LINUX_HPP__
+#define __GPIO_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
+#include "IGPIO.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -29,22 +30,35 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-/**
- * \brief interface class for ADC
- */
-class IADC
+class GpioLinux : public IGPIO, private NonCopyable
 {
 public:
-    virtual ~IADC(void){}
+    ~GpioLinux(void);
 
-    /** \brief init ADC channel */
-    virtual RETURN_STATUS init(void) = 0;
+    /** \brief get instance, singleton class*/
+    static GpioLinux* getInstance(void);
 
-    /** \brief read ADC value */
-    virtual U32 read(void) = 0;
+    /** init all gpio */
+    RETURN_STATUS init(void) override;
+
+    /** read gpio*/
+    BOOL read(void) override;
+
+    /** write gpio*/
+    RETURN_STATUS write(BOOL status) override;
+
+    /** set callback function for external interrupt*/
+    void setCB(VoidCallback cbFunc) override;
+
+private:
+     GpioLinux(void);
+
+private:
+     static GpioLinux* m_instance;
+
 };
-
 }//namespace platform
-#endif /* __IADC_HPP__ */
+
+#endif /* __GPIO_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

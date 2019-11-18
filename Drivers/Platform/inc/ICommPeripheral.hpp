@@ -14,8 +14,6 @@
 #define __ICOMMPERIPHERAL_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "Singleton.hpp"
-#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/

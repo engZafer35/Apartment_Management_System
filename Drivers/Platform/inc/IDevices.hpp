@@ -14,8 +14,6 @@
 #define __IDEVICES_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "Singleton.hpp"
-#include "Utility.hpp"
 
 #include "IClock.hpp"
 #include "ICommPeripheral.hpp"
@@ -47,11 +45,11 @@ public:
     virtual RETURN_STATUS openDevices(void) = 0;
 
 public:
-    IClock          *clock;
+    //    IClock          *clock;
+    ITimer          *timer;
     ICommPeripheral *uart;
     IADC            *adc;
     IGPIO           *gpio;
-    ITimer          *timer;
 };
 }//namespace platform
 #endif /* __IDEVICES_HPP__ */

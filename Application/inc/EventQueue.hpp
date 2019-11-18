@@ -57,7 +57,7 @@ public:
     RETURN_STATUS deleteAllEvent(void);
 
 private:
-    MutexLock m_mutex;
+    platform::MutexLock m_mutex;
 
     typedef std::deque<EventMsg *> QEvents;
     QEvents qEvents;

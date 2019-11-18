@@ -14,8 +14,6 @@
 #define __IGPIO_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "Singleton.hpp"
-#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -40,7 +38,7 @@ public:
     virtual ~IGPIO(void){}
 
     /** init all gpio */
-    virtual void init(void) = 0;
+    virtual RETURN_STATUS init(void) = 0;
 
     /** read gpio*/
     virtual BOOL read(void) = 0;

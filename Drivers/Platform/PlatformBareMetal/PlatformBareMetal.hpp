@@ -15,6 +15,8 @@
 /*********************************INCLUDES*************************************/
 #include "BareMetalUtil.hpp"
 #include "BoardConfig_ZBM010.hpp"
+
+#include "ITimer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -28,6 +30,17 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class HwTimer10Ms : public ITimer
+{
+     RETURN_STATUS init(void) override;
+
+};
+
+}//namespace platform
+
+
 
 #endif /* __PLATFORM_BARE_METAL_HPP__ */
 

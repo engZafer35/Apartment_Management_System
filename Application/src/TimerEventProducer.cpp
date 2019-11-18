@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include <TimerEventProducer.hpp>
+#include "TimerEventProducer.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -34,11 +34,11 @@
 namespace event
 {
 
-TimerEventProducer::TimerEventProducer(void): m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
+TimerEventProducer::TimerEventProducer(void) : m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
 {
     m_platform = platform::Platform::getInstance(); //get platform instance
-
-    //TODO: register HW timer
+    m_timerEnginePeriod = m_platform->devices->timer->getPeriod();
+    m_platform->devices->timer->callback(reinterpret_cast<VoidCallback>(&TimerEventProducer::loop));
 }
 /***************************** CLASS PROTECTED METHOD *************************/
 /**

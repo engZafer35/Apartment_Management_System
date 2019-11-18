@@ -13,7 +13,7 @@
 #ifndef __UTILITY_SINGLETON_HPP__
 #define __UTILITY_SINGLETON_HPP__
 /*********************************INCLUDES*************************************/
-#include "Utility.hpp"
+#include "ProjectConf.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -27,19 +27,18 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-template<class T>
+template<typename T>
 class Singleton : virtual NonCopyable
 {
 public:
     virtual ~Singleton(void)
     {
-        delete m_instance;
         m_instance = nullptr;
     }
 
     static T* getInstance(void)
     {
-        MutexLockFunc mutex; //guarantee to create just one object
+        platform::MutexLockFunc mutex; //guarantee to create just one object
         if(NULL_PTR == m_instance)
         {
             m_instance = new T;

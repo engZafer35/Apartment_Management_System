@@ -1,19 +1,20 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 16, 2019 - 11:40:05 PM
-* #File Name    : IADC.hpp
-* #File Path    : /GezGor/Drivers/Platform/inc/IADC.hpp
+* #Date         : Nov 17, 2019 - 10:48:19 PM
+* #File Name    : AdcLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/AdcLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __IADC_HPP__
-#define __IADC_HPP__
+#ifndef __ADC_LINUX_HPP__
+#define __ADC_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
+#include "IADC.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -29,22 +30,28 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-/**
- * \brief interface class for ADC
- */
-class IADC
+class AdcLinux : public IADC, private NonCopyable
 {
 public:
-    virtual ~IADC(void){}
+    ~AdcLinux(void);
+
+    /** \brief get instance, singleton class*/
+    static AdcLinux* getInstance(void);
 
     /** \brief init ADC channel */
-    virtual RETURN_STATUS init(void) = 0;
+    RETURN_STATUS init(void) override;
 
     /** \brief read ADC value */
-    virtual U32 read(void) = 0;
-};
+    U32 read(void) override;
 
+private:
+    AdcLinux(void);
+
+private:
+    static AdcLinux* m_instance;
+
+};
 }//namespace platform
-#endif /* __IADC_HPP__ */
+#endif /* __ADC_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

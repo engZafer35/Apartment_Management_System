@@ -14,8 +14,6 @@
 #define __ITIMER_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "Singleton.hpp"
-#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -41,12 +39,25 @@ public:
 
     virtual RETURN_STATUS init(void) = 0;
 
-    virtual void loadCallback(VoidCallback cbFunc) = 0;
+    inline void callback(VoidCallback cbFunc) {m_cbFunc = cbFunc;}
 
-    U32 getPeriod(void);
+    inline U32 getPeriod(void) const {return m_hwTimerPeriod;}
+
+    /**
+     * \brief Delay ms
+     * \param time ms
+     */
+    virtual void delayMs(U32 timeMs) const = 0;
+
+    /**
+     * \brief  Get system tick counter value
+     * \return current system tick counter value
+     */
+    virtual U32 getSysTickCounter(void) const = 0;
 
 protected:
     U32 m_hwTimerPeriod;
+    VoidCallback m_cbFunc;
 };
 }//namespace platform
 

@@ -131,7 +131,7 @@ private:
     typedef std::deque<struct TimerData *> QTimers;
     QTimers m_qTimers;
 
-    const U32 m_timerEnginePeriod;
+    U32 m_timerEnginePeriod;
 
     platform::Platform *m_platform;
 
@@ -139,7 +139,7 @@ private:
     template<TIMER_ENG ID>
     static TimerEventProducer *m_producer;
 
-    MutexLock m_mutex;
+    platform::MutexLock m_mutex;
 
     volatile BOOL m_started;
     volatile BOOL m_exit;
@@ -151,7 +151,7 @@ TimerEventProducer *TimerEventProducer::m_producer = NULL_PTR;
 template<TIMER_ENG ID>
 extern inline TimerEventProducer *TimerEventProducer::getInstance(/*const Platform *pl*/)
 {
-    MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
+    platform::MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
 
     if (NULL_PTR == m_producer<ID>)
     {
