@@ -26,8 +26,8 @@
 *
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __TIMER_EVENT_PRODUCER_HPP___ //todo:
-#define __TIMER_EVENT_PRODUCER_HPP___
+#ifndef __TIMER_EVENT_PRODUCER_HPP__
+#define __TIMER_EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
 #include "ProjectConf.hpp"
 #include "Utility.hpp"
@@ -67,6 +67,7 @@ typedef enum _TIMER_ID
 namespace event
 {
 
+/** \brief Timer event producer. Singleton design. */
 class TimerEventProducer : public IEventProducer
 {
 public:
@@ -90,7 +91,7 @@ public:
 
     /**
      * \brief create periodic timer
-     * \param timer ID
+     * \param timer ID, use ID just one time, dont create timer with same ID !!!
      * \param timeMs
      * \param cb when timer done, timer producer will invoke callback function
      * \param priority
@@ -108,12 +109,12 @@ public:
 
     /** \brief pause event producer */
     void pause(void) override;
-
-public:
     /** \brief run event producer */
     void loop(void) override;
+private:
 
-    TimerEventProducer(/*const Platform *pl*/);
+
+    TimerEventProducer(void);
 private:
 
     struct TimerData
@@ -130,18 +131,18 @@ private:
     typedef std::deque<struct TimerData *> QTimers;
     QTimers m_qTimers;
 
-    const U32 m_timerEnginePeriod;
+    U32 m_timerEnginePeriod;
 
-    //TODO:Const Platform *m_pl;
+    platform::Platform *m_platform;
 
     /** pointer for each timer */
     template<TIMER_ENG ID>
     static TimerEventProducer *m_producer;
 
-    MutexLock m_mutex;
+    platform::MutexLock m_mutex;
 
-    BOOL volatile m_started;
-    BOOL volatile m_exit;
+    volatile BOOL m_started;
+    volatile BOOL m_exit;
 };
 
 template<TIMER_ENG ID>
@@ -150,11 +151,11 @@ TimerEventProducer *TimerEventProducer::m_producer = NULL_PTR;
 template<TIMER_ENG ID>
 extern inline TimerEventProducer *TimerEventProducer::getInstance(/*const Platform *pl*/)
 {
-    MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
+    platform::MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
 
     if (NULL_PTR == m_producer<ID>)
     {
-        m_producer<ID> = new TimerEventProducer(/*const Platform *pl*/);
+        m_producer<ID> = new TimerEventProducer();
     }
 
     return m_producer<ID>;

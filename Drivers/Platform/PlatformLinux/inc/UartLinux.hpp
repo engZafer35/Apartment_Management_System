@@ -1,19 +1,21 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 1, 2019 - 10:54:57 AM
-* #File Name    : LinuxPlatformUtil.hpp
-* #File Path    : /GezGor/Application/inc/LinuxPlatformUtil.hpp
+* #Date         : Nov 17, 2019 - 10:08:29 PM
+* #File Name    : UartLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/UartLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __LINUX_PLATFORM_UTIL_HPP__
-#define __LINUX_PLATFORM_UTIL_HPP__
+#ifndef __UART_LINUX_HPP__
+#define __UART_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include <mutex>
+#ifdef __linux
+#include "ICommPeripheral.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -29,28 +31,38 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-class Mutex
+class UartLinux : public ICommPeripheral, private NonCopyable
 {
 public:
-    Mutex(void){}
+    ~UartLinux(void);
 
-    virtual ~Mutex(void){}
+    /** \brief get instance, singleton class*/
+    static UartLinux* getInstance(void);
 
-public:
-    void _lock(void)
-    {
-        mtx.lock();
-    }
+    /** \brief init uart*/
+    RETURN_STATUS init(void) override;
 
-    void _unlock(void)
-    {
-        mtx.unlock();
-    }
+    /** \brief send data*/
+    RETURN_STATUS send(const void *buff, U32 size, U32 timeout) override;
+
+    /** \brief receive data*/
+    RETURN_STATUS receive(void *buff, U32 size, U32 timeout) override;
 
 private:
-    std::mutex mtx;
+    UartLinux(void);
+
+    /** \brief hardware receive interrupt callback function */
+    void cbReceive(void) override;
+
+    /** \brief hardware send interrupt callback function */
+    void cbSend(void) override;
+
+private:
+    static UartLinux* m_instance;
 };
+
 }//namespace platform
-#endif /* __LINUX_PLATFORM_UTIL_HPP__ */
+#endif// if __linux
+#endif /* __UART_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

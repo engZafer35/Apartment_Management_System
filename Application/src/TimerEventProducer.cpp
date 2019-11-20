@@ -11,8 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include <TimerEventProducer.hpp>
-#include <iostream> //TODO:
+#include "TimerEventProducer.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -35,9 +34,11 @@
 namespace event
 {
 
-TimerEventProducer::TimerEventProducer(/*const Platform *pl*/): m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
+TimerEventProducer::TimerEventProducer(void) : m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
 {
-    //TODO: register HW timer
+    m_platform = platform::Platform::getInstance(); //get platform instance
+    m_timerEnginePeriod = m_platform->devices->timer->getPeriod();
+    m_platform->devices->timer->loadCallback(this);
 }
 /***************************** CLASS PROTECTED METHOD *************************/
 /**
@@ -47,41 +48,50 @@ TimerEventProducer::TimerEventProducer(/*const Platform *pl*/): m_timerEnginePer
  */
 void TimerEventProducer::loop(void)
 {
+    m_mutex.lock(); //enter section, don't allow to add new timer when checking the timers status.
+
+//    std::cout << "TimerEventProducer::loop " << m_started << std::endl;
+
     if(TRUE == m_started)
     {
-        U32 size = m_qTimers.size();
-        if (size > 0)
+        QTimers::iterator it = m_qTimers.begin();
+        U32 index = 0;
+
+        while(it != m_qTimers.end())
         {
-            for (QTimers::iterator it = m_qTimers.begin(); it != m_qTimers.end(); ++it)
+            ++index; //for next iterator
+            if ((*it)->m_timeMs > 0)
             {
-                if ((*it)->m_timeMs > 0)
+                (*it)->m_timeMs -= m_timerEnginePeriod; //decrease timer value
+
+                if ((*it)->m_timeMs < m_timerEnginePeriod) //check timer done
                 {
-                    (*it)->m_timeMs -= m_timerEnginePeriod; //decrease timer value
+                    throwEvent(EN_EVENT_USER_TIMER, EN_SOURCE_TIMER, (*it)->m_priority, \
+                                &((*it)->m_timerID), sizeof((*it)->m_timerID) );
 
-                    if ((*it)->m_timeMs < m_timerEnginePeriod) //check timer done
+                    if (NULL_PTR != (*it)->cbFunc)
                     {
-                        throwEvent(EN_EVENT_USER_TIMER, EN_SOURCE_TIMER, (*it)->m_priority, \
-                                   &((*it)->m_timerID), sizeof((*it)->m_timerID) );
+                        (*it)->cbFunc(); //invoke callback function.
+                    }
 
-                        if (NULL_PTR != (*it)->cbFunc)
-                        {
-                            (*it)->cbFunc(); //invoke callback function.
-                        }
-
-                        if ((*it)->m_isContinue) //if periodic timer, reload timer
-                        {
-                            (*it)->m_timeMs = (*it)->m_timeMsCopy;
-                        }
-                        else
-                        {
-                            m_qTimers.erase(it); //delete one shot timer.
-                            --it; //after erase queue came back 1 steep . so it must be on same position
-                        }
+                    if ((*it)->m_isContinue) //if periodic timer, reload timer
+                    {
+                        (*it)->m_timeMs = (*it)->m_timeMsCopy;
+                    }
+                    else
+                    {
+                        delete((*it));
+                        m_qTimers.erase(it); //delete one shot timer.
+                        --index; //deleted one member, so decrease index again
                     }
                 }
             }
-        }
+
+            it = m_qTimers.begin() + index; //set next timer
+        }//end of while()
     }
+
+    m_mutex.unlock(); //leave section
 }
 /***************************** CLASS PUBLIC METHOD ****************************/
 /** \brief start event producer */
@@ -138,17 +148,17 @@ U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY 
 
     m_qTimers.push_back(td); //add timer to list
 
-    //give timer ID for one shot timer
+    //give timer ID for one shot timer, periodic timer ID reserved
     td->m_timerID = EN_TIMER_MAX_NUM + m_qTimers.size();
 
-    m_mutex.unlock();////leave section
+    m_mutex.unlock();//leave section
 
     return SUCCESS;
 }
 
 /**
  * \brief create periodic timer
- * \param timer ID
+ * \param timer ID, use ID just one time, dont create timer with same ID !!
  * \param timeMs
  * \param cb when timer done, timer producer will invoke callback function
  * \param priority
@@ -163,7 +173,7 @@ void TimerEventProducer::operator ()(TimerID tmID, U32 timeMs, VoidCallback cb, 
     td->m_timeMs     = timeMs;
     td->m_timeMsCopy = timeMs;
     td->m_priority   = priority;
-    td->m_isContinue = FALSE;
+    td->m_isContinue = TRUE;
     td->m_timerID    = tmID;
 
     m_qTimers.push_back(td); //add timer to list
@@ -182,9 +192,8 @@ RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
 
     for (U32 i = 0; i < size; i++)
     {
-        if ((*it)->m_timerID == tmID)
+        if ((*it)->m_timerID == tmID) //find timer
         {
-            if((*it)->m_timerID)
             m_qTimers.erase(it);
             retVal = SUCCESS;
             break;

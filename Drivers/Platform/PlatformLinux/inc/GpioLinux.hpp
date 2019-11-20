@@ -1,26 +1,25 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 17, 2019 - 10:24:42 PM
+* #File Name    : GpioLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/GpioLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __GPIO_LINUX_HPP__
+#define __GPIO_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
-
+#ifdef __linux
+#include "IGPIO.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +29,37 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class GpioLinux : public IGPIO, private NonCopyable
+{
+public:
+    ~GpioLinux(void);
 
-#endif /* __PROJECT_CONF_HPP__ */
+    /** \brief get instance, singleton class*/
+    static GpioLinux* getInstance(void);
+
+    /** init all gpio */
+    RETURN_STATUS init(void) override;
+
+    /** read gpio*/
+    BOOL read(void) override;
+
+    /** write gpio*/
+    RETURN_STATUS write(BOOL status) override;
+
+    /** set callback function for external interrupt*/
+    void setCB(VoidCallback cbFunc) override;
+
+private:
+     GpioLinux(void);
+
+private:
+     static GpioLinux* m_instance;
+};
+
+}//namespace platform
+#endif//#ifdef __linux
+#endif /* __GPIO_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

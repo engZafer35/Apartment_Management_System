@@ -1,36 +1,53 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 19, 2019 - 4:10:52 PM
+* #File Name    : DrvInterruptRegister.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/DrvInterruptRegister.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __DRV_INTERRUPT_REGISTER_HPP__
+#define __DRV_INTERRUPT_REGISTER_HPP__
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
 
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
+typedef void (*SelectCb)(int fd);
+
+typedef struct _SelectStruct
+{
+    int      fd;
+    SelectCb Vcb;
+} SelectStruct;
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
+/**
+ * \brief register interrupt
+ */
+int drvIntRegisterInit(void);
 
+int drvIntRegisterFd(SelectStruct selectStruct);
+
+int drvIntUnregisterFd(int fd);
 /********************************* CLASS **************************************/
-
-#endif /* __PROJECT_CONF_HPP__ */
+#ifdef __cplusplus
+}
+#endif
+#endif /* __DRV_INTERRUPT_REGISTER_HPP__ */
 
 /********************************* End Of File ********************************/

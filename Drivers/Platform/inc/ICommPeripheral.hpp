@@ -1,26 +1,23 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 16, 2019 - 11:38:50 PM
+* #File Name    : ICommPeripheral.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/ICommPeripheral.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __ICOMMPERIPHERAL_HPP__
+#define __ICOMMPERIPHERAL_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
-
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +27,34 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+/**
+ *  \brief interface class for all communication peripheral.
+ *         for example UART, CAN
+ */
+class ICommPeripheral
+{
+public:
+    virtual ~ICommPeripheral(void){}
 
-#endif /* __PROJECT_CONF_HPP__ */
+    /** \brief init related communication peripheral*/
+    virtual RETURN_STATUS init(void) = 0;
+
+    /** \brief send data*/
+    virtual RETURN_STATUS send(const void *buff, U32 size, U32 timeout) = 0;
+
+    /** \brief receive data*/
+    virtual RETURN_STATUS receive(void *buff, U32 size, U32 timeout) = 0;
+
+protected:
+    /** \brief hardware receive interrupt callback function */
+    virtual void cbReceive(void) = 0;
+
+    /** \brief hardware send interrupt callback function */
+    virtual void cbSend(void) = 0;
+};
+}//namespace platform
+#endif /* __ICOMMPERIPHERAL_HPP__ */
 
 /********************************* End Of File ********************************/

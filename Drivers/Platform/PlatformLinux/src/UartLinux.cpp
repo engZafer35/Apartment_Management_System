@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Nov 17, 2019 - 10:11:49 PM
+* #File Name    : UartLinux.cpp 
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/UartLinux.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,8 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+#include "ProjectConf.hpp"
+#include "UartLinux.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -29,63 +30,77 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
+namespace platform
+{
+UartLinux* UartLinux::m_instance = NULL_PTR;
+}
 /***************************** CLASS PRIVATE METHOD ***************************/
+namespace platform
+{
+UartLinux::UartLinux(void)
+{
 
+}
+
+/** \brief hardware receive interrupt callback function */
+void UartLinux::cbReceive(void)
+{
+
+}
+
+/** \brief hardware send interrupt callback function */
+void UartLinux::cbSend(void)
+{
+
+}
+
+}//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
+namespace platform
 {
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+UartLinux::~UartLinux(void)
 {
-
+    m_instance = NULL_PTR;
 }
 
-EventPool::~EventPool(void)
+/** \brief get instance, singleton class*/
+UartLinux* UartLinux::getInstance(void)
 {
-    if (NULL_PTR != m_tEventProducer)
+    MutexLockFunc mutex; //guarantee to create just one object
+    if(NULL_PTR == m_instance)
     {
-        delete m_tEventProducer;
+        ZLOG << "UartLinux Created";
+        m_instance = new UartLinux();
     }
+    return m_instance;
 }
 
-RETURN_STATUS EventPool::buildEventProducer(void)
+/** \brief init uart*/
+RETURN_STATUS UartLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->start();
-
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
-
+    ZLOGF_IF(FAILURE == retVal) << "[E] UartLinux init Error: !!";
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
+/** \brief send data*/
+RETURN_STATUS UartLinux::send(const void *buff, U32 size, U32 timeout)
 {
     RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
 
-RETURN_STATUS EventPool::stopProducers(void)
+/** \brief receive data*/
+RETURN_STATUS UartLinux::receive(void *buff, U32 size, U32 timeout)
 {
     RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
 
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-}//namespace event
+}//namespace platform
 /******************************** End Of File *********************************/

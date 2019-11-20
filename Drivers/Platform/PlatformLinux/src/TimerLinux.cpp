@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Nov 17, 2019 - 12:48:31 PM
+* #File Name    : TimerLinux.cpp 
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/TimerLinux.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,12 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+#include <unistd.h>
+
+#include "ProjectConf.hpp"
+#include "TimerLinux.hpp"
+#include "DrvInterruptRegister.hpp"
+
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -27,65 +32,71 @@
 /***************************** STATIC FUNCTIONS  ******************************/
 
 /***************************** PUBLIC FUNCTIONS  ******************************/
-
+namespace platform
+{
+/**
+ * \brief Delay ms
+ * \param time ms
+ */
+void delayMs(U32 timeMs)
+{
+    ::usleep(timeMs*1000);
+}
+/**
+ * \brief  Get system tick counter value
+ * \return current system tick counter value
+ */
+U32 getSysTickCounter(void)
+{
+    return 666;
+}
+}
 /***************************** CLASS VARIABLES ********************************/
-
+namespace platform
+{
+TimerLinux* TimerLinux::m_instance = NULL_PTR;
+}
 /***************************** CLASS PRIVATE METHOD ***************************/
-
+namespace platform
+{
+TimerLinux::TimerLinux(void)
+{
+}
+}//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
+namespace platform
 {
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+TimerLinux::~TimerLinux(void)
 {
-
+    m_instance = NULL_PTR;
 }
 
-EventPool::~EventPool(void)
+/** \brief get instance, singleton class*/
+TimerLinux* TimerLinux::getInstance(void)
 {
-    if (NULL_PTR != m_tEventProducer)
+    MutexLockFunc mutex; //guarantee to create just one object
+    if(NULL_PTR == m_instance)
     {
-        delete m_tEventProducer;
+        ZLOG << "TimerLinux Created";
+        m_instance = new TimerLinux();
     }
+    return m_instance;
 }
 
-RETURN_STATUS EventPool::buildEventProducer(void)
+/** \brief init TimerLinux */
+RETURN_STATUS TimerLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->start();
+    m_hwTimerPeriod = TIMER_CHECK_CYCLE;
 
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
+    ZLOG << "TimerLinux init : " << (int)m_hwTimerPeriod <<"ms";
+    ZLOGF_IF(FAILURE == retVal) << "TimerLinux init Error";
 
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::stopProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-}//namespace event
+}//namespace platform
 /******************************** End Of File *********************************/

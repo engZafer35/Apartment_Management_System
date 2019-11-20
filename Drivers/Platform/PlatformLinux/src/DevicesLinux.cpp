@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Nov 17, 2019 - 11:18:56 PM
+* #File Name    : DevicesLinux.cpp 
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/DevicesLinux.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,17 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+#ifdef __linux
+
+#include "ProjectConf.hpp"
+#include "DevicesLinux.hpp"
+
+#include "TimerLinux.hpp"
+#include "UartLinux.hpp"
+#include "GpioLinux.hpp"
+#include "AdcLinux.hpp"
+
+#include "DrvInterruptRegister.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -29,63 +39,65 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
+namespace platform
+{
+DevicesLinux* DevicesLinux::m_instance = NULL_PTR;
+}
 /***************************** CLASS PRIVATE METHOD ***************************/
-
+namespace platform
+{
+DevicesLinux::DevicesLinux(void) : isDevicesInit{FALSE}
+{
+    //create and load peripheral devices
+    gpio  = GpioLinux::getInstance();
+    uart  = UartLinux::getInstance();
+    timer = TimerLinux::getInstance();
+    adc   = AdcLinux::getInstance();
+}
+}//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
+namespace platform
 {
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+DevicesLinux::~DevicesLinux(void)
 {
-
+    m_instance = NULL_PTR;
 }
 
-EventPool::~EventPool(void)
+DevicesLinux* DevicesLinux::getInstance(void)
 {
-    if (NULL_PTR != m_tEventProducer)
+    MutexLockFunc mutex; //guarantee to create just one object
+    if(NULL_PTR == m_instance)
     {
-        delete m_tEventProducer;
+        m_instance = new DevicesLinux();
     }
+    return m_instance;
 }
 
-RETURN_STATUS EventPool::buildEventProducer(void)
+RETURN_STATUS DevicesLinux::openDevices(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->start();
+    if (FALSE == isDevicesInit)
+    {
+        // init all peripherals here
+        retVal |= gpio->init();
+        retVal |= uart->init();
+        retVal |= timer->init();
+        retVal |= adc->init();
 
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
+        drvIntRegisterInit();
+
+        ZLOGF_IF(FAILURE == retVal) << "[E] DevicesLinux::openDevices !! Retval: " << retVal;
+
+        isDevicesInit = TRUE;
+    }
 
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
 }
 
-RETURN_STATUS EventPool::stopProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-}//namespace event
+#endif//#ifdef __linux
 /******************************** End Of File *********************************/

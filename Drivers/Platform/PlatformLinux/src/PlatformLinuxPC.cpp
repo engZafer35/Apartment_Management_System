@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Nov 17, 2019 - 3:05:05 PM
+* #File Name    : PlatformLinuxPC.cpp 
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/PlatformLinuxPC.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -35,57 +35,5 @@
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
-{
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
-{
 
-}
-
-EventPool::~EventPool(void)
-{
-    if (NULL_PTR != m_tEventProducer)
-    {
-        delete m_tEventProducer;
-    }
-}
-
-RETURN_STATUS EventPool::buildEventProducer(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->start();
-
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::startProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::stopProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-}//namespace event
 /******************************** End Of File *********************************/

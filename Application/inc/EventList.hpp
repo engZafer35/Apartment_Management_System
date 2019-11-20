@@ -13,7 +13,7 @@
 #ifndef __EVENT_LIST_HPP__
 #define __EVENT_LIST_HPP__
 /*********************************INCLUDES*************************************/
-#include "ProjectConf.hpp"
+//#include "ProjectConf.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -82,10 +82,6 @@ typedef enum
 
 
 }//namespace event
-
-
-
-
 
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/

@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Nov 17, 2019 - 11:28:42 PM
+* #File Name    : ConsoleLinux.cpp 
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/ConsoleLinux.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,8 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+#include "ProjectConf.hpp"
+#include "ConsoleLinux.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -29,63 +30,56 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
+namespace platform
+{
+ConsoleLinux* ConsoleLinux::m_instance = NULL_PTR;
+}
 /***************************** CLASS PRIVATE METHOD ***************************/
-
+namespace platform
+{
+ConsoleLinux::ConsoleLinux(void)
+{
+}
+}//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
+namespace platform
 {
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+ConsoleLinux::~ConsoleLinux(void)
 {
-
+    m_instance = NULL_PTR;
 }
 
-EventPool::~EventPool(void)
+ConsoleLinux* ConsoleLinux::getInstance(void)
 {
-    if (NULL_PTR != m_tEventProducer)
+    MutexLockFunc mutex; //guarantee to create just one object
+    if(NULL_PTR == m_instance)
     {
-        delete m_tEventProducer;
+        ZLOG << "ConsoleLinux Created";
+        m_instance = new ConsoleLinux();
     }
+    return m_instance;
 }
 
-RETURN_STATUS EventPool::buildEventProducer(void)
+/** \brief init console */
+RETURN_STATUS ConsoleLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
-
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->start();
-
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
-
+    ZLOGF_IF(FAILURE == retVal) << "[E] ConsoleLinux init Error: !!";
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::stopProducers(void)
+/**
+ * \brief set console status
+ *  \param set TRUE to active console
+ */
+RETURN_STATUS ConsoleLinux::consoleStatus(BOOL status)
 {
     RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
 
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
 }
-
-}//namespace event
 /******************************** End Of File *********************************/

@@ -1,26 +1,26 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 1, 2019 - 11:30:48 AM
+* #File Name    : PlatformBareMetal.hpp
+* #File Path    : /GezGor/Application/inc/PlatformBareMetal.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __PLATFORM_BARE_METAL_HPP__
+#define __PLATFORM_BARE_METAL_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
+#include "BareMetalUtil.hpp"
+#include "BoardConfig_ZBM010.hpp"
 
+#include "ITimer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +30,18 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class HwTimer10Ms : public ITimer
+{
+     RETURN_STATUS init(void) override;
 
-#endif /* __PROJECT_CONF_HPP__ */
+};
+
+}//namespace platform
+
+
+
+#endif /* __PLATFORM_BARE_METAL_HPP__ */
 
 /********************************* End Of File ********************************/

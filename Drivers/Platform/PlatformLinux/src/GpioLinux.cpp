@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Nov 17, 2019 - 10:35:48 PM
+* #File Name    : GpioLinux.cpp 
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/GpioLinux.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,8 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+#include "ProjectConf.hpp"
+#include "GpioLinux.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -29,63 +30,68 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
+namespace platform
+{
+GpioLinux* GpioLinux::m_instance = NULL_PTR;
+}
 /***************************** CLASS PRIVATE METHOD ***************************/
+namespace platform
+{
+GpioLinux::GpioLinux(void)
+{
 
+}
+}//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
+namespace platform
 {
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+GpioLinux::~GpioLinux(void)
 {
-
+    m_instance = NULL_PTR;
 }
 
-EventPool::~EventPool(void)
+/** \brief get instance, singleton class*/
+GpioLinux* GpioLinux::getInstance(void)
 {
-    if (NULL_PTR != m_tEventProducer)
+    MutexLockFunc mutex; //guarantee to create just one object
+    if(NULL_PTR == m_instance)
     {
-        delete m_tEventProducer;
+        m_instance = new GpioLinux();
     }
+    return m_instance;
 }
 
-RETURN_STATUS EventPool::buildEventProducer(void)
+/** init all gpio */
+RETURN_STATUS GpioLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
+    ZLOGF_IF(FAILURE == retVal) << "GpioLinux init Error";
+    return retVal;
+}
 
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->start();
-
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
+/** read gpio*/
+BOOL GpioLinux::read(void)
+{
+    BOOL retVal = TRUE;
 
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-RETURN_STATUS EventPool::stopProducers(void)
+/** write gpio*/
+RETURN_STATUS GpioLinux::write(BOOL status)
 {
     RETURN_STATUS retVal = SUCCESS;
 
     return retVal;
 }
 
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
+/** set callback function for external interrupt*/
+void GpioLinux::setCB(VoidCallback cbFunc)
 {
-    RETURN_STATUS retVal = SUCCESS;
 
-    return retVal;
 }
 
-}//namespace event
+}//namespace platform
 /******************************** End Of File *********************************/

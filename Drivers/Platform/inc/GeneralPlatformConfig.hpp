@@ -1,26 +1,49 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Oct 31, 2019 - 3:02:23 PM
+* #File Name    : GeneralBoardConfig.hpp
+* #File Path    : /GezGor/Drivers/Platform/GeneralPlatformConfig.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __GENERAL_PLATFORM_CONFIG_HPP__
+#define __GENERAL_PLATFORM_CONFIG_HPP__
+
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
 
 /******************************* NAME SPACE ***********************************/
+#define PLATFORM_LINUX_PC       (1)
+#define PLATFORM_LINUX_EMB      (2)
+#define PLATFORM_FREERTOS       (3)
+#define PLATFORM_BARE_METAL     (4)
+/* add new platform, don't change queue*/
+
+/** ******* < select platform > ******* */
+#define CURRENT_PLATFORM    (PLATFORM_LINUX_PC)
+//#define CURRENT_PLATFORM   (PLATFORM_LINUX_EMB)
+//#define CURRENT_PLATFORM   (PLATFORM_FREERTOS)
+//#define CURRENT_PLATFORM   (PLATFORM_BARE_METAL)
+
+#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
+    #include "PlatformLinuxPC.hpp"
+#elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
+    #include "BoardConfig_ZLE010.hpp"
+#elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
+    #include "../Platform/PlatformBareMetal.hpp"
+#elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
+    #include "BoardConfig_ZFR010.hpp"
+#else
+    #error "!!! Current Platform is undefined. Check GeneralBoardConfig.h file !!!"
+#endif
+
+#include "Platform.hpp"
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -31,6 +54,6 @@
 
 /********************************* CLASS **************************************/
 
-#endif /* __PROJECT_CONF_HPP__ */
+#endif /* __GENERAL_PLATFORM_CONFIG_HPP__ */
 
 /********************************* End Of File ********************************/

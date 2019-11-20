@@ -13,7 +13,7 @@
 #ifndef __UTILITY_HPP__
 #define __UTILITY_HPP__
 /*********************************INCLUDES*************************************/
-#include "ProjectConf.hpp"
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -38,53 +38,6 @@ private:
     NonCopyable& operator=(const NonCopyable&);
 };
 
-class MutexLock : private platform::Mutex, private NonCopyable
-{
-public:
-    MutexLock(void){}
-    ~MutexLock(void){}
-
-    void lock(void)
-    {
-        _lock();
-    }
-
-    void unlock(void)
-    {
-        _unlock();
-    }
-};
-
-//class MutexLock : NonCopyable
-//{
-//public:
-//    MutexLock(Mutex& mutex) : m_mutex(mutex)
-//    {
-//        m_mutex.lock();
-//    }
-//
-//    ~MutexLock()
-//    {
-//        m_mutex.unlock();
-//    }
-//
-//private:
-//    Mutex& m_mutex;
-//};
-
-class MutexLockFunc : virtual platform::Mutex, private NonCopyable
-{
-public:
-    MutexLockFunc()
-    {
-        _lock();
-    }
-
-    ~MutexLockFunc()
-    {
-        _unlock();
-    }
-};
 
 #endif /* __UTILITY_HPP__ */
 

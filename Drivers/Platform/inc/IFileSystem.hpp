@@ -1,26 +1,25 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 16, 2019 - 11:36:37 PM
+* #File Name    : IFileSystem.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IFileSystem.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __IFILESYSTEM_HPP__
+#define __IFILESYSTEM_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
-
+#include "Singleton.hpp"
+#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +29,29 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class IFileSystem
+{
+public:
+    virtual ~IFileSystem(void){}
 
-#endif /* __PROJECT_CONF_HPP__ */
+    virtual RETURN_STATUS init(void) = 0;
+
+    virtual RETURN_STATUS open(void) = 0;
+
+    virtual RETURN_STATUS close(void) = 0;
+
+    virtual U32 write(const void *buff, U32 len) = 0;
+
+    virtual U32 read(void *buff, U32 len) = 0;
+
+    virtual RETURN_STATUS seek(void) = 0;
+
+    virtual RETURN_STATUS rename(void) = 0;
+};
+}//namespace platform
+
+#endif /* __IFILESYSTEM_HPP__ */
 
 /********************************* End Of File ********************************/

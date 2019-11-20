@@ -1,26 +1,29 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 16, 2019 - 11:43:48 PM
+* #File Name    : IDevices.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IDevices.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __IDEVICES_HPP__
+#define __IDEVICES_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
 
+#include "IClock.hpp"
+#include "ICommPeripheral.hpp"
+#include "IADC.hpp"
+#include "IGPIO.hpp"
+#include "ITimer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +33,25 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+/**
+ * \brief All system devices will created in this class
+ */
+class IDevices
+{
+public:
+    virtual ~IDevices(void){}
+    virtual RETURN_STATUS openDevices(void) = 0;
 
-#endif /* __PROJECT_CONF_HPP__ */
+public:
+    //    IClock          *clock;
+    ITimer          *timer;
+    ICommPeripheral *uart;
+    IADC            *adc;
+    IGPIO           *gpio;
+};
+}//namespace platform
+#endif /* __IDEVICES_HPP__ */
 
 /********************************* End Of File ********************************/

@@ -1,20 +1,19 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 1, 2019 - 11:30:48 AM
-* #File Name    : PlatformBareMetal.hpp
-* #File Path    : /GezGor/Application/inc/PlatformBareMetal.hpp
+* #Date         : Nov 16, 2019 - 11:40:05 PM
+* #File Name    : IADC.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IADC.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PLATFORM_BARE_METAL_HPP__
-#define __PLATFORM_BARE_METAL_HPP__
+#ifndef __IADC_HPP__
+#define __IADC_HPP__
 /*********************************INCLUDES*************************************/
-#include "../Platform/BareMetalUtil.hpp"
-#include "../Platform/BoardConfig_ZBM010.hpp"
+#include "GlobalDefinitions.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -28,7 +27,24 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+/**
+ * \brief interface class for ADC
+ */
+class IADC
+{
+public:
+    virtual ~IADC(void){}
 
-#endif /* __PLATFORM_BARE_METAL_HPP__ */
+    /** \brief init ADC channel */
+    virtual RETURN_STATUS init(void) = 0;
+
+    /** \brief read ADC value */
+    virtual U32 read(void) = 0;
+};
+
+}//namespace platform
+#endif /* __IADC_HPP__ */
 
 /********************************* End Of File ********************************/

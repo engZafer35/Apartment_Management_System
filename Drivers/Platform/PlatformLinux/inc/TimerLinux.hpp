@@ -1,44 +1,24 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 31, 2019 - 3:02:23 PM
-* #File Name    : GeneralBoardConfig.hpp
-* #File Path    : /GezGor/Drivers/Platform/GeneralPlatformConfig.hpp
+* #Date         : Nov 17, 2019 - 12:43:24 PM
+* #File Name    : TimerLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/TimerLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __GENERAL_PLATFORM_CONFIG_HPP__
-#define __GENERAL_PLATFORM_CONFIG_HPP__
-
+#ifndef __TIMER_LINUX_HPP__
+#define __TIMER_LINUX_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
+
+#include <unistd.h>
+#include "ITimer.hpp"
 
 /******************************* NAME SPACE ***********************************/
-#define PLATFORM_LINUX_PC       (1)
-#define PLATFORM_LINUX_EMB      (2)
-#define PLATFORM_FREERTOS       (3)
-#define PLATFORM_BARE_METAL     (4)
-/* add new platform, don't change queue*/
-
-/** ******* < select platform > ******* */
-#define CURRENT_PLATFORM    (PLATFORM_LINUX_PC)
-//#define CURRENT_PLATFORM   (PLATFORM_LINUX_EMB)
-//#define CURRENT_PLATFORM   (PLATFORM_FREERTOS)
-//#define CURRENT_PLATFORM   (PLATFORM_BARE_METAL)
-
-#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
-    #include "../Platform/PlatformLinuxPC.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
-    #include "BoardConfig_ZLE010.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
-    #include "../Platform/PlatformBareMetal.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
-    #include "BoardConfig_ZFR010.hpp"
-#else
-    #error "!!! Current Platform is undefined. Check GeneralBoardConfig.h file !!!"
-#endif
 
 /**************************** MACRO DEFINITIONS *******************************/
 
@@ -51,7 +31,30 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class TimerLinux : public ITimer, private NonCopyable
+{
+#define TIMER_CHECK_CYCLE    (100) //hardware timer period Ms
+public:
+    ~TimerLinux(void);
 
-#endif /* __GENERAL_PLATFORM_CONFIG_HPP__ */
+    /** \brief get instance, singleton class*/
+    static TimerLinux* getInstance(void);
+
+    /** \brief init TimerLinux */
+    RETURN_STATUS init(void) override;
+
+private:
+     TimerLinux(void);
+
+private:
+     static TimerLinux* m_instance;
+};
+
+}//namespace platform
+
+#endif
+#endif /* __TIMER_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

@@ -1,20 +1,19 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 1, 2019 - 9:10:41 AM
-* #File Name    : PlatformLinux.hpp
-* #File Path    : /GezGor/Application/inc/PlatformLinuxPC.hpp
+* #Date         : Nov 16, 2019 - 11:33:30 PM
+* #File Name    : IConsole.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IConsole.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PLATFORM_LINUX_PC_HPP__
-#define __PLATFORM_LINUX_PC_HPP__
+#ifndef __ICONSOLE_HPP__
+#define __ICONSOLE_HPP__
 /*********************************INCLUDES*************************************/
-#include "BoardConfig_ZLP010.hpp"
-#include "LinuxPlatformUtil.hpp"
+#include "GlobalDefinitions.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -28,7 +27,23 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+class IConsole
+{
+public:
+    virtual ~IConsole(void){}
 
-#endif /* __PLATFORM_LINUX_PC_HPP__ */
+    /** \brief init console */
+    virtual RETURN_STATUS init(void) = 0;
 
+    /**
+     * \brief set console status
+     *  \param set TRUE to active console
+     */
+    virtual RETURN_STATUS consoleStatus(BOOL status) = 0;
+};
+}//namespace platform
+
+#endif /* __ICONSOLE_HPP__ */
 /********************************* End Of File ********************************/

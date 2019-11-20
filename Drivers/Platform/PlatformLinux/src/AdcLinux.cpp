@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Nov 17, 2019 - 10:51:35 PM
+* #File Name    : AdcLinux.cpp 
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/AdcLinux.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,8 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+#include "ProjectConf.hpp"
+#include "AdcLinux.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -29,63 +30,52 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
+namespace platform
+{
+AdcLinux* AdcLinux::m_instance = NULL_PTR;
+}
 /***************************** CLASS PRIVATE METHOD ***************************/
+namespace platform
+{
+AdcLinux::AdcLinux(void)
+{
 
+}
+}//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
+namespace platform
 {
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+AdcLinux::~AdcLinux(void)
 {
-
+    m_instance = NULL_PTR;
 }
-
-EventPool::~EventPool(void)
+AdcLinux* AdcLinux::getInstance(void)
 {
-    if (NULL_PTR != m_tEventProducer)
+    MutexLockFunc mutex; //guarantee to create just one object
+    if(NULL_PTR == m_instance)
     {
-        delete m_tEventProducer;
+        ZLOG << "[I] AdcLinux Created";
+        m_instance = new AdcLinux();
     }
+    return m_instance;
 }
 
-RETURN_STATUS EventPool::buildEventProducer(void)
+/** \brief init ADC channel */
+RETURN_STATUS AdcLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
-
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->start();
-
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
-
+    ZLOGF_IF(FAILURE == retVal) << "[E] AdcLinux init Error: !!";
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
+/** \brief read ADC value */
+U32 AdcLinux::read(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
+    return 666;
 }
 
-RETURN_STATUS EventPool::stopProducers(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
 
-    return retVal;
-}
-
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-}//namespace event
+}//namespace platform
 /******************************** End Of File *********************************/

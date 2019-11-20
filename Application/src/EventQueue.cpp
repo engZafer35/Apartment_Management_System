@@ -42,8 +42,9 @@ EventQueue::EventQueue(void)
 {}
 
 /** \brief throw event */
-EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource) const
+EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource)
 {
+    m_mutex.lock(); // lock section
     EventMsg *retEvent = NULL_PTR;
 
     if (FALSE == qEvents.empty()) // is not empty
@@ -51,15 +52,16 @@ EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource) const
         retEvent = qEvents.front();
     }
 
+    m_mutex.unlock(); //unlock section
+
     return retEvent;
 }
 
 /** \brief throw event */
 RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 {
-    RETURN_STATUS retVal = SUCCESS;
-
     m_mutex.lock(); //lock section
+    RETURN_STATUS retVal = SUCCESS;
 
     if (FALSE == qEvents.empty()) // is not empty
     {
@@ -117,9 +119,8 @@ RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
 /** \brief delete event with queue number*/
 RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
 {
-    RETURN_STATUS retVal = FAILURE;
-
     m_mutex.lock(); // lock section
+    RETURN_STATUS retVal = FAILURE;
 
     if (FALSE == qEvents.empty()) // is not empty
     {

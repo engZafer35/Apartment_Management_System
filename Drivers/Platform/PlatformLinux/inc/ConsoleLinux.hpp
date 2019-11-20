@@ -1,26 +1,25 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 17, 2019 - 11:23:14 PM
+* #File Name    : ConsoleLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/ConsoleLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __CONSOLE_LINUX_HPP__
+#define __CONSOLE_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
+#include "IConsole.hpp"
+#include "Utility.hpp"
 
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +29,37 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
 
-#endif /* __PROJECT_CONF_HPP__ */
+/**
+ * \brief Manage Linux console
+ */
+class ConsoleLinux : public IConsole, private NonCopyable
+{
+public:
+    ~ConsoleLinux(void);
+
+    /** \brief get instance, singleton class*/
+    static ConsoleLinux* getInstance(void);
+
+    /** \brief init console */
+    RETURN_STATUS init(void) override;
+
+    /**
+     * \brief set console status
+     * \param set TRUE to active console
+     */
+    RETURN_STATUS consoleStatus(BOOL status) override;
+
+private:
+    ConsoleLinux(void);
+
+private:
+    static ConsoleLinux* m_instance;
+};
+
+}//namespace platform
+#endif /* __CONSOLE_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

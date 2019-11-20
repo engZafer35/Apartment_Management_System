@@ -1,26 +1,25 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 17, 2019 - 11:16:29 PM
+* #File Name    : DevicesLinux.hpp
+* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/inc/DevicesLinux.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __DEVICES_LINUX_HPP__
+#define __DEVICES_LINUX_HPP__
 /*********************************INCLUDES*************************************/
-#include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
+#include "Utility.hpp"
+#include "IDevices.hpp"
 
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +29,33 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+#ifdef __linux
+/**
+ * \brief Linux Pc peripheral devices, Singleton Class
+ */
+class DevicesLinux : public IDevices, private NonCopyable
+{
+public:
+    ~DevicesLinux(void);
 
-#endif /* __PROJECT_CONF_HPP__ */
+    /** brief Open devices to use it */
+    RETURN_STATUS openDevices(void) override;
+
+public:
+    /** \brief get instance, singleton class*/
+    static DevicesLinux* getInstance(void);
+
+private:
+    DevicesLinux(void);
+
+private:
+    static DevicesLinux* m_instance;
+    BOOL isDevicesInit;
+};
+#endif
+}//namespace platform
+#endif /* __DEVICES_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

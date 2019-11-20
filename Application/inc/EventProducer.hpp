@@ -31,7 +31,6 @@
 /********************************* CLASS **************************************/
 namespace event
 {
-//TODO: saf sanal sınıf yapılıp linux ve Bare metale göre bu sınıf türeyecek
 class IEventProducer : private virtual NonCopyable
 {
 public:
@@ -53,11 +52,10 @@ public:
 
 //    /** \brief doControl event producer */
 //    virtual void doControl(void) = 0;
-
-protected:
-
     /** \brief run event producer */
     virtual void loop(void) = 0;
+protected:
+
 
     /** \brief throw event */
     void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);

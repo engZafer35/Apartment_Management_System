@@ -1,26 +1,24 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 3:09:25 PM
-* #File Name    : ProjectConf.hpp
-* #File Path    : /GezGör/Application/inc/ProjectConf.hpp
+* #Date         : Nov 16, 2019 - 11:37:47 PM
+* #File Name    : IClock.hpp
+* #File Path    : /GezGor/Drivers/Platform/inc/IClock.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __PROJECT_CONF_HPP__
-#define __PROJECT_CONF_HPP__
+#ifndef __DRIVERS_PLATFORM_INC_ICLOCK_HPP__
+#define __DRIVERS_PLATFORM_INC_ICLOCK_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "GeneralPlatformConfig.hpp"
 
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-//two byte version num
-#define SW_VERSION (0X000100) //version 0.1.0 major-minor-bug-fix
+
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -30,7 +28,21 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
+namespace platform
+{
+/**
+ *  \brief interface class for MCU clock
+ */
+class IClock
+{
+public:
+    virtual ~IClock(void){}
+    /** \brief init mcu clock */
+    virtual RETURN_STATUS init(void) = 0;
+};
 
-#endif /* __PROJECT_CONF_HPP__ */
+}//namespace platform
+
+#endif /* __DRIVERS_PLATFORM_INC_ICLOCK_HPP__ */
 
 /********************************* End Of File ********************************/
