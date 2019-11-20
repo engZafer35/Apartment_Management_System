@@ -11,6 +11,8 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
+#ifdef __linux
+
 #include "ProjectConf.hpp"
 #include "DevicesLinux.hpp"
 
@@ -19,7 +21,7 @@
 #include "GpioLinux.hpp"
 #include "AdcLinux.hpp"
 
-#include <iostream>
+#include "DrvInterruptRegister.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -47,9 +49,9 @@ namespace platform
 DevicesLinux::DevicesLinux(void) : isDevicesInit{FALSE}
 {
     //create and load peripheral devices
-    timer = TimerLinux::getInstance();
-    uart  = UartLinux::getInstance();
     gpio  = GpioLinux::getInstance();
+    uart  = UartLinux::getInstance();
+    timer = TimerLinux::getInstance();
     adc   = AdcLinux::getInstance();
 }
 }//namespace platform
@@ -80,10 +82,14 @@ RETURN_STATUS DevicesLinux::openDevices(void)
     if (FALSE == isDevicesInit)
     {
         // init all peripherals here
-        if ((FAILURE == gpio->init())  || (FAILURE == timer->init()) || (FAILURE == uart->init()) || (FAILURE == adc->init()))
-        {
-            retVal = FAILURE;
-        }
+        retVal |= gpio->init();
+        retVal |= uart->init();
+        retVal |= timer->init();
+        retVal |= adc->init();
+
+        drvIntRegisterInit();
+
+        ZLOGF_IF(FAILURE == retVal) << "[E] DevicesLinux::openDevices !! Retval: " << retVal;
 
         isDevicesInit = TRUE;
     }
@@ -92,4 +98,6 @@ RETURN_STATUS DevicesLinux::openDevices(void)
 }
 
 }
+
+#endif//#ifdef __linux
 /******************************** End Of File *********************************/

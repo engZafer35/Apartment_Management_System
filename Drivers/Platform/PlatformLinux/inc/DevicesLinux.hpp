@@ -31,7 +31,7 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-
+#ifdef __linux
 /**
  * \brief Linux Pc peripheral devices, Singleton Class
  */
@@ -54,7 +54,7 @@ private:
     static DevicesLinux* m_instance;
     BOOL isDevicesInit;
 };
-
+#endif
 }//namespace platform
 #endif /* __DEVICES_LINUX_HPP__ */
 

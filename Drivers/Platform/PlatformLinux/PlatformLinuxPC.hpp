@@ -13,6 +13,7 @@
 #ifndef __PLATFORM_LINUX_PC_HPP__
 #define __PLATFORM_LINUX_PC_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
 #include "LinuxPlatformUtility.hpp"
 #include "BoardConfig_ZLP010.hpp"
 
@@ -31,7 +32,7 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-
+#endif//#ifdef __linux
 #endif /* __PLATFORM_LINUX_PC_HPP__ */
 
 /********************************* End Of File ********************************/

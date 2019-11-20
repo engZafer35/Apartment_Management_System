@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Nov 17, 2019 - 10:35:48 PM
-* #File Name    : GpioLinux.cpp 
-* #File Path    : /GezGor/Drivers/Platform/PlatformLinux/src/GpioLinux.cpp
+* #Date         : Nov 20, 2019 - 4:18:20 PM
+* #File Name    : ITimer.cpp 
+* #File Path    : /GezGor/Drivers/Platform/src/ITimer.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,8 +11,8 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "ProjectConf.hpp"
-#include "GpioLinux.hpp"
+#include "ITimer.hpp"
+#include "EventProducer.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -30,68 +30,25 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-namespace platform
-{
-GpioLinux* GpioLinux::m_instance = NULL_PTR;
-}
-/***************************** CLASS PRIVATE METHOD ***************************/
-namespace platform
-{
-GpioLinux::GpioLinux(void)
-{
 
-}
-}//namespace platform
+/***************************** CLASS PRIVATE METHOD ***************************/
+
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace platform
 {
-GpioLinux::~GpioLinux(void)
+/**
+ * \brief invoke callback function
+ * \note  just do little jobs in your callback function
+ */
+void ITimer::runCallback(void)
 {
-    m_instance = NULL_PTR;
-}
-
-/** \brief get instance, singleton class*/
-GpioLinux* GpioLinux::getInstance(void)
-{
-    MutexLockFunc mutex; //guarantee to create just one object
-    if(NULL_PTR == m_instance)
+    if (NULL_PTR != m_cbClass)
     {
-        m_instance = new GpioLinux();
+        m_cbClass->loop();
     }
-    return m_instance;
 }
-
-/** init all gpio */
-RETURN_STATUS GpioLinux::init(void)
-{
-    RETURN_STATUS retVal = SUCCESS;
-    ZLOGF_IF(FAILURE == retVal) << "GpioLinux init Error";
-    return retVal;
-}
-
-/** read gpio*/
-BOOL GpioLinux::read(void)
-{
-    BOOL retVal = TRUE;
-
-    return retVal;
-}
-
-/** write gpio*/
-RETURN_STATUS GpioLinux::write(BOOL status)
-{
-    RETURN_STATUS retVal = SUCCESS;
-
-    return retVal;
-}
-
-/** set callback function for external interrupt*/
-void GpioLinux::setCB(VoidCallback cbFunc)
-{
-
-}
-
 }//namespace platform
+
 /******************************** End Of File *********************************/

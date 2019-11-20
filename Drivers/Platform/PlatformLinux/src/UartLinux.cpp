@@ -71,6 +71,7 @@ UartLinux* UartLinux::getInstance(void)
     MutexLockFunc mutex; //guarantee to create just one object
     if(NULL_PTR == m_instance)
     {
+        ZLOG << "UartLinux Created";
         m_instance = new UartLinux();
     }
     return m_instance;
@@ -81,6 +82,7 @@ RETURN_STATUS UartLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
+    ZLOGF_IF(FAILURE == retVal) << "[E] UartLinux init Error: !!";
     return retVal;
 }
 

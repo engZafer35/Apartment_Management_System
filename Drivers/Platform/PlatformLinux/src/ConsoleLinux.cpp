@@ -56,6 +56,7 @@ ConsoleLinux* ConsoleLinux::getInstance(void)
     MutexLockFunc mutex; //guarantee to create just one object
     if(NULL_PTR == m_instance)
     {
+        ZLOG << "ConsoleLinux Created";
         m_instance = new ConsoleLinux();
     }
     return m_instance;
@@ -65,7 +66,7 @@ ConsoleLinux* ConsoleLinux::getInstance(void)
 RETURN_STATUS ConsoleLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
-
+    ZLOGF_IF(FAILURE == retVal) << "[E] ConsoleLinux init Error: !!";
     return retVal;
 }
 

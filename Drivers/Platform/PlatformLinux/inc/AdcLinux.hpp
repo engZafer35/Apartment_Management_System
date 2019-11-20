@@ -13,6 +13,7 @@
 #ifndef __ADC_LINUX_HPP__
 #define __ADC_LINUX_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
 #include "IADC.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
@@ -52,6 +53,7 @@ private:
 
 };
 }//namespace platform
+#endif //#ifdef __linux
 #endif /* __ADC_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

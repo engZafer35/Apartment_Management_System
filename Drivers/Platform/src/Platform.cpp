@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
+#include "ProjectConf.hpp"
 #include "Platform.hpp"
 #include <iostream>
 /****************************** MACRO DEFINITIONS *****************************/
@@ -61,12 +62,12 @@ Platform* Platform::getInstance(void)
     return m_instance;
 }
 
-RETURN_STATUS Platform::openDevices(void)
+RETURN_STATUS Platform::buildPlatform(void)
 {
     RETURN_STATUS retVal = SUCCESS;
 
-    devices->openDevices();
-    console->init();
+    retVal |= devices->openDevices();
+    retVal |= console->init();
 
     return retVal;
 }

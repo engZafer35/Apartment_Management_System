@@ -56,6 +56,7 @@ AdcLinux* AdcLinux::getInstance(void)
     MutexLockFunc mutex; //guarantee to create just one object
     if(NULL_PTR == m_instance)
     {
+        ZLOG << "[I] AdcLinux Created";
         m_instance = new AdcLinux();
     }
     return m_instance;
@@ -65,7 +66,7 @@ AdcLinux* AdcLinux::getInstance(void)
 RETURN_STATUS AdcLinux::init(void)
 {
     RETURN_STATUS retVal = SUCCESS;
-
+    ZLOGF_IF(FAILURE == retVal) << "[E] AdcLinux init Error: !!";
     return retVal;
 }
 

@@ -13,6 +13,7 @@
 #ifndef __GPIO_LINUX_HPP__
 #define __GPIO_LINUX_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
 #include "IGPIO.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
@@ -55,10 +56,10 @@ private:
 
 private:
      static GpioLinux* m_instance;
-
 };
-}//namespace platform
 
+}//namespace platform
+#endif//#ifdef __linux
 #endif /* __GPIO_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

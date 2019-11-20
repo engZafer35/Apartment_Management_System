@@ -38,7 +38,7 @@ TimerEventProducer::TimerEventProducer(void) : m_timerEnginePeriod{0}, m_started
 {
     m_platform = platform::Platform::getInstance(); //get platform instance
     m_timerEnginePeriod = m_platform->devices->timer->getPeriod();
-    m_platform->devices->timer->callback(reinterpret_cast<VoidCallback>(&TimerEventProducer::loop));
+    m_platform->devices->timer->loadCallback(this);
 }
 /***************************** CLASS PROTECTED METHOD *************************/
 /**
@@ -49,6 +49,8 @@ TimerEventProducer::TimerEventProducer(void) : m_timerEnginePeriod{0}, m_started
 void TimerEventProducer::loop(void)
 {
     m_mutex.lock(); //enter section, don't allow to add new timer when checking the timers status.
+
+//    std::cout << "TimerEventProducer::loop " << m_started << std::endl;
 
     if(TRUE == m_started)
     {
@@ -156,7 +158,7 @@ U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY 
 
 /**
  * \brief create periodic timer
- * \param timer ID
+ * \param timer ID, use ID just one time, dont create timer with same ID !!
  * \param timeMs
  * \param cb when timer done, timer producer will invoke callback function
  * \param priority
@@ -171,7 +173,7 @@ void TimerEventProducer::operator ()(TimerID tmID, U32 timeMs, VoidCallback cb, 
     td->m_timeMs     = timeMs;
     td->m_timeMsCopy = timeMs;
     td->m_priority   = priority;
-    td->m_isContinue = FALSE;
+    td->m_isContinue = TRUE;
     td->m_timerID    = tmID;
 
     m_qTimers.push_back(td); //add timer to list

@@ -13,8 +13,11 @@
 #ifndef __TIMER_LINUX_HPP__
 #define __TIMER_LINUX_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
+
+#include <unistd.h>
 #include "ITimer.hpp"
-#include "Utility.hpp"
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -32,6 +35,7 @@ namespace platform
 {
 class TimerLinux : public ITimer, private NonCopyable
 {
+#define TIMER_CHECK_CYCLE    (100) //hardware timer period Ms
 public:
     ~TimerLinux(void);
 
@@ -41,27 +45,16 @@ public:
     /** \brief init TimerLinux */
     RETURN_STATUS init(void) override;
 
-    /**
-     * \brief Delay ms
-     * \param time ms
-     */
-    void delayMs(U32 timeMs) const override;
-
-    /**
-     * \brief  Get system tick counter value
-     * \return current system tick counter value
-     */
-    U32 getSysTickCounter(void) const override;
-
 private:
      TimerLinux(void);
 
 private:
      static TimerLinux* m_instance;
-
 };
 
 }//namespace platform
+
+#endif
 #endif /* __TIMER_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

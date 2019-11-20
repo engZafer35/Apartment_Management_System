@@ -13,6 +13,7 @@
 #ifndef __UART_LINUX_HPP__
 #define __UART_LINUX_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
 #include "ICommPeripheral.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
@@ -61,6 +62,7 @@ private:
 };
 
 }//namespace platform
+#endif// if __linux
 #endif /* __UART_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

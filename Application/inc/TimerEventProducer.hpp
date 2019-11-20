@@ -91,7 +91,7 @@ public:
 
     /**
      * \brief create periodic timer
-     * \param timer ID
+     * \param timer ID, use ID just one time, dont create timer with same ID !!!
      * \param timeMs
      * \param cb when timer done, timer producer will invoke callback function
      * \param priority
@@ -109,10 +109,10 @@ public:
 
     /** \brief pause event producer */
     void pause(void) override;
-
-private:
     /** \brief run event producer */
     void loop(void) override;
+private:
+
 
     TimerEventProducer(void);
 private:

@@ -13,17 +13,8 @@
 #ifndef __PLATFORM_INTERFACE_HPP__
 #define __PLATFORM_INTERFACE_HPP__
 /*********************************INCLUDES*************************************/
+#include "ZLogger.h"
 #include "GlobalDefinitions.hpp"
-
-#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
-    #include "PlatformLinuxPC.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
-    #include "BoardConfig_ZLE010.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
-    #include "PlatformBareMetal.hpp"
-#elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
-    #include "BoardConfig_ZFR010.hpp"
-#endif
 
 #include "IDevices.hpp"
 #include "IConsole.hpp"
@@ -46,7 +37,7 @@
 namespace platform
 {
 
-class Platform //: public Singleton<Platform>
+class Platform
 {
 public:
     ~Platform(void);
@@ -54,13 +45,28 @@ public:
     /** \brief get instance, singleton class*/
     static Platform* getInstance(void);
 
-    RETURN_STATUS openDevices(void);
+    /**
+     * \brief  build platform
+     * \return if everything is OK, return SUCCES
+     *         otherwise return FAILURE
+     * \note:  In failure case don't run application
+     */
+    RETURN_STATUS buildPlatform(void);
 
 public:
-    IDevices * const devices = DevicesLinux::getInstance();
-    IConsole * const console = ConsoleLinux::getInstance();
-    ISystem  * const system  = NULL_PTR;
-    IFileSystem * const fileSys = NULL_PTR;
+#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
+    IDevices * const devices = DevicesLinux::getInstance(); /** < All platform devices */
+    IConsole * const console = ConsoleLinux::getInstance(); /** < Manage system console */
+    ISystem  * const system  = NULL_PTR;                    /** < Manage system status */
+    IFileSystem * const fileSys = NULL_PTR;                 /** < Platform file system */
+
+#elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
+
+#elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
+
+#elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
+
+#endif
 
 private:
     Platform(void);
