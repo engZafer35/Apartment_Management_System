@@ -15,6 +15,7 @@
 * 3- Last, invoke start() function to start timer event producer
 * 4- TIMER_1, TIMER_2, TIMER_3, TIMER macros can be used create new timer.
 * 
+* note: don't cancel timer in callback function
 ******* Examples:
 *                      Create One Shot Timer
 * TIMER_1(100);
@@ -24,6 +25,9 @@
 * TIMER_1(event::EN_TIMER_BIT, 500);
 * TIMER_1(event::EN_TIMER_BIT, 500, foo, event::EN_PRIORITY_MED);
 *
+*                      Create One Shot Timer with callback functions
+* U32 timerID = TIMER_1(2500, std::bind(&MyCB::foo, &cb));
+* U32 timer2 = TIMER_1(2700, [](void){std::cout << "This is my little lambda" << std::endl;});
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
 #ifndef __TIMER_EVENT_PRODUCER_HPP__
@@ -48,6 +52,13 @@ namespace event
 #define TIMER_1   TIMER(event::TIMER_ENG_1) /** <! load timer to timer engine 1*/
 #define TIMER_2   TIMER(event::TIMER_ENG_2) /** <! load timer to timer engine 2*/
 #define TIMER_3   TIMER(event::TIMER_ENG_3) /** <! load timer to timer engine 3*/
+
+#define TIMER_CANCEL(timerID) TIMER.cancelTimer(timerID)
+
+#define TIMER_CANCEL_1(timerID) TIMER_1.cancelTimer(timerID)
+#define TIMER_CANCEL_2(timerID) TIMER_2.cancelTimer(timerID)
+#define TIMER_CANCEL_3(timerID) TIMER_3.cancelTimer(timerID)
+
 }
 /*******************************TYPE DEFINITIONS ******************************/
 namespace event
@@ -86,6 +97,10 @@ public:
      * \param timeMs
      * \param cb when timer done, timer producer will invoke callback function
      * \param priority
+     * \return timer ID
+     * \note: if user want to cancel timer, cancelTimer() method can be invoke by timer ID
+     *        so don't lost timer ID
+     * \note: don't cancel timer in callback function
      */
     U32 operator ()(U32 timeMs, VoidCallback cb = NULL_PTR, EVENT_PRIORITY priority = EN_PRIORITY_LOW);
 
@@ -95,6 +110,7 @@ public:
      * \param timeMs
      * \param cb when timer done, timer producer will invoke callback function
      * \param priority
+     * \note: don't cancel timer in callback function
      */
     void operator ()(TimerID tmID, U32 timeMs, VoidCallback cb = NULL_PTR, EVENT_PRIORITY priority = EN_PRIORITY_LOW);
 
@@ -109,14 +125,13 @@ public:
 
     /** \brief pause event producer */
     void pause(void) override;
+
     /** \brief run event producer */
     void loop(void) override;
 private:
-
-
     TimerEventProducer(void);
-private:
 
+private:
     struct TimerData
     {
         U32   m_timeMs;
