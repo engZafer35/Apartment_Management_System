@@ -79,9 +79,6 @@ static void *listenFds(void *arg)
                         }
                     }
                 }
-#if DEBUG_SELECT
-                printf("... \n");
-#endif
             }
             else  // it is because of timeout
             {

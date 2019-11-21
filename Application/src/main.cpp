@@ -3,7 +3,7 @@
 * #Revision     : 1.0
 * #Date         : Oct 22, 2019 - 2:43:17 PM
 * #File Name    : main.cpp 
-* #File Path    : /GezGör/Application/src/main.cpp
+* #File Path    : /GezGor/Application/src/main.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -17,7 +17,7 @@
 #include "EventPool.hpp"
 
 #include <iostream>
-
+#include <unistd.h>
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -37,19 +37,26 @@
 class MyCB
 {
 public:
-    void foo(void){ std::cout << "my callback " << counter++ << std::endl;}
+    MyCB() : counter{666}{}
+    void foo(void)
+    {
+
+        std::cout <<std::endl<< " ---------> my callback <----------------" << counter++ << std::endl;
+    }
 
 private:
     int counter;
 };
-
+using namespace std::placeholders;
 int main(void)
 {
     zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
 
     platform::Platform *device = platform::Platform::getInstance();
 
-//    MyCB cb;
+    MyCB cb;
+
+    //TODO: lamda expression bak, callback yapısına bak, thread oluşturma yapısına bak.
 
 
     if (SUCCESS == device->buildPlatform())
@@ -59,34 +66,51 @@ int main(void)
         event::EventPool eventPool;
     //
         eventPool.buildEventProducer();
-        TIMER_1(event::EN_TIMER_BIT, 1000, NULL, event::EN_PRIORITY_HIG);
-        TIMER_1(1500);
-//        TIMER_1(1000);
-//        TIMER_1(1000);
+        TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+        TIMER_1(event::EN_TIMER_3, 2000, [](void){std::cout << "This is my little lambda" << std::endl;}, event::EN_PRIORITY_MED);
+//
+//        U32 timerID = TIMER_1(2500, std::bind(&MyCB::foo, &cb));
+//
+//        U32 timer2 = TIMER_1(2700, [](void){std::cout << "This is my little lambda" << std::endl;});
 
 
-            event::EventMsg *event = NULL_PTR;
-        //
+//        ::sleep(2);
+//
+//        TIMER_1.cancelTimer(timerID);
+//        TIMER_1.cancelTimer(timer2);
 
 
-                while(1)
-                {
-                    event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
+//      TIMER_1(1000);
+//      TIMER_1(1000);
 
-                    if (NULL_PTR != event)
-                    {
-                        std::cout << "get event " << event->getEvent() << std::endl;
-                        std::cout << "get getEventPriority " << event->getEventPriority() << std::endl;
-                        std::cout << "get getEventSource " << event->getEventSource() << std::endl;
-                        std::cout << "get getLeng " << event->getLeng() << std::endl;
-                        eventPool.eventQueue.deleteEvent(&event);
-                    }
-                }
+        event::EventMsg *event = NULL_PTR;
 
+//
+//        platform::delayMs(10000);
+//
+//        CANCEL_TIMER_1(event::EN_TIMER_3);
 
-        while(1);
-        //TODO: Application app(device);
-        //TODO: app.run();
+        while(1)
+        {
+            event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
+
+            if (NULL_PTR != event)
+            {
+                std::cout << "get event " << event->getEvent() << std::endl;
+                std::cout << "get getEventPriority " << event->getEventPriority() << std::endl;
+                std::cout << "get getEventSource " << event->getEventSource() << std::endl;
+                std::cout << "get getLeng " << event->getLeng() << std::endl;
+                U32 *timerID = static_cast<U32*>(event->getValue());
+                std::cout << "Timer ID " << *timerID << std::endl;
+
+                eventPool.eventQueue.deleteEvent(&event);
+
+//                TIMER_CANCEL_1(*timerID);
+            }
+
+            //TODO: Application app(device);
+            //TODO: app.run();
+        }
     }
     else
     {

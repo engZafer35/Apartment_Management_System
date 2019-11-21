@@ -57,25 +57,25 @@ typedef enum
     #define BIT_TIME        (WAIT_10_SEC)//ms
 
     EN_TIMER_2,
-    #define EN_TIMER_2      (WAIT_6_SEC)//ms
+    #define TIMER_2_TIME      (WAIT_6_SEC)//ms
 
     EN_TIMER_3,
-    #define EN_TIMER_3      (WAIT_1_SEC)//ms
+    #define TIMER_3_TIME      (WAIT_1_SEC)//ms
 
     EN_TIMER_4,
-    #define EN_TIMER_4      (WAIT_8_SEC)//ms
+    #define TIMER_4_TIME      (WAIT_8_SEC)//ms
 
     EN_TIMER_5,
-    #define EN_TIMER_5      (WAIT_4_SEC)//ms
+    #define TIMER_5_TIME      (WAIT_4_SEC)//ms
 
     EN_TIMER_6,
-    #define EN_TIMER_6      (WAIT_1_MIN)//ms
+    #define TIMER_6_TIME      (WAIT_1_MIN)//ms
 
     EN_TIMER_7,
-    #define EN_TIMER_7      (WAIT_1_MIN)//ms max 1 min
+    #define TIMER_TIME     (WAIT_1_MIN)//ms max 1 min
 
     EN_TIMER_8,
-    #define EN_TIMER_8      (WAIT_30_SEC)
+    #define TIMER_8_TIME      (WAIT_30_SEC)
 
     EN_TIMER_MAX_NUM
 }TimerID;

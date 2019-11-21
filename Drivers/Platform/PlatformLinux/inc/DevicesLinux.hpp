@@ -13,6 +13,7 @@
 #ifndef __DEVICES_LINUX_HPP__
 #define __DEVICES_LINUX_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
 #include "Utility.hpp"
 #include "IDevices.hpp"
 
@@ -31,7 +32,6 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-#ifdef __linux
 /**
  * \brief Linux Pc peripheral devices, Singleton Class
  */

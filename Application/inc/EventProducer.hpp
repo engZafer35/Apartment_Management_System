@@ -50,10 +50,9 @@ public:
     /** \brief stop event producer */
     virtual void stop(void) = 0;
 
-//    /** \brief doControl event producer */
-//    virtual void doControl(void) = 0;
     /** \brief run event producer */
     virtual void loop(void) = 0;
+
 protected:
 
 

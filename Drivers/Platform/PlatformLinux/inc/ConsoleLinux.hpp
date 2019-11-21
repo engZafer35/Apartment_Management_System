@@ -13,6 +13,7 @@
 #ifndef __CONSOLE_LINUX_HPP__
 #define __CONSOLE_LINUX_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
 #include "IConsole.hpp"
 #include "Utility.hpp"
 
@@ -60,6 +61,7 @@ private:
 };
 
 }//namespace platform
+#endif//#ifdef __linux
 #endif /* __CONSOLE_LINUX_HPP__ */
 
 /********************************* End Of File ********************************/

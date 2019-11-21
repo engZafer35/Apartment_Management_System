@@ -66,12 +66,14 @@ void TimerEventProducer::loop(void)
 
                 if ((*it)->m_timeMs < m_timerEnginePeriod) //check timer done
                 {
-                    throwEvent(EN_EVENT_USER_TIMER, EN_SOURCE_TIMER, (*it)->m_priority, \
-                                &((*it)->m_timerID), sizeof((*it)->m_timerID) );
-
                     if (NULL_PTR != (*it)->cbFunc)
                     {
                         (*it)->cbFunc(); //invoke callback function.
+                    }
+                    else //don't throw event if callback function exist
+                    {
+                        throwEvent(EN_EVENT_USER_TIMER, EN_SOURCE_TIMER, (*it)->m_priority, \
+                                   &((*it)->m_timerID), sizeof((*it)->m_timerID) );
                     }
 
                     if ((*it)->m_isContinue) //if periodic timer, reload timer
@@ -133,6 +135,9 @@ void TimerEventProducer::pause(void)
  * \param timeMs
  * \param cb when timer done, timer producer will invoke callback function
  * \param priority
+ * \return timer ID
+ * \note: if user want to cancel timer, cancelTimer() method can be invoke by timer ID
+ *        so don't lost timer ID
  */
 U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY priority)
 {
@@ -151,9 +156,11 @@ U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY 
     //give timer ID for one shot timer, periodic timer ID reserved
     td->m_timerID = EN_TIMER_MAX_NUM + m_qTimers.size();
 
+    ZLOG << "[I] New Timer created: " << timeMs << "ms" << " ID:"<< td->m_timerID;
+
     m_mutex.unlock();//leave section
 
-    return SUCCESS;
+    return td->m_timerID;
 }
 
 /**
@@ -178,6 +185,7 @@ void TimerEventProducer::operator ()(TimerID tmID, U32 timeMs, VoidCallback cb, 
 
     m_qTimers.push_back(td); //add timer to list
 
+    ZLOG << "[I] New Periodic Timer created: " << timeMs << "ms" << " ID:"<< td->m_timerID;
     m_mutex.unlock(); //leave section
 }
 
@@ -200,7 +208,7 @@ RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
         }
         it++;
     }
-
+    ZLOGV_IF(SUCCESS == retVal) << "[I] Timer Canceled " << " ID:" << tmID;
     m_mutex.unlock(); //leave section
 
     return retVal;

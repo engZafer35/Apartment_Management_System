@@ -9,7 +9,7 @@
 *
 *
 *******************************************************************************/
-
+#ifdef __linux
 /********************************* INCLUDES ***********************************/
 #include "ProjectConf.hpp"
 #include "GpioLinux.hpp"
@@ -94,4 +94,5 @@ void GpioLinux::setCB(VoidCallback cbFunc)
 }
 
 }//namespace platform
+#endif//#ifdef __linux
 /******************************** End Of File *********************************/

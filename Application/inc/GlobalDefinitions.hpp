@@ -3,7 +3,7 @@
 * #Revision     : 1.0
 * #Date         : Jun 21, 2019 - 3:07:02 PM
 * #File Name    : GlobalDefinitions.h
-* #File Path    : /HUMS_PVTKS_CB/Application/AppComm/inc/GlobalDefinitions.h
+* #File Path    :
 *
 *******************************************************************************/
 
@@ -13,21 +13,17 @@
 /******************************IFNDEF & DEFINE********************************/
 #ifndef __GLOBAL_DEFINITIONS_H__
 #define __GLOBAL_DEFINITIONS_H__
-#ifdef __cplusplus
-extern "C" {
-#endif
+
 /*********************************INCLUDES*************************************/
+#include <functional>
 
 /******************************MACRO DEFINITIONS*******************************/
-
 #define MCU_16BIT   (16)
 #define MCU_32BIT   (32)
 
 //Select project mcu bit size
 #define MCU_BIT_SIZE_DEF (MCU_32BIT)
 
-
-typedef int RETURN_STATUS;
 #define SUCCESS (0)
 #define FAILURE (-1)
 
@@ -94,7 +90,7 @@ typedef int RETURN_STATUS;
 #define SAFE_FREE(x)   do{ if(x) { free(x); x = NULL_PTR; } }while(0)
 #define SAFE_DELETE(x) do{ if(x) { delete(x); x = NULL_PTR; } }while(0)
 
-typedef void (*VoidCallback)(void);
+typedef std::function<void(void)> VoidCallback;
 
 #if (MCU_BIT_SIZE_DEF == MCU_16BIT)
     typedef signed char         S8;
@@ -112,6 +108,7 @@ typedef void (*VoidCallback)(void);
     typedef USS                 BOOL;
     typedef BOOL                FLAG;
 
+    typedef SSS                 RETURN_STATUS;
     #define MAX_USS_NUM         (0xFFFF) //max 16bit unsigned value
 
 #elif (MCU_BIT_SIZE_DEF == MCU_32BIT)
@@ -130,6 +127,7 @@ typedef void (*VoidCallback)(void);
     typedef USS                 BOOL;
     typedef BOOL                FLAG;
 
+    typedef SSS                 RETURN_STATUS;
     #define MAX_USS_VAL         (0xFFFFFFFF) //max 32bit unsigned value
 
 #else
@@ -142,9 +140,7 @@ typedef void (*VoidCallback)(void);
 /************************* GLOBAL VARIBALE REFERENCES *************************/
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
-#ifdef __cplusplus
-}
-#endif
+
 #endif /* __GLOBAL_DEFINITIONS_H__ */
 
 /********************************* End Of File ********************************/
