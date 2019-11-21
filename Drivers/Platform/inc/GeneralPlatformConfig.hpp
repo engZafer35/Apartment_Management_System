@@ -23,7 +23,11 @@
 /* add new platform, don't change queue*/
 
 /** ******* < select platform > ******* */
+#ifdef __linux
 #define CURRENT_PLATFORM    (PLATFORM_LINUX_PC)
+#else
+#define CURRENT_PLATFORM    (PLATFORM_BARE_METAL)
+#endif
 //#define CURRENT_PLATFORM   (PLATFORM_LINUX_EMB)
 //#define CURRENT_PLATFORM   (PLATFORM_FREERTOS)
 //#define CURRENT_PLATFORM   (PLATFORM_BARE_METAL)
@@ -33,7 +37,7 @@
 #elif (CURRENT_PLATFORM == PLATFORM_LINUX_EMB)
     #include "BoardConfig_ZLE010.hpp"
 #elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
-    #include "../Platform/PlatformBareMetal.hpp"
+    #include "PlatformBareMetal.hpp"
 #elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
     #include "BoardConfig_ZFR010.hpp"
 #else

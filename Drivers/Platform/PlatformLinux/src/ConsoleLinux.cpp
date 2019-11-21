@@ -11,6 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
+#ifdef __linux
 #include "ProjectConf.hpp"
 #include "ConsoleLinux.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
@@ -82,4 +83,5 @@ RETURN_STATUS ConsoleLinux::consoleStatus(BOOL status)
 }
 
 }
+#endif//#ifdef __linux
 /******************************** End Of File *********************************/

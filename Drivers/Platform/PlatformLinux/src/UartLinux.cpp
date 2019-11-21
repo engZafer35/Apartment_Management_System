@@ -9,7 +9,7 @@
 *
 *
 *******************************************************************************/
-
+#ifdef __linux
 /********************************* INCLUDES ***********************************/
 #include "ProjectConf.hpp"
 #include "UartLinux.hpp"
@@ -103,4 +103,6 @@ RETURN_STATUS UartLinux::receive(void *buff, U32 size, U32 timeout)
 }
 
 }//namespace platform
+
+#endif//#ifdef __linux
 /******************************** End Of File *********************************/
