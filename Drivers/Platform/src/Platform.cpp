@@ -64,7 +64,7 @@ Platform* Platform::getInstance(void)
 
 RETURN_STATUS Platform::buildPlatform(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     retVal |= devices->openDevices();
     retVal |= console->init();

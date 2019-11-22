@@ -117,7 +117,7 @@ int drvIntRegisterInit(void)
     // create Thread
     pthread_create(&stid, NULL, &listenFds, NULL);
 
-    return SUCCESS;
+    return OK;
 }
 
 int drvIntRegisterFd(SelectStruct selectStruct)
@@ -161,7 +161,7 @@ int drvIntRegisterFd(SelectStruct selectStruct)
         // set fd
         FD_SET(selectStructs[freeIndex].fd, &masterfs);
 
-        retVal = SUCCESS;
+        retVal = OK;
     }
     else
     {
@@ -200,7 +200,7 @@ int drvIntUnregisterFd(int fd)
     if (isFind)
     {
         highestFd = maxFd; // new max point
-        retVal    = SUCCESS;
+        retVal    = OK;
     }
     else
     {

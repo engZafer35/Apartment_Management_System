@@ -39,11 +39,66 @@ public:
     { /* for Bare-Metal*/}
 
 public:
-    void _lock(void)
+    inline void _lock(void)
     { /* for Bare-Metal*/ }
 
-    void _unlock(void)
+    inline void _unlock(void)
     {  /* for Bare-Metal*/ }
+};
+
+
+class MutexLock : private virtual Mutex
+{
+public:
+    MutexLock(void){}
+    ~MutexLock(void){}
+
+    inline void lock(void)
+    {
+        _lock();
+    }
+
+    inline void unlock(void)
+    {
+        _unlock();
+    }
+private:
+    MutexLock(const MutexLock&);
+    MutexLock& operator=(const MutexLock&);
+};
+
+//class MutexLock : NonCopyable
+//{
+//public:
+//    MutexLock(Mutex& mutex) : m_mutex(mutex)
+//    {
+//        m_mutex.lock();
+//    }
+//
+//    ~MutexLock()
+//    {
+//        m_mutex.unlock();
+//    }
+//
+//private:
+//    Mutex& m_mutex;
+//};
+
+class MutexLockFunc : virtual private  Mutex
+{
+public:
+    MutexLockFunc()
+    {
+        _lock();
+    }
+
+    ~MutexLockFunc()
+    {
+        _unlock();
+    }
+private:
+    MutexLockFunc(const MutexLockFunc&);
+    MutexLockFunc& operator=(const MutexLockFunc&);
 };
 }//namespace board
 #endif /* __APPLICATION_INC_BAREMETALUTIL_HPP__ */

@@ -14,7 +14,6 @@
 /*********************************INCLUDES*************************************/
 #include "ProjectConf.hpp"
 #include "EventMessage.hpp"
-#include "Utility.hpp"
 
 #include <deque>
 /******************************* NAME SPACE ***********************************/

@@ -13,6 +13,7 @@
 #ifndef __APPLICATION_INC_BOARDCONFIG_ZBM010_HPP__
 #define __APPLICATION_INC_BOARDCONFIG_ZBM010_HPP__
 /*****************************************************************************/
+#include "main.h"
 namespace platform
 {
 #define BOARD_NAME              "GEZGOR-MOTION"

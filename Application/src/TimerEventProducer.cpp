@@ -50,8 +50,6 @@ void TimerEventProducer::loop(void)
 {
     m_mutex.lock(); //enter section, don't allow to add new timer when checking the timers status.
 
-//    std::cout << "TimerEventProducer::loop " << m_started << std::endl;
-
     if(TRUE == m_started)
     {
         QTimers::iterator it = m_qTimers.begin();
@@ -203,12 +201,12 @@ RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
         if ((*it)->m_timerID == tmID) //find timer
         {
             m_qTimers.erase(it);
-            retVal = SUCCESS;
+            retVal = OK;
             break;
         }
         it++;
     }
-    ZLOGV_IF(SUCCESS == retVal) << "[I] Timer Canceled " << " ID:" << tmID;
+    ZLOGV_IF(OK == retVal) << "[I] Timer Canceled " << " ID:" << tmID;
     m_mutex.unlock(); //leave section
 
     return retVal;

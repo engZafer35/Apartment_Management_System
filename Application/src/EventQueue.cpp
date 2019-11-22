@@ -61,7 +61,7 @@ EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource)
 RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 {
     m_mutex.lock(); //lock section
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     if (FALSE == qEvents.empty()) // is not empty
     {
@@ -100,7 +100,7 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 RETURN_STATUS EventQueue::deleteEvent(U32 queNum)
 {
     m_mutex.lock(); // lock section
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     m_mutex.unlock();// unlock section
     return retVal;
@@ -110,7 +110,7 @@ RETURN_STATUS EventQueue::deleteEvent(U32 queNum)
 RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
 {
     m_mutex.lock(); // lock section
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     m_mutex.unlock();// unlock section
     return retVal;
@@ -130,7 +130,7 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
             {
                 qEvents.erase(it);           
                 *event = NULL_PTR;
-                retVal = SUCCESS;
+                retVal = OK;
                 break;
             }
         }
@@ -144,7 +144,7 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
 RETURN_STATUS EventQueue::deleteAllEvent(void)
 {
     m_mutex.lock(); // lock section
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     m_mutex.unlock();// unlock section
     return retVal;

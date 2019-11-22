@@ -77,7 +77,7 @@ DevicesLinux* DevicesLinux::getInstance(void)
 
 RETURN_STATUS DevicesLinux::openDevices(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     if (FALSE == isDevicesInit)
     {

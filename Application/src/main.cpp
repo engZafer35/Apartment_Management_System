@@ -47,7 +47,7 @@ public:
 private:
     int counter;
 };
-using namespace std::placeholders;
+
 int main(void)
 {
     zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
@@ -59,7 +59,7 @@ int main(void)
     //TODO: lamda expression bak, callback yapısına bak, thread oluşturma yapısına bak.
 
 
-    if (SUCCESS == device->buildPlatform())
+    if (OK == device->buildPlatform())
     {
         ZLOGW << "[I] Building Platform SUCCESS, Thanks $$$";
 
@@ -67,7 +67,7 @@ int main(void)
     //
         eventPool.buildEventProducer();
         TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-        TIMER_1(event::EN_TIMER_3, 2000, [](void){std::cout << "This is my little lambda" << std::endl;}, event::EN_PRIORITY_MED);
+//        TIMER_1(event::EN_TIMER_2, 1500, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
 //
 //        U32 timerID = TIMER_1(2500, std::bind(&MyCB::foo, &cb));
 //
@@ -99,7 +99,7 @@ int main(void)
                 std::cout << "get event " << event->getEvent() << std::endl;
                 std::cout << "get getEventPriority " << event->getEventPriority() << std::endl;
                 std::cout << "get getEventSource " << event->getEventSource() << std::endl;
-                std::cout << "get getLeng " << event->getLeng() << std::endl;
+                std::cout << "get event data leng " << event->getLeng() << std::endl;
                 U32 *timerID = static_cast<U32*>(event->getValue());
                 std::cout << "Timer ID " << *timerID << std::endl;
 

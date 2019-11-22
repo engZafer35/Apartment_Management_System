@@ -14,7 +14,6 @@
 #define __DRIVERS_PLATFORM_INC_ISYSTEM_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-#include "Singleton.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 

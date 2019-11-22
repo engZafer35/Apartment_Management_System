@@ -65,7 +65,7 @@ AdcLinux* AdcLinux::getInstance(void)
 /** \brief init ADC channel */
 RETURN_STATUS AdcLinux::init(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
     ZLOGF_IF(FAILURE == retVal) << "[E] AdcLinux init Error: !!";
     return retVal;
 }

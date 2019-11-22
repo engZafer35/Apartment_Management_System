@@ -34,7 +34,7 @@
 #define __TIMER_EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
 #include "ProjectConf.hpp"
-#include "Utility.hpp"
+
 #include "EventProducer.hpp"
 
 #include <deque>

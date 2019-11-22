@@ -88,7 +88,7 @@ TimerLinux* TimerLinux::getInstance(void)
 /** \brief init TimerLinux */
 RETURN_STATUS TimerLinux::init(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     m_hwTimerPeriod = TIMER_CHECK_CYCLE;
 
