@@ -82,6 +82,7 @@ namespace event
 class TimerEventProducer : public IEventProducer
 {
 public:
+    ~TimerEventProducer(void);
     /**
      * \brief  create TimerEventProducer(singleton)
      * tparam  create different timer with ID. if system

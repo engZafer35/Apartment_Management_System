@@ -63,7 +63,24 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+void handleEvent(event::EventMsg *event)
+{
+    switch (event->getEvent())
+    {
+        case event::EN_EVENT_USER_TIMER:
+        {
+            ZLOG << "get event " << event->getEvent() ;
+            ZLOG << "get getEventPriority " << event->getEventPriority() ;
+            ZLOG << "get getEventSource " << event->getEventSource() ;
+            ZLOG << "get data leng " << event->getLeng() ;
+            U32 *timerID = static_cast<U32*>(event->getValue());
+            ZLOG << "Timer ID " << *timerID ;
 
+            HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin);
+            HAL_GPIO_TogglePin(Led2_GPIO_Port, Led2_Pin);
+        }
+    }
+}
 /* USER CODE END 0 */
 
 /**
@@ -104,7 +121,6 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-
   platform::Platform *device = platform::Platform::getInstance();
   device->buildPlatform();
 //
@@ -117,24 +133,17 @@ int main(void)
 //
     TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
 //    TIMER_1(event::EN_TIMER_2, 1500, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
-    unsigned char data[2] = {'Z', 'x'};
+//    TIMER_1(event::EN_TIMER_2, 5000);
 
+    HAL_GPIO_TogglePin(Led2_GPIO_Port, Led2_Pin);
   while (1)
   {
-      event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
+      event = eventPool.eventQueue.waithEvent(1200, event::EN_SOURCE_3);
 
       if (NULL_PTR != event)
       {
-          ZLOG << "get event " << event->getEvent() ;
-          ZLOG << "get getEventPriority " << event->getEventPriority() ;
-          ZLOG << "get getEventSource " << event->getEventSource() ;
-          ZLOG << "get data leng " << event->getLeng() ;
-          U32 *timerID = static_cast<U32*>(event->getValue());
-          ZLOG << "Timer ID " << *timerID ;
+          handleEvent(event);
           eventPool.eventQueue.deleteEvent(&event);
-
-          HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin);
-
 
 //                TIMER_CANCEL_1(*timerID);
       }

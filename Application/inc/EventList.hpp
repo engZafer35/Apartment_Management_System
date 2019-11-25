@@ -53,7 +53,7 @@ typedef enum _EVENT_SOURCE
 /** * \brief to create periodic timer use this enum list */
 typedef enum
 {
-    EN_TIMER_BIT = 1,
+    EN_TIMER_BIT,
     #define BIT_TIME        (WAIT_10_SEC)//ms
 
     EN_TIMER_2,

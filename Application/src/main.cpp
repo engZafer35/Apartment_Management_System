@@ -17,7 +17,6 @@
 #include "EventPool.hpp"
 
 #include <iostream>
-#include <unistd.h>
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -56,43 +55,22 @@ int main(void)
 
     MyCB cb;
 
-    //TODO: lamda expression bak, callback yapısına bak, thread oluşturma yapısına bak.
-
-
     if (OK == device->buildPlatform())
     {
         ZLOGW << "[I] Building Platform SUCCESS, Thanks $$$";
 
         event::EventPool eventPool;
-    //
         eventPool.buildEventProducer();
+        eventPool.startProducers();
+
         TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-//        TIMER_1(event::EN_TIMER_2, 1500, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
-//
-//        U32 timerID = TIMER_1(2500, std::bind(&MyCB::foo, &cb));
-//
-//        U32 timer2 = TIMER_1(2700, [](void){std::cout << "This is my little lambda" << std::endl;});
-
-
-//        ::sleep(2);
-//
-//        TIMER_1.cancelTimer(timerID);
-//        TIMER_1.cancelTimer(timer2);
-
-
-//      TIMER_1(1000);
-//      TIMER_1(1000);
+        TIMER_1(event::EN_TIMER_2, 1000, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
 
         event::EventMsg *event = NULL_PTR;
 
-//
-//        platform::delayMs(10000);
-//
-//        CANCEL_TIMER_1(event::EN_TIMER_3);
-
         while(1)
         {
-            event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
+            event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_3);
 
             if (NULL_PTR != event)
             {
@@ -104,8 +82,6 @@ int main(void)
                 std::cout << "Timer ID " << *timerID << std::endl;
 
                 eventPool.eventQueue.deleteEvent(&event);
-
-//                TIMER_CANCEL_1(*timerID);
             }
 
             //TODO: Application app(device);
@@ -116,41 +92,6 @@ int main(void)
     {
         ZLOGF << "[E] Building Platform Error !!!";
     }
-
-//    event::EventPool eventPool;
-//    event::EventMsg *event = NULL_PTR;
-////
-//    eventPool.buildEventProducer();
-//
-//    TIMER(event::TIMER_ENG_1)(400);
-//
-//    TIMER_1(100);
-//    TIMER_1(500, foo, event::EN_PRIORITY_MED);
-//
-//    TIMER_1(event::EN_TIMER_BIT, 500);
-//    TIMER_1(event::EN_TIMER_BIT, 500, foo, event::EN_PRIORITY_MED);
-
-//    while(1)
-//    {
-//        if (!event)
-//        ::sleep(5);
-//
-//        event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
-//        while(NULL_PTR != event)
-//        {
-//            if (NULL_PTR != event)
-//            {
-//    //            std::cout <<"event ıd" << event->getEvent() << std::endl;
-//    //            std::cout <<"event source" << event->getEventSource() << std::endl;
-//    //            std::cout << "event pr" <<event->getEventPriority() << std::endl;
-//                std::cout << "add: " << event <<" event value: " << *(static_cast<int*>(event->getValue())) << std::endl;
-//
-//                eventPool.eventQueue.deleteEvent(&event);
-//                event = eventPool.eventQueue.waithEvent(200, event::EN_SOURCE_3);
-//            }
-//        }
-//
-//    }
 
     return 0;
 }
