@@ -38,9 +38,9 @@ public:
     /** \brief All supported event producers list*/
     typedef enum
     {
+        EN_EVENT_TIMER, //EN_EVENT_TIMER
         EN_EVENT_PRODUCER_1, //EN_EVENT_KEYPAD
         EN_EVENT_PRODUCER_2, //EN_EVENT_UART
-        EN_EVENT_PRODUCER_3, //EN_EVENT_TIMER
     }EVENT_PRODUCER_LIST;
 
     /** \brief event producer command */
@@ -48,8 +48,6 @@ public:
     {
         EN_PRODUCER_STOP,
         EN_PRODUCER_START,
-        EN_PRODUCER_PAUSE,
-        EN_PRODUCER_RESUME,
     }EVENT_PRODUCER_COMMAND;
 
 public:

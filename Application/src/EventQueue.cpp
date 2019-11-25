@@ -3,7 +3,7 @@
 * #Revision     : 1.0
 * #Date         : Oct 22, 2019 - 4:25:10 PM
 * #File Name    : EventQueue.cpp 
-* #File Path    : /GezGör/Application/src/EventQueue.cpp
+* #File Path    : /GezGor/Application/src/EventQueue.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,9 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
+#include "ProjectConf.hpp"
 #include "EventQueue.hpp"
+#include "TimerEventProducer.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -41,18 +43,41 @@ namespace event
 EventQueue::EventQueue(void)
 {}
 
+EventQueue::~EventQueue(void)
+{
+    deleteAllEvent();
+}
+
 /** \brief throw event */
 EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource)
 {
-    m_mutex.lock(); // lock section
     EventMsg *retEvent = NULL_PTR;
+    U32 timer = -1; //unset timer id
 
-    if (FALSE == qEvents.empty()) // is not empty
+    if (timeoutMs > 0)
     {
-        retEvent = qEvents.front();
+        timer = TIMER_1(timeoutMs);
     }
 
-    m_mutex.unlock(); //unlock section
+    while(1)
+    {
+        if (FALSE == qEvents.empty()) // is not empty
+        {
+            retEvent = qEvents.front();
+            if ((EN_EVENT_USER_TIMER == retEvent->getEvent()) && (timer == *(static_cast<U32*>(retEvent->getValue()))) )
+            {
+                deleteEvent(&retEvent); //timeout event. clear event
+                retEvent = NULL_PTR;
+            }
+
+            break;
+        }
+    }
+
+    if (timeoutMs>0)
+    {
+        TIMER_1.cancelTimer(timer);
+    }
 
     return retEvent;
 }
@@ -61,7 +86,7 @@ EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource)
 RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 {
     m_mutex.lock(); //lock section
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     if (FALSE == qEvents.empty()) // is not empty
     {
@@ -96,21 +121,13 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
     return retVal;
 }
 
-/** \brief delete event with queue number*/
-RETURN_STATUS EventQueue::deleteEvent(U32 queNum)
-{
-    m_mutex.lock(); // lock section
-    RETURN_STATUS retVal = SUCCESS;
-
-    m_mutex.unlock();// unlock section
-    return retVal;
-}
-
 /** \brief delete all event that have same event ID */
 RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
 {
     m_mutex.lock(); // lock section
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
+
+    //TODO:
 
     m_mutex.unlock();// unlock section
     return retVal;
@@ -122,17 +139,15 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
     m_mutex.lock(); // lock section
     RETURN_STATUS retVal = FAILURE;
 
-    if (FALSE == qEvents.empty()) // is not empty
+    for (QEvents::iterator it = qEvents.begin(); it != qEvents.end(); ++it)
     {
-        for (QEvents::iterator it = qEvents.begin(); it != qEvents.end(); ++it)
+        if ((*it) == (*event))
         {
-            if ((*it) == (*event))
-            {
-                qEvents.erase(it);           
-                *event = NULL_PTR;
-                retVal = SUCCESS;
-                break;
-            }
+            qEvents.erase(it); //delete from queue
+            delete (*event);   //delete from memory
+            *event = NULL_PTR;
+            retVal = OK;
+            break;
         }
     }
 
@@ -144,10 +159,16 @@ RETURN_STATUS EventQueue::deleteEvent(EventMsg **event)
 RETURN_STATUS EventQueue::deleteAllEvent(void)
 {
     m_mutex.lock(); // lock section
-    RETURN_STATUS retVal = SUCCESS;
+
+    for (QEvents::iterator it = qEvents.begin(); it != qEvents.end(); ++it)
+    {
+        delete (*it);   //delete from memory
+    }
+
+    qEvents.clear();
 
     m_mutex.unlock();// unlock section
-    return retVal;
+    return OK;
 }
 
 }//namespace event

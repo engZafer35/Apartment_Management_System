@@ -14,7 +14,6 @@
 /*********************************INCLUDES*************************************/
 #include "ProjectConf.hpp"
 #include "EventMessage.hpp"
-#include "Utility.hpp"
 
 #include <deque>
 /******************************* NAME SPACE ***********************************/
@@ -35,6 +34,7 @@ namespace event
 class EventQueue
 {
 public:
+    ~EventQueue(void);
     /** \brief constructor */
     EventQueue(void);
 
@@ -43,9 +43,6 @@ public:
 
     /** \brief create new event*/
     RETURN_STATUS throwEvent(EventMsg *event);
-
-    /** \brief delete event with queue number*/
-    RETURN_STATUS deleteEvent(U32 queNum);
 
     /** \brief delete event with queue number*/
     RETURN_STATUS deleteEvent(EventMsg **event);

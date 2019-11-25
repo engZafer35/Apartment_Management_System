@@ -66,7 +66,7 @@ ConsoleLinux* ConsoleLinux::getInstance(void)
 /** \brief init console */
 RETURN_STATUS ConsoleLinux::init(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
     ZLOGF_IF(FAILURE == retVal) << "[E] ConsoleLinux init Error: !!";
     return retVal;
 }
@@ -77,7 +77,7 @@ RETURN_STATUS ConsoleLinux::init(void)
  */
 RETURN_STATUS ConsoleLinux::consoleStatus(BOOL status)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     return retVal;
 }

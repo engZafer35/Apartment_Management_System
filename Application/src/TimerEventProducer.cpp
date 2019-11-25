@@ -50,8 +50,6 @@ void TimerEventProducer::loop(void)
 {
     m_mutex.lock(); //enter section, don't allow to add new timer when checking the timers status.
 
-//    std::cout << "TimerEventProducer::loop " << m_started << std::endl;
-
     if(TRUE == m_started)
     {
         QTimers::iterator it = m_qTimers.begin();
@@ -80,12 +78,12 @@ void TimerEventProducer::loop(void)
                     {
                         (*it)->m_timeMs = (*it)->m_timeMsCopy;
                     }
-                    else
-                    {
-                        delete((*it));
-                        m_qTimers.erase(it); //delete one shot timer.
-                        --index; //deleted one member, so decrease index again
-                    }
+//                    else
+//                    {
+//                        delete((*it));
+//                        m_qTimers.erase(it); //delete one shot timer.
+//                        --index; //deleted one member, so decrease index again
+//                    }
                 }
             }
 
@@ -96,6 +94,19 @@ void TimerEventProducer::loop(void)
     m_mutex.unlock(); //leave section
 }
 /***************************** CLASS PUBLIC METHOD ****************************/
+TimerEventProducer::~TimerEventProducer(void)
+{
+    m_mutex.lock(); // lock section
+
+    for (QTimers::iterator it = m_qTimers.begin(); it != m_qTimers.end(); ++it)
+    {
+        delete (*it);   //delete from memory
+    }
+
+    m_qTimers.clear();
+
+    m_mutex.unlock();// unlock section
+}
 /** \brief start event producer */
 void TimerEventProducer::start(void)
 {
@@ -151,10 +162,10 @@ U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY 
     td->m_priority   = priority;
     td->m_isContinue = FALSE;
 
-    m_qTimers.push_back(td); //add timer to list
-
     //give timer ID for one shot timer, periodic timer ID reserved
     td->m_timerID = EN_TIMER_MAX_NUM + m_qTimers.size();
+
+    m_qTimers.push_back(td); //add timer to list
 
     ZLOG << "[I] New Timer created: " << timeMs << "ms" << " ID:"<< td->m_timerID;
 
@@ -202,13 +213,14 @@ RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
     {
         if ((*it)->m_timerID == tmID) //find timer
         {
+            delete((*it));
             m_qTimers.erase(it);
-            retVal = SUCCESS;
+            retVal = OK;
             break;
         }
         it++;
     }
-    ZLOGV_IF(SUCCESS == retVal) << "[I] Timer Canceled " << " ID:" << tmID;
+    ZLOGV_IF(OK == retVal) << "[I] Timer Canceled " << " ID:" << tmID;
     m_mutex.unlock(); //leave section
 
     return retVal;

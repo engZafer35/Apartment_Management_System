@@ -13,13 +13,34 @@
 #ifndef __PLATFORM_INTERFACE_HPP__
 #define __PLATFORM_INTERFACE_HPP__
 /*********************************INCLUDES*************************************/
-#include "ZLogger.h"
-#include "GlobalDefinitions.hpp"
+#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
+#include "ZLogger.h" //TODO: complete ZLogger for bare metal
+#endif
 
+#include "GlobalDefinitions.hpp"
 #include "IDevices.hpp"
 #include "IConsole.hpp"
 #include "ISystem.hpp"
 #include "IFileSystem.hpp"
+
+#if (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
+
+#include <iostream> //todo
+
+#define ZLOG std::cout << "\n\r", std::cout //todo
+#define ZLOGW std::cout << "\n\r",std::cout //todo
+#define ZLOGF std::cout << "\n\r",std::cout //todo
+#define ZLOGV_IF(X) std::cout << "\n\r", std::cout //todo
+#define ZLOGF_IF(X) std::cout << "\n\r", std::cout //todo
+
+//#include "DevicesBareMetal.hpp"
+//#include "ConsoleBareMetal.hpp"
+
+#endif
+/**************************************************/
+
+/**************************************************/
+
 
 /******************************* NAME SPACE ***********************************/
 
@@ -65,7 +86,10 @@ public:
 #elif (CURRENT_PLATFORM == PLATFORM_FREERTOS)
 
 #elif (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
-
+    IDevices * const devices = DevicesBareMetal::getInstance(); /** < All platform devices */
+    IConsole * const console = ConsoleBareMetal::getInstance(); /** < Manage system console */
+    ISystem  * const system  = NULL_PTR;                    /** < Manage system status */
+    IFileSystem * const fileSys = NULL_PTR;                 /** < Platform file system */
 #endif
 
 private:

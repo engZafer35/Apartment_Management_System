@@ -80,7 +80,7 @@ UartLinux* UartLinux::getInstance(void)
 /** \brief init uart*/
 RETURN_STATUS UartLinux::init(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     ZLOGF_IF(FAILURE == retVal) << "[E] UartLinux init Error: !!";
     return retVal;
@@ -89,7 +89,7 @@ RETURN_STATUS UartLinux::init(void)
 /** \brief send data*/
 RETURN_STATUS UartLinux::send(const void *buff, U32 size, U32 timeout)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     return retVal;
 }
@@ -97,7 +97,7 @@ RETURN_STATUS UartLinux::send(const void *buff, U32 size, U32 timeout)
 /** \brief receive data*/
 RETURN_STATUS UartLinux::receive(void *buff, U32 size, U32 timeout)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     return retVal;
 }

@@ -2,7 +2,7 @@
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
 * #Date         : Jun 21, 2019 - 3:07:02 PM
-* #File Name    : GlobalDefinitions.h
+* #File Name    : GlobalDefinitions.hpp
 * #File Path    :
 *
 *******************************************************************************/
@@ -16,7 +16,6 @@
 
 /*********************************INCLUDES*************************************/
 #include <functional>
-
 /******************************MACRO DEFINITIONS*******************************/
 #define MCU_16BIT   (16)
 #define MCU_32BIT   (32)
@@ -24,7 +23,7 @@
 //Select project mcu bit size
 #define MCU_BIT_SIZE_DEF (MCU_32BIT)
 
-#define SUCCESS (0)
+#define OK (0)
 #define FAILURE (-1)
 
 #ifndef FALSE
@@ -32,11 +31,11 @@
     #define TRUE  1
 #endif
 
-#ifndef DISABLE
-    #define DISABLE (0)
+#ifndef PASSIVE
+    #define PASSIVE (0)
 #endif
-#ifndef ENABLE
-    #define ENABLE (1)
+#ifndef ACTIVE
+    #define ACTIVE (1)
 #endif
 
 #define WAIT_100_MS     (100)

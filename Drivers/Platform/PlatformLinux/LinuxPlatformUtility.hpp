@@ -13,6 +13,7 @@
 #ifndef __LINUX_PLATFORM_UTILITY_HPP__
 #define __LINUX_PLATFORM_UTILITY_HPP__
 /*********************************INCLUDES*************************************/
+#ifdef __linux
 #include <mutex>
 
 /******************************* NAME SPACE ***********************************/
@@ -108,6 +109,8 @@ private:
 };
 
 }//namespace platform
+
+#endif //#ifdef __linux
 #endif /* __LINUX_PLATFORM_UTILITY_HPP__ */
 
 /********************************* End Of File ********************************/

@@ -38,9 +38,7 @@
 namespace event
 {
 EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
-{
-
-}
+{}
 
 EventPool::~EventPool(void)
 {
@@ -52,12 +50,12 @@ EventPool::~EventPool(void)
 
 RETURN_STATUS EventPool::buildEventProducer(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
     m_tEventProducer->setQueue(&eventQueue);
     m_tEventProducer->pause();
-    m_tEventProducer->start();
+    m_tEventProducer->stop();
 
     //TODO: create all event producers
     //TODO: give event queue handle to event producers
@@ -68,23 +66,44 @@ RETURN_STATUS EventPool::buildEventProducer(void)
 
 RETURN_STATUS EventPool::startProducers(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    m_tEventProducer->start();
 
-    return retVal;
+    //TODO: start all producers here
+
+    return OK;
 }
 
 RETURN_STATUS EventPool::stopProducers(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    m_tEventProducer->stop();
 
-    return retVal;
+    //TODO: start all producers here
+
+    return OK;
 }
 
 RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    switch(list)
+    {
+        case EN_EVENT_TIMER:
+        {
+            (EN_PRODUCER_START == cmd) ? m_tEventProducer->start() : m_tEventProducer->stop();
+            break;
+        }
+        case EN_EVENT_PRODUCER_1:
+        {
+            break;
+        }
+        case EN_EVENT_PRODUCER_2:
+        {
+            break;
+        }
 
-    return retVal;
+        //TODO: other event producer
+    }
+
+    return OK;
 }
 
 }//namespace event

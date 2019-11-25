@@ -66,7 +66,7 @@ GpioLinux* GpioLinux::getInstance(void)
 /** init all gpio */
 RETURN_STATUS GpioLinux::init(void)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
     ZLOGF_IF(FAILURE == retVal) << "GpioLinux init Error";
     return retVal;
 }
@@ -82,7 +82,7 @@ BOOL GpioLinux::read(void)
 /** write gpio*/
 RETURN_STATUS GpioLinux::write(BOOL status)
 {
-    RETURN_STATUS retVal = SUCCESS;
+    RETURN_STATUS retVal = OK;
 
     return retVal;
 }

@@ -34,7 +34,7 @@
 #define __TIMER_EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
 #include "ProjectConf.hpp"
-#include "Utility.hpp"
+
 #include "EventProducer.hpp"
 
 #include <deque>
@@ -82,6 +82,7 @@ namespace event
 class TimerEventProducer : public IEventProducer
 {
 public:
+    ~TimerEventProducer(void);
     /**
      * \brief  create TimerEventProducer(singleton)
      * tparam  create different timer with ID. if system
