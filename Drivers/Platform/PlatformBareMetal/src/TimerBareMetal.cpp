@@ -69,6 +69,7 @@ namespace platform
 {
 TimerBareMetal::~TimerBareMetal(void)
 {
+    delete (m_instance);
     m_instance = NULL_PTR;
 }
 

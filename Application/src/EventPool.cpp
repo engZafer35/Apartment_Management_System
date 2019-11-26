@@ -52,7 +52,7 @@ RETURN_STATUS EventPool::buildEventProducer(void)
 {
     RETURN_STATUS retVal = OK;
 
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
+    m_tEventProducer = TimerEventProducer::getInstance(); /** < create timer event producer >*/
     m_tEventProducer->setQueue(&eventQueue);
     m_tEventProducer->pause();
     m_tEventProducer->stop();
@@ -64,7 +64,7 @@ RETURN_STATUS EventPool::buildEventProducer(void)
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
+RETURN_STATUS EventPool::start(void)
 {
     m_tEventProducer->start();
 
@@ -73,7 +73,7 @@ RETURN_STATUS EventPool::startProducers(void)
     return OK;
 }
 
-RETURN_STATUS EventPool::stopProducers(void)
+RETURN_STATUS EventPool::stop(void)
 {
     m_tEventProducer->stop();
 

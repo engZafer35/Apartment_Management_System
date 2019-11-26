@@ -64,10 +64,10 @@ public:
     RETURN_STATUS buildEventProducer(void);
 
     /** \brief start all producer to create event */
-    RETURN_STATUS startProducers(void);
+    RETURN_STATUS start(void);
 
     /** \brief stop all producer */
-    RETURN_STATUS stopProducers(void);
+    RETURN_STATUS stop(void);
 
     /**
      * \brief send command to producer

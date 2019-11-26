@@ -67,9 +67,9 @@ void handleEvent(event::EventMsg *event)
 {
     switch (event->getEvent())
     {
-        case event::EN_EVENT_USER_TIMER:
+        case event::EN_EVENT_PER_JOB_1:
         {
-            ZLOG << "get event " << event->getEvent() ;
+            ZLOG << "get event ++++++++++" << event->getEvent() ;
             ZLOG << "get getEventPriority " << event->getEventPriority() ;
             ZLOG << "get getEventSource " << event->getEventSource() ;
             ZLOG << "get data leng " << event->getLeng() ;
@@ -77,7 +77,26 @@ void handleEvent(event::EventMsg *event)
             ZLOG << "Timer ID " << *timerID ;
 
             HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin);
-            HAL_GPIO_TogglePin(Led2_GPIO_Port, Led2_Pin);
+            break;
+        }
+
+        case event::EN_EVENT_PER_JOB_2:
+        {
+            HAL_GPIO_TogglePin(Led1_GPIO_Port, Led1_Pin);
+            break;
+        }
+
+        case event::EN_EVENT_TIMEOUT_TIMER:
+        {
+            ZLOG << "get event --------------------------" << event->getEvent() ;
+            ZLOG << "get getEventPriority " << event->getEventPriority() ;
+            ZLOG << "get getEventSource " << event->getEventSource() ;
+            ZLOG << "get data leng " << event->getLeng() ;
+            U32 *timerID = static_cast<U32*>(event->getValue());
+            ZLOG << "Timer ID " << *timerID ;
+
+            HAL_GPIO_TogglePin(Led1_GPIO_Port, Led1_Pin);
+            break;
         }
     }
 }
@@ -128,17 +147,18 @@ int main(void)
 //
     event::EventPool eventPool;
     eventPool.buildEventProducer();
+    eventPool.start();
     event::EventMsg *event = NULL_PTR;
 //
 //
-    TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-//    TIMER_1(event::EN_TIMER_2, 1500, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
-//    TIMER_1(event::EN_TIMER_2, 5000);
+    TIMER(event::EN_TIMER_5, 1000, event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+    TIMER(event::EN_TIMER_2, 2000, event::EN_EVENT_NO_EVENT, [](void){HAL_GPIO_TogglePin(Led3_GPIO_Port, Led3_Pin); ZLOG << "Timer Event Callback Funct Timer:2000ms!!!!!!!!!!!!";}, event::EN_PRIORITY_MED);
+    TIMER(event::EN_TIMER_3, 3000, event::EN_EVENT_PER_JOB_2, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_MED);
 
     HAL_GPIO_TogglePin(Led2_GPIO_Port, Led2_Pin);
   while (1)
   {
-      event = eventPool.eventQueue.waithEvent(1200, event::EN_SOURCE_3);
+      event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER | event::EN_SOURCE_ONE_TIMER);
 
       if (NULL_PTR != event)
       {

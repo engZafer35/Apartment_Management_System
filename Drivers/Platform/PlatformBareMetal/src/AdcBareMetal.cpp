@@ -48,6 +48,7 @@ namespace platform
 {
 AdcBareMetal::~AdcBareMetal(void)
 {
+    delete (m_instance);
     m_instance = NULL_PTR;
 }
 AdcBareMetal* AdcBareMetal::getInstance(void)

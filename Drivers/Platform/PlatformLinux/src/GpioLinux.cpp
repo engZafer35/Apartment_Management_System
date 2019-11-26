@@ -49,6 +49,7 @@ namespace platform
 {
 GpioLinux::~GpioLinux(void)
 {
+    delete (m_instance);
     m_instance = NULL_PTR;
 }
 

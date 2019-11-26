@@ -46,10 +46,37 @@ public:
 private:
     int counter;
 };
+void handleEvent(event::EventMsg *event)
+{
+    switch (event->getEvent())
+    {
+        case event::EN_EVENT_PER_JOB_1:
+        {
+            ZLOG << "get event " << event->getEvent() ;
+            ZLOG << "get getEventPriority " << event->getEventPriority() ;
+            ZLOG << "get getEventSource " << event->getEventSource() ;
+            ZLOG << "get data leng " << event->getLeng() ;
+            U32 *timerID = static_cast<U32*>(event->getValue());
+            ZLOG << "Timer ID " << *timerID ;
 
+            break;
+        }
+        case event::EN_EVENT_TIMEOUT_TIMER:
+        {
+            ZLOG << "get event " << event->getEvent() ;
+            ZLOG << "get getEventPriority " << event->getEventPriority() ;
+            ZLOG << "get getEventSource " << event->getEventSource() ;
+            ZLOG << "get data leng " << event->getLeng() ;
+            U32 *timerID = static_cast<U32*>(event->getValue());
+            ZLOG << "Timer ID " << *timerID ;
+
+            break;
+        }
+    }
+}
 int main(void)
 {
-    zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
+//    zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
 
     platform::Platform *device = platform::Platform::getInstance();
 
@@ -61,26 +88,21 @@ int main(void)
 
         event::EventPool eventPool;
         eventPool.buildEventProducer();
-        eventPool.startProducers();
+        eventPool.start();
 
-        TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-        TIMER_1(event::EN_TIMER_2, 1000, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
+        TIMER(event::EN_TIMER_5, 3000, event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+//        TIMER(event::EN_TIMER_2, 1000, event::EN_EVENT_NO_EVENT, [](void){ZLOG << "Timer Event Callback Funct Timer:1000ms";}, event::EN_PRIORITY_MED);
+
+        TIMER(5000);
 
         event::EventMsg *event = NULL_PTR;
 
         while(1)
         {
-            event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_3);
-
+            event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER);
             if (NULL_PTR != event)
             {
-                std::cout << "get event " << event->getEvent() << std::endl;
-                std::cout << "get getEventPriority " << event->getEventPriority() << std::endl;
-                std::cout << "get getEventSource " << event->getEventSource() << std::endl;
-                std::cout << "get event data leng " << event->getLeng() << std::endl;
-                U32 *timerID = static_cast<U32*>(event->getValue());
-                std::cout << "Timer ID " << *timerID << std::endl;
-
+                handleEvent(event);
                 eventPool.eventQueue.deleteEvent(&event);
             }
 

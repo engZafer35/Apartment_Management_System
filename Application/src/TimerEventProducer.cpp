@@ -23,7 +23,10 @@
 /******************************* TYPE DEFINITIONS *****************************/
 
 /********************************** VARIABLES *********************************/
-
+namespace event
+{
+TimerEventProducer *TimerEventProducer::m_instance = NULL_PTR;
+}//namespace event
 /***************************** STATIC FUNCTIONS  ******************************/
 
 /***************************** PUBLIC FUNCTIONS  ******************************/
@@ -34,7 +37,7 @@
 namespace event
 {
 
-TimerEventProducer::TimerEventProducer(void) : m_timerEnginePeriod{0}, m_started{FALSE}, m_exit{FALSE}
+TimerEventProducer::TimerEventProducer(void) : idCounter{EN_TIMER_MAX_NUM}, m_timerEnginePeriod{0}, m_start{FALSE}
 {
     m_platform = platform::Platform::getInstance(); //get platform instance
     m_timerEnginePeriod = m_platform->devices->timer->getPeriod();
@@ -50,7 +53,7 @@ void TimerEventProducer::loop(void)
 {
     m_mutex.lock(); //enter section, don't allow to add new timer when checking the timers status.
 
-    if(TRUE == m_started)
+    if(TRUE == m_start)
     {
         QTimers::iterator it = m_qTimers.begin();
         U32 index = 0;
@@ -58,11 +61,11 @@ void TimerEventProducer::loop(void)
         while(it != m_qTimers.end())
         {
             ++index; //for next iterator
-            if ((*it)->m_timeMs > 0)
+            if ((*it)->timeMs > 0)
             {
-                (*it)->m_timeMs -= m_timerEnginePeriod; //decrease timer value
+                (*it)->timeMs -= m_timerEnginePeriod; //decrease timer value
 
-                if ((*it)->m_timeMs < m_timerEnginePeriod) //check timer done
+                if ((*it)->timeMs < m_timerEnginePeriod) //check timer done
                 {
                     if (NULL_PTR != (*it)->cbFunc)
                     {
@@ -70,20 +73,20 @@ void TimerEventProducer::loop(void)
                     }
                     else //don't throw event if callback function exist
                     {
-                        throwEvent(EN_EVENT_USER_TIMER, EN_SOURCE_TIMER, (*it)->m_priority, \
-                                   &((*it)->m_timerID), sizeof((*it)->m_timerID) );
+                        EVENT_SOURCE src;
+                        if((*it)->timeMsCopy > 0)
+                        {
+                            src = EN_SOURCE_PER_TIMER;
+                        }
+                        else
+                        {
+                            src = EN_SOURCE_ONE_TIMER;
+                        }
+
+                        throwEvent((*it)->event, src, (*it)->priority, &((*it)->timerID), sizeof((*it)->timerID) );
                     }
 
-                    if ((*it)->m_isContinue) //if periodic timer, reload timer
-                    {
-                        (*it)->m_timeMs = (*it)->m_timeMsCopy;
-                    }
-//                    else
-//                    {
-//                        delete((*it));
-//                        m_qTimers.erase(it); //delete one shot timer.
-//                        --index; //deleted one member, so decrease index again
-//                    }
+                    (*it)->timeMs = (*it)->timeMsCopy;
                 }
             }
 
@@ -105,15 +108,29 @@ TimerEventProducer::~TimerEventProducer(void)
 
     m_qTimers.clear();
 
+    delete (m_instance);
+    m_instance = NULL_PTR;
+
     m_mutex.unlock();// unlock section
 }
+
+/** \brief  create TimerEventProducer(singleton)*/
+TimerEventProducer *TimerEventProducer::getInstance(void)
+{
+    platform::MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
+    if (NULL_PTR == m_instance)
+    {
+        m_instance = new TimerEventProducer();
+    }
+    return m_instance;
+}
+
 /** \brief start event producer */
 void TimerEventProducer::start(void)
 {
     m_mutex.lock();
 
-    m_started = TRUE;
-    m_exit    = FALSE;
+    m_start = TRUE;
 
     m_mutex.unlock();
 }
@@ -122,10 +139,9 @@ void TimerEventProducer::stop(void)
 {
     m_mutex.lock();
 
-    m_started = FALSE;
+    m_start = FALSE;
 
     //TODO: unregister from timer driver. if success set m_exit TRUE
-    m_exit    = TRUE;
 
     m_mutex.unlock();
 }
@@ -135,8 +151,7 @@ void TimerEventProducer::pause(void)
 {
     m_mutex.lock();
 
-    m_started = FALSE;
-    m_exit    = FALSE;
+    m_start = FALSE;
 
     m_mutex.unlock();
 }
@@ -150,28 +165,35 @@ void TimerEventProducer::pause(void)
  * \note: if user want to cancel timer, cancelTimer() method can be invoke by timer ID
  *        so don't lost timer ID
  */
-U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY priority)
+U32 TimerEventProducer::operator ()(U32 timeMs, EVENTS event, VoidCallback cb, EVENT_PRIORITY priority)
 {
     m_mutex.lock(); //enter section
-
+    U32 ru;
     struct TimerData *td = new struct TimerData;
 
-    td->cbFunc       = cb;
-    td->m_timeMs     = timeMs;
-    td->m_timeMsCopy = timeMs;
-    td->m_priority   = priority;
-    td->m_isContinue = FALSE;
+    //round up
+    ru = (timeMs % m_timerEnginePeriod);
+    if (0 != ru)
+    {
+        timeMs += m_timerEnginePeriod - ru;
+    }
+
+    td->cbFunc      = cb;
+    td->timeMs      = timeMs;
+    td->timeMsCopy  = 0;
+    td->event       = event;
+    td->priority    = priority;
 
     //give timer ID for one shot timer, periodic timer ID reserved
-    td->m_timerID = EN_TIMER_MAX_NUM + m_qTimers.size();
+    td->timerID = idCounter++; //dot care overload
 
     m_qTimers.push_back(td); //add timer to list
 
-    ZLOG << "[I] New Timer created: " << timeMs << "ms" << " ID:"<< td->m_timerID;
+    ZLOG << "[I] New One-Shot Timer created: " << timeMs << "ms" << " ID:"<< td->timerID << std::endl;
 
     m_mutex.unlock();//leave section
 
-    return td->m_timerID;
+    return td->timerID;
 }
 
 /**
@@ -181,26 +203,33 @@ U32 TimerEventProducer::operator ()(U32 timeMs, VoidCallback cb, EVENT_PRIORITY 
  * \param cb when timer done, timer producer will invoke callback function
  * \param priority
  */
-void TimerEventProducer::operator ()(TimerID tmID, U32 timeMs, VoidCallback cb, EVENT_PRIORITY priority)
+void TimerEventProducer::operator ()(TimerID tmID, U32 timeMs, EVENTS event, VoidCallback cb, EVENT_PRIORITY priority)
 {
     m_mutex.lock(); //enter section
-
+    U32 ru;
     struct TimerData *td = new struct TimerData;
 
-    td->cbFunc       = cb;
-    td->m_timeMs     = timeMs;
-    td->m_timeMsCopy = timeMs;
-    td->m_priority   = priority;
-    td->m_isContinue = TRUE;
-    td->m_timerID    = tmID;
+    //round up
+    ru = (timeMs % m_timerEnginePeriod);
+    if (0 != ru)
+    {
+        timeMs += m_timerEnginePeriod - ru;
+    }
+
+    td->cbFunc     = cb;
+    td->timeMs     = timeMs;
+    td->timeMsCopy = timeMs;
+    td->event      = event;
+    td->priority   = priority;
+    td->timerID    = tmID;
 
     m_qTimers.push_back(td); //add timer to list
 
-    ZLOG << "[I] New Periodic Timer created: " << timeMs << "ms" << " ID:"<< td->m_timerID;
+    ZLOG << "[I] New Periodic Timer created: " << timeMs << "ms" << " ID:"<< td->timerID;
     m_mutex.unlock(); //leave section
 }
 
-RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
+RETURN_STATUS TimerEventProducer::cancelTimer(U32 tmID)
 {
     m_mutex.lock(); //enter section
 
@@ -211,7 +240,7 @@ RETURN_STATUS TimerEventProducer::cancelTimer(S32 tmID)
 
     for (U32 i = 0; i < size; i++)
     {
-        if ((*it)->m_timerID == tmID) //find timer
+        if ((*it)->timerID == tmID) //find timer
         {
             delete((*it));
             m_qTimers.erase(it);
