@@ -17,6 +17,8 @@
 #include "EventPool.hpp"
 
 #include <iostream>
+#include "EventHandler.hpp"
+#include "MyEventInterpreter.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -46,39 +48,15 @@ public:
 private:
     int counter;
 };
-void handleEvent(event::EventMsg *event)
-{
-    switch (event->getEvent())
-    {
-        case event::EN_EVENT_PER_JOB_1:
-        {
-            ZLOG << "get event " << event->getEvent() ;
-            ZLOG << "get getEventPriority " << event->getEventPriority() ;
-            ZLOG << "get getEventSource " << event->getEventSource() ;
-            ZLOG << "get data leng " << event->getLeng() ;
-            U32 *timerID = static_cast<U32*>(event->getValue());
-            ZLOG << "Timer ID " << *timerID ;
 
-            break;
-        }
-        case event::EN_EVENT_TIMEOUT_TIMER:
-        {
-            ZLOG << "get event " << event->getEvent() ;
-            ZLOG << "get getEventPriority " << event->getEventPriority() ;
-            ZLOG << "get getEventSource " << event->getEventSource() ;
-            ZLOG << "get data leng " << event->getLeng() ;
-            U32 *timerID = static_cast<U32*>(event->getValue());
-            ZLOG << "Timer ID " << *timerID ;
-
-            break;
-        }
-    }
-}
 int main(void)
 {
 //    zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
 
     platform::Platform *device = platform::Platform::getInstance();
+
+    MyEventInterpreter inp;
+    event::EventHandler eh(inp);
 
     MyCB cb;
 
@@ -90,21 +68,23 @@ int main(void)
         eventPool.buildEventProducer();
         eventPool.start();
 
-        TIMER(event::EN_TIMER_5, 3000, event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+//        TIMER(event::EN_TIMER_5, 3000, event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
 //        TIMER(event::EN_TIMER_2, 1000, event::EN_EVENT_NO_EVENT, [](void){ZLOG << "Timer Event Callback Funct Timer:1000ms";}, event::EN_PRIORITY_MED);
 
-        TIMER(5000);
+        TIMER(2000);
 
         event::EventMsg *event = NULL_PTR;
 
         while(1)
         {
-            event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER);
+            U32 tid = TIMER(1000);
+            event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER | event::EN_SOURCE_ONE_TIMER);
             if (NULL_PTR != event)
             {
-                handleEvent(event);
+                eh.handleEVent(*event);
                 eventPool.eventQueue.deleteEvent(&event);
             }
+            CANCEL_TIMER(tid);
 
             //TODO: Application app(device);
             //TODO: app.run();

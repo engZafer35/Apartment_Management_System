@@ -28,8 +28,6 @@ typedef enum _EVENTS
     EN_EVENT_TIMEOUT_TIMER,
     EN_EVENT_PER_JOB_1,
     EN_EVENT_PER_JOB_2,
-    EN_EVENT_2,
-    EN_EVENT_3,
 }EVENTS;
 
 /** \brief Event Priority */
