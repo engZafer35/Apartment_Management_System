@@ -1,19 +1,19 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 28, 2019 - 2:25:42 PM
-* #File Name    : MyEventInterpreter.hpp
-* #File Path    : /GezGor/Application/inc/MyEventInterpreter.hpp
+* #Date         : Nov 29, 2019 - 10:40:59 AM
+* #File Name    : ExmLinuxEventHandler.hpp
+* #File Path    : /GezGor/Application/inc/ExmLinuxEventHandler.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __MY_EVENT_INTERPRETER_HPP__
-#define __MY_EVENT_INTERPRETER_HPP__
+#ifndef __EXM_LINUX_EVENT_HANDLER_HPP__
+#define __EXM_LINUX_EVENT_HANDLER_HPP__
 /*********************************INCLUDES*************************************/
-#include "IEventInterpreter.hpp"
+#include "IEventHandler.hpp"
 #include "EventMessage.hpp"
 /******************************* NAME SPACE ***********************************/
 
@@ -28,11 +28,11 @@
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
 /********************************* CLASS **************************************/
-class MyEventInterpreter : public event::IEventInterpreter
+class ExmLinuxEventHandler : public IEventHandler
 {
 public:
-    RETURN_STATUS handleEvent(event::EventMsg &event);
+    virtual RETURN_STATUS handleEvent(event::EventMsg &event) override;
 };
-#endif /* __MY_EVENT_INTERPRETER_HPP__ */
+#endif /* __EXM_LINUX_EVENT_HANDLER_HPP__ */
 
 /********************************* End Of File ********************************/

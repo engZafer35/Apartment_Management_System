@@ -28,8 +28,7 @@
 #include <unistd.h>
 
 #include "stdio.h"
-#include "EventHandler.hpp"
-#include "MyEventInterpreter.hpp"
+#include "ExmpSTMEventHandler.hpp"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -119,8 +118,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   platform::Platform *device = platform::Platform::getInstance();
-  MyEventInterpreter inp;
-  event::EventHandler eh(inp);
+
+  ExmpSTMEventHandler stmHandler;
 
   device->buildPlatform();
 //
@@ -135,18 +134,18 @@ int main(void)
 
     MyCB cb; //test callback class
 
-    TIMER(event::EN_TIMER_5, 112,event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-    TIMER(event::EN_TIMER_2, 221, event::EN_EVENT_NO_EVENT, [](void){HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin); ZLOG << "#### Hi, I am Lambda #### ";}, event::EN_PRIORITY_MED);
-    TIMER(event::EN_TIMER_3, 300, event::EN_EVENT_PER_JOB_2, /*std::bind(&MyCB::foo, &cb)*/NULL_PTR, event::EN_PRIORITY_MED);
-    U32 tid = TIMER(390);
+    TIMER(event::EN_TIMER_5, 300,event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+    TIMER(event::EN_TIMER_2, 100, event::EN_EVENT_NO_EVENT, [](void){HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin); ZLOG << "#### Hi, I am Lambda #### ";}, event::EN_PRIORITY_MED);
+    TIMER(event::EN_TIMER_3, 200, event::EN_EVENT_PER_JOB_2);
+    U32 tid = TIMER(400);
+
   while (1)
   {
-
       event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER | event::EN_SOURCE_ONE_TIMER);
 
       if (NULL_PTR != event)
       {
-          eh.handleEVent(*event);
+          stmHandler.handleEvent(*event);
 
           if (event::EN_SOURCE_ONE_TIMER == event->getEventSource())
           {
@@ -156,7 +155,6 @@ int main(void)
 
           eventPool.eventQueue.deleteEvent(&event);
       }
-
 
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */

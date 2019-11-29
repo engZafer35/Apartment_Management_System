@@ -249,7 +249,7 @@ RETURN_STATUS TimerEventProducer::cancelTimer(U32 tmID)
         }
         it++;
     }
-    ZLOGV_IF(OK == retVal) << "[I] Timer Canceled " << " ID:" << tmID;
+//    ZLOGV_IF(OK == retVal) << "[I] Timer Canceled " << " ID:" << tmID;
     m_mutex.unlock(); //leave section
 
     return retVal;
