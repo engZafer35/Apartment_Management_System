@@ -1,24 +1,18 @@
 /******************************************************************************
-*                       "THE BEER-WARE LICENSE" (Revision 2020)
-* ZS wrote this file. As long as you retain this notice you can do whatever
-* you want with this stuff. If we meet some day, and you think this stuff
-* is worth it, you can buy me a beer in return
-*
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 2:43:17 PM
-* #File Name    : main.cpp 
-* #File Path    : /GezGor/Application/src/main.cpp
+* #Date         : Jan 7, 2020 - 4:15:01 PM
+* #File Name    : AppEventHandler.cpp 
+* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/src/AppEventHandler.cpp
 *******************************************************************************/
 /******************************************************************************
+*
 *
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "ExmLinuxEventHandler.hpp"
 #include "ProjectConf.hpp"
-
-#include "AppRedBirdLoop.hpp"
+#include "AppEventHandler.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -34,28 +28,45 @@
 /***************************** STATIC FUNCTIONS  ******************************/
 
 /***************************** PUBLIC FUNCTIONS  ******************************/
-int main(void)
+
+/***************************** CLASS VARIABLES ********************************/
+
+/***************************** CLASS PRIVATE METHOD ***************************/
+
+/***************************** CLASS PROTECTED METHOD *************************/
+
+/***************************** CLASS PUBLIC METHOD ****************************/
+namespace redbird
 {
-    //    zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
 
-        platform::Platform *platform = platform::Platform::getInstance();
+AppEventHandler::AppEventHandler(void)
+{}
 
-        if (OK == platform->buildPlatform())
+AppEventHandler::~AppEventHandler(void)
+{}
+
+RETURN_STATUS AppEventHandler::handleEvent(event::EventMsg &event)
+{
+    RETURN_STATUS retVal = OK;
+
+    switch(event.getEvent())
+    {
+        case event::EN_EVENT_PER_JOB_1:
         {
-            ZLOGW << "[I] Building Platform SUCCESS, Thanks $$$";
-
-            redbird::AppRedBird redBird(*platform);
-
-            if (OK == redBird.eggs())
-            {
-                redBird.fly();
-            }
+            ZLOG << " >[I] AppEventHandler::EN_EVENT_PER_JOB_1" << "\n";
+            break;
         }
-        else
+        case event::EN_EVENT_PER_JOB_2:
         {
-            ZLOGF << "[E] Building Platform Error !!!";
+            ZLOG << " >[I] AppEventHandler::EN_EVENT_PER_JOB_2" << "\n";
+            break;
         }
+        default:
+            break;
+    }
 
-    return 0;
+    return retVal;
 }
+
+}//namespace redbird
 /******************************** End Of File *********************************/
