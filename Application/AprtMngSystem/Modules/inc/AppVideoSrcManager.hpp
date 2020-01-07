@@ -1,21 +1,22 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Jan 7, 2020 - 2:05:02 PM
+* #Date         : Jan 7, 2020 - 3:16:40 PM
 * #File Name    : AppVideoSrcManager.hpp
-* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/AppVideoSrcManager.hpp
-*
+* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/inc_/AppVideoSrcManager.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPVIDEOSRCMANAGER_HPP_
-#define APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPVIDEOSRCMANAGER_HPP_
+#ifndef __APP_VIDEO_SRC_MANAGER_HPP__
+#define __APP_VIDEO_SRC_MANAGER_HPP__
 /*********************************INCLUDES*************************************/
 
-/******************************MACRO DEFINITIONS*******************************/
+/******************************* NAME SPACE ***********************************/
+
+/**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
 
@@ -23,7 +24,10 @@
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
+/************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
-#endif /* APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPVIDEOSRCMANAGER_HPP_ */
+/********************************* CLASS **************************************/
+
+#endif /* __APP_VIDEO_SRC_MANAGER_HPP__ */
 
 /********************************* End Of File ********************************/
