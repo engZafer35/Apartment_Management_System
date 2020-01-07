@@ -66,11 +66,11 @@ class TimerEventProducer : public IEventProducer
 {
 public:
     ~TimerEventProducer(void);
-    /**
-     * \brief  create TimerEventProducer(singleton)
-     * \return address of TimerEventProducer
-     */
-    static TimerEventProducer *getInstance(void);
+/**
+ * \brief  create TimerEventProducer(singleton)
+ * \return address of TimerEventProducer
+ */
+static TimerEventProducer *getInstance(void);
 
     /**
      * \brief create one shot timer

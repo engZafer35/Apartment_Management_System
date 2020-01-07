@@ -138,6 +138,7 @@ int main(void)
     TIMER(event::EN_TIMER_2, 100, event::EN_EVENT_NO_EVENT, [](void){HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin); ZLOG << "#### Hi, I am Lambda #### ";}, event::EN_PRIORITY_MED);
     TIMER(event::EN_TIMER_3, 200, event::EN_EVENT_PER_JOB_2);
     U32 tid = TIMER(400);
+    U32 tid2 = TIMER(300);
 
   while (1)
   {

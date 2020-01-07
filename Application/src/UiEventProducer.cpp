@@ -1,9 +1,9 @@
 /******************************************************************************
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 9:16:01 PM
-* #File Name    : EventPool.cpp 
-* #File Path    : /GezGor/Application/src/EventPool.cpp
+* #Date         : Dec 2, 2019 - 9:58:06 AM
+* #File Name    : UiEventProducer.cpp 
+* #File Path    : /GezGor/Application/src/UiEventProducer.cpp
 *******************************************************************************/
 /******************************************************************************
 *
@@ -11,7 +11,7 @@
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
-#include "EventPool.hpp"
+#include "UiEventProducer.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
 
 /********************************* NAME SPACE *********************************/
@@ -23,87 +23,75 @@
 /******************************* TYPE DEFINITIONS *****************************/
 
 /********************************** VARIABLES *********************************/
-
+namespace event
+{
+UiEventProducer *UiEventProducer::m_instance = NULL_PTR;
+}//namespace event
 /***************************** STATIC FUNCTIONS  ******************************/
 
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
+namespace event
+{
 /***************************** CLASS PRIVATE METHOD ***************************/
-
+UiEventProducer::UiEventProducer(void) : m_start{FALSE}
+{
+}
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
-namespace event
+UiEventProducer::~UiEventProducer(void)
 {
-EventPool::EventPool(void) : m_timerEventProd{NULL_PTR}
-{}
+    m_mutex.lock(); // lock section
 
-EventPool::~EventPool(void)
+    delete (m_instance);
+    m_instance = NULL_PTR;
+
+    m_mutex.unlock();// unlock section
+}
+
+/**
+ * \brief  create TimerEventProducer(singleton)
+ * \return address of TimerEventProducer
+ */
+UiEventProducer *UiEventProducer::getInstance(void)
 {
-    if (NULL_PTR != m_timerEventProd)
+    platform::MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
+    if (NULL_PTR == m_instance)
     {
-        delete m_timerEventProd;
+        m_instance = new UiEventProducer();
     }
+    return m_instance;
 }
 
-RETURN_STATUS EventPool::buildEventProducer(void)
+/** \brief start event producer */
+void UiEventProducer::start(void)
 {
-    RETURN_STATUS retVal = OK;
-
-    m_timerEventProd = TimerEventProducer::getInstance(); /** < create timer event producer >*/
-    m_timerEventProd->setQueue(&eventQueue);
-    m_timerEventProd->pause();
-    m_timerEventProd->stop();
-
-    //TODO: create all event producers
-    //TODO: give event queue handle to event producers
-    //TODO: stop all event producers
-
-    return retVal;
+    m_mutex.lock();
+    m_start = TRUE;
+    m_mutex.unlock();
 }
 
-RETURN_STATUS EventPool::start(void)
+/** \brief stop event producer */
+void UiEventProducer::stop(void)
 {
-    m_timerEventProd->start();
-
-    //TODO: start all producers here
-
-    return OK;
+    m_mutex.lock();
+    m_start = FALSE;
+    m_mutex.unlock();
 }
 
-RETURN_STATUS EventPool::stop(void)
+/** \brief pause event producer */
+void UiEventProducer::pause(void)
 {
-    m_timerEventProd->stop();
-
-    //TODO: start all producers here
-
-    return OK;
+    m_mutex.lock();
+    m_start = FALSE;
+    m_mutex.unlock();
 }
 
-RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd)
+/** \brief run event producer */
+void UiEventProducer::loop(void)
 {
-    switch(list)
-    {
-        case EN_EVENT_TIMER:
-        {
-            (EN_PRODUCER_START == cmd) ? m_timerEventProd->start() : m_timerEventProd->stop();
-            break;
-        }
-        case EN_EVENT_PRODUCER_1:
-        {
-            break;
-        }
-        case EN_EVENT_PRODUCER_2:
-        {
-            break;
-        }
-
-        //TODO: other event producer
-    }
-
-    return OK;
 }
 
 }//namespace event

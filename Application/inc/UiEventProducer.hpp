@@ -1,21 +1,21 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Oct 22, 2019 - 8:30:25 PM
-* #File Name    : EventProducerInterface.hpp
-* #File Path    : /GezGor/Application/inc/EventProducer.hpp
+* #Date         : Dec 2, 2019 - 9:01:55 AM
+* #File Name    : UiEventProducer.hpp
+* #File Path    : /GezGor/Application/inc/UiEventProducer.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __EVENT_PRODUCER_HPP__
-#define __EVENT_PRODUCER_HPP__
+#ifndef __UI_EVENT_PRODUCER_HPP__
+#define __UI_EVENT_PRODUCER_HPP__
 /*********************************INCLUDES*************************************/
-#include "EventQueue.hpp"
+#include "ProjectConf.hpp"
+#include "EventProducer.hpp"
 #include "EventList.hpp"
-#include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -31,39 +31,42 @@
 /********************************* CLASS **************************************/
 namespace event
 {
-class IEventProducer : private virtual NonCopyable
+
+class UiEventProducer : public IEventProducer
 {
 public:
-    IEventProducer(void);
-    /** \brief destructor */
-    virtual ~IEventProducer(void);
+    ~UiEventProducer(void);
 
-    /** \brief All event producer will load its event into event queue */
-    virtual void setQueue(EventQueue *eventQueue);
-
-    /** \brief pause event producer */
-    virtual void pause(void) = 0;
+    /**
+     * \brief  create TimerEventProducer(singleton)
+     * \return address of TimerEventProducer
+     */
+    static UiEventProducer *getInstance(void);
 
     /** \brief start event producer */
-    virtual void start(void) = 0;
+    void start(void) override;
 
     /** \brief stop event producer */
-    virtual void stop(void) = 0;
+    void stop(void) override;
+
+    /** \brief pause event producer */
+    void pause(void) override;
 
     /** \brief run event producer */
-    virtual void loop(void) = 0;
+    void loop(void) override;
 
-protected:
-    /** \brief throw event */
-    void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);
+private:
+    UiEventProducer(void);
 
-protected:
-    EventQueue *m_pQueue;
+private:
+    static UiEventProducer *m_instance;
+    volatile BOOL m_start;
+
+//    platform::Platform *m_platform;
+    platform::MutexLock m_mutex;
 };
 
-}//namespace event
-
-
-#endif /* __EVENT_PRODUCER_HPP__ */
+}
+#endif /* __UI_EVENT_PRODUCER_HPP__ */
 
 /********************************* End Of File ********************************/

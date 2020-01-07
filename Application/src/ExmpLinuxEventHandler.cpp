@@ -2,8 +2,8 @@
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
 * #Date         : Nov 28, 2019 - 2:35:36 PM
-* #File Name    : ExmLinuxEventHandler.cpp
-* #File Path    : /GezGor/Application/src/ExmLinuxEventHandler.cpp
+* #File Name    : ExmpLinuxEventHandler.cpp
+* #File Path    : /GezGor/Application/src/ExmpLinuxEventHandler.cpp
 *******************************************************************************/
 /******************************************************************************
 *

@@ -15,7 +15,9 @@
 /*********************************INCLUDES*************************************/
 #include "EventQueue.hpp"
 #include "Utility.hpp"
+
 #include "TimerEventProducer.hpp"
+#include "UiEventProducer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -80,7 +82,8 @@ public:
     /** Event Producers will load events in this event queue*/
     EventQueue eventQueue;
 private:
-    TimerEventProducer *m_tEventProducer;
+    TimerEventProducer *m_timerEventProd;
+    UiEventProducer    *m_uiEventProd;
 };
 
 }//namespace event

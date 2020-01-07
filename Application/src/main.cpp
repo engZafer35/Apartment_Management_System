@@ -1,4 +1,9 @@
 /******************************************************************************
+*                       "THE BEER-WARE LICENSE" (Revision 2020)
+* ZS wrote this file. As long as you retain this notice you can do whatever
+* you want with this stuff. If we meet some day, and you think this stuff
+* is worth it, you can buy me a beer in return
+*
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
 * #Date         : Oct 22, 2019 - 2:43:17 PM
@@ -6,7 +11,6 @@
 * #File Path    : /GezGor/Application/src/main.cpp
 *******************************************************************************/
 /******************************************************************************
-*
 *
 *******************************************************************************/
 
@@ -66,16 +70,15 @@ int main(void)
         eventPool.buildEventProducer();
         eventPool.start();
 
-        TIMER(event::EN_TIMER_5, 300, event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-        TIMER(event::EN_TIMER_2, 100, event::EN_EVENT_NO_EVENT, [](void){ZLOG << "#### Hi, I am Lambda #### ";}, event::EN_PRIORITY_MED);
-        TIMER(event::EN_TIMER_3, 200, event::EN_EVENT_PER_JOB_2);
+        TIMER(event::EN_TIMER_5, 3000, event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+        TIMER(event::EN_TIMER_2, 1000, event::EN_EVENT_NO_EVENT, [](void){ZLOG << "#### Hi, I am Lambda #### ";}, event::EN_PRIORITY_MED);
+        TIMER(event::EN_TIMER_3, 2000, event::EN_EVENT_PER_JOB_2);
 
         event::EventMsg *event = NULL_PTR;
-        U32 tid = TIMER(400);
+        U32 tid = TIMER(4000);
 
         while(1)
         {
-
             event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER | event::EN_SOURCE_ONE_TIMER);
             if (NULL_PTR != event)
             {
@@ -84,7 +87,7 @@ int main(void)
                 if (event::EN_SOURCE_ONE_TIMER == event->getEventSource())
                 {
                     CANCEL_TIMER(tid);
-                    tid = TIMER(400);
+                    tid = TIMER(4000);
                 }
 
                 eventPool.eventQueue.deleteEvent(&event);
