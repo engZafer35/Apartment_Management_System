@@ -48,6 +48,12 @@ namespace platform
 {
 Platform::~Platform(void)
 {
+    delete (devices);
+    delete (console);
+    delete (system);
+    delete (fileSys);
+    delete (m_instance);
+
     m_instance = NULL_PTR;
 }
 

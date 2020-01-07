@@ -13,8 +13,8 @@
 #ifndef __PLATFORM_INTERFACE_HPP__
 #define __PLATFORM_INTERFACE_HPP__
 /*********************************INCLUDES*************************************/
-#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC)
-#include "ZLogger.h" //TODO: complete ZLogger for bare metal
+#if (CURRENT_PLATFORM == PLATFORM_LINUX_PC) //TODO: set active, when ZLogger completed
+//#include "ZLogger.h" //TODO: complete ZLogger for bare metal
 #endif
 
 #include "GlobalDefinitions.hpp"
@@ -23,7 +23,7 @@
 #include "ISystem.hpp"
 #include "IFileSystem.hpp"
 
-#if (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
+#if 1//(CURRENT_PLATFORM == PLATFORM_BARE_METAL) //TODO: set active, when ZLogger completed
 
 #include <iostream> //todo
 
@@ -32,10 +32,6 @@
 #define ZLOGF std::cout << "\n\r",std::cout //todo
 #define ZLOGV_IF(X) std::cout << "\n\r", std::cout //todo
 #define ZLOGF_IF(X) std::cout << "\n\r", std::cout //todo
-
-//#include "DevicesBareMetal.hpp"
-//#include "ConsoleBareMetal.hpp"
-
 #endif
 /**************************************************/
 

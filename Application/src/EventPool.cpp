@@ -37,14 +37,14 @@
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace event
 {
-EventPool::EventPool(void) : m_tEventProducer{NULL_PTR}
+EventPool::EventPool(void) : m_timerEventProd{NULL_PTR}
 {}
 
 EventPool::~EventPool(void)
 {
-    if (NULL_PTR != m_tEventProducer)
+    if (NULL_PTR != m_timerEventProd)
     {
-        delete m_tEventProducer;
+        delete m_timerEventProd;
     }
 }
 
@@ -52,10 +52,10 @@ RETURN_STATUS EventPool::buildEventProducer(void)
 {
     RETURN_STATUS retVal = OK;
 
-    m_tEventProducer = TimerEventProducer::getInstance<event::TIMER_ENG_1>(); /** < create timer event producer >*/
-    m_tEventProducer->setQueue(&eventQueue);
-    m_tEventProducer->pause();
-    m_tEventProducer->stop();
+    m_timerEventProd = TimerEventProducer::getInstance(); /** < create timer event producer >*/
+    m_timerEventProd->setQueue(&eventQueue);
+    m_timerEventProd->pause();
+    m_timerEventProd->stop();
 
     //TODO: create all event producers
     //TODO: give event queue handle to event producers
@@ -64,18 +64,18 @@ RETURN_STATUS EventPool::buildEventProducer(void)
     return retVal;
 }
 
-RETURN_STATUS EventPool::startProducers(void)
+RETURN_STATUS EventPool::start(void)
 {
-    m_tEventProducer->start();
+    m_timerEventProd->start();
 
     //TODO: start all producers here
 
     return OK;
 }
 
-RETURN_STATUS EventPool::stopProducers(void)
+RETURN_STATUS EventPool::stop(void)
 {
-    m_tEventProducer->stop();
+    m_timerEventProd->stop();
 
     //TODO: start all producers here
 
@@ -88,7 +88,7 @@ RETURN_STATUS EventPool::producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCE
     {
         case EN_EVENT_TIMER:
         {
-            (EN_PRODUCER_START == cmd) ? m_tEventProducer->start() : m_tEventProducer->stop();
+            (EN_PRODUCER_START == cmd) ? m_timerEventProd->start() : m_timerEventProd->stop();
             break;
         }
         case EN_EVENT_PRODUCER_1:

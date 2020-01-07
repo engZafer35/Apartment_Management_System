@@ -13,7 +13,7 @@
 #ifndef __EVENT_LIST_HPP__
 #define __EVENT_LIST_HPP__
 /*********************************INCLUDES*************************************/
-//#include "ProjectConf.hpp"
+
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -24,11 +24,10 @@ namespace event
 /** \brief Events ID */
 typedef enum _EVENTS
 {
-    EN_EVENT_1,
-    EN_EVENT_2,
-    EN_EVENT_3,
-
-    EN_EVENT_USER_TIMER,
+    EN_EVENT_NO_EVENT,
+    EN_EVENT_TIMEOUT_TIMER,
+    EN_EVENT_PER_JOB_1,
+    EN_EVENT_PER_JOB_2,
 }EVENTS;
 
 /** \brief Event Priority */
@@ -43,11 +42,12 @@ typedef enum _EVENT_PRIORITY
 /** \brief Event Source */
 typedef enum _EVENT_SOURCE
 {
-    EN_SOURCE_1,
-    EN_SOURCE_2,
-    EN_SOURCE_3,
+    EN_SOURCE_PER_TIMER = 0x1, //periodic timer
+    EN_SOURCE_ONE_TIMER = 0x2, //one-shot timer
+    EN_SOURCE_CB_TIMER  = 0x4,
 
-    EN_SOURCE_TIMER,
+    EN_SOURCE_XX = 0x08,
+
 }EVENT_SOURCE;
 
 /** * \brief to create periodic timer use this enum list */
@@ -79,7 +79,6 @@ typedef enum
 
     EN_TIMER_MAX_NUM
 }TimerID;
-
 
 }//namespace event
 

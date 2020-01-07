@@ -52,31 +52,47 @@ EventQueue::~EventQueue(void)
 EventMsg *EventQueue::waithEvent(U32 timeoutMs, U32 eventSource)
 {
     EventMsg *retEvent = NULL_PTR;
-    U32 timer = -1; //unset timer id
+    U32 timer = -1;
 
     if (timeoutMs > 0)
     {
-        timer = TIMER_1(timeoutMs);
+        timer = TIMER(timeoutMs);
+        eventSource |= EN_SOURCE_ONE_TIMER;
     }
 
     while(1)
     {
         if (FALSE == qEvents.empty()) // is not empty
         {
-            retEvent = qEvents.front();
-            if ((EN_EVENT_USER_TIMER == retEvent->getEvent()) && (timer == *(static_cast<U32*>(retEvent->getValue()))) )
+            m_mutex.lock(); //lock section
+            for(U32 i = 0; i < qEvents.size(); ++i)
             {
-                deleteEvent(&retEvent); //timeout event. clear event
-                retEvent = NULL_PTR;
+                if (eventSource & qEvents[i]->getEventSource())
+                {
+                    retEvent = qEvents[i];
+                }
             }
+            m_mutex.unlock(); //lock section
 
-            break;
+            if (NULL_PTR != retEvent)
+            {
+                if ( (timer > 0) && (EN_EVENT_TIMEOUT_TIMER == retEvent->getEvent()) && (timer == *(static_cast<U32*>(retEvent->getValue()))) )
+                {
+                    deleteEvent(&retEvent); //timeout event. clear event
+                    retEvent = NULL_PTR;
+                    break;
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
     }
 
-    if (timeoutMs>0)
+    if (timeoutMs > 0) //cancel timer if it set
     {
-        TIMER_1.cancelTimer(timer);
+        CANCEL_TIMER(timer);
     }
 
     return retEvent;
@@ -162,10 +178,10 @@ RETURN_STATUS EventQueue::deleteAllEvent(void)
 
     for (QEvents::iterator it = qEvents.begin(); it != qEvents.end(); ++it)
     {
-        delete (*it);   //delete from memory
+        delete (*it); //delete from memory
     }
 
-    qEvents.clear();
+    qEvents.clear(); //clear queue
 
     m_mutex.unlock();// unlock section
     return OK;

@@ -54,8 +54,6 @@ public:
     virtual void loop(void) = 0;
 
 protected:
-
-
     /** \brief throw event */
     void throwEvent(EVENTS event, EVENT_SOURCE source, EVENT_PRIORITY priority, void *parameter = NULL_PTR, U32 leng = 0);
 

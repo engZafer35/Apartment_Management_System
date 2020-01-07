@@ -1,4 +1,9 @@
 /******************************************************************************
+*                       "THE BEER-WARE LICENSE" (Revision 2020)
+* ZS wrote this file. As long as you retain this notice you can do whatever
+* you want with this stuff. If we meet some day, and you think this stuff
+* is worth it, you can buy me a beer in return
+*
 * #Author       : Zafer Satilmis
 * #Revision     : 1.0
 * #Date         : Oct 22, 2019 - 2:43:17 PM
@@ -7,10 +12,11 @@
 *******************************************************************************/
 /******************************************************************************
 *
-*
 *******************************************************************************/
 
 /********************************* INCLUDES ***********************************/
+#include "ExmLinuxEventHandler.hpp"
+#include "IEventHandler.hpp"
 #include "ProjectConf.hpp"
 
 #include "TimerEventProducer.hpp"
@@ -39,7 +45,6 @@ public:
     MyCB() : counter{666}{}
     void foo(void)
     {
-
         std::cout <<std::endl<< " ---------> my callback <----------------" << counter++ << std::endl;
     }
 
@@ -49,9 +54,11 @@ private:
 
 int main(void)
 {
-    zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
+//    zlogger::loggerInit(zlogger::EN_LOG_LEVEL_VERBOSE); //Firstly Init logger
 
     platform::Platform *device = platform::Platform::getInstance();
+
+    ExmLinuxEventHandler ehandler;
 
     MyCB cb;
 
@@ -61,25 +68,27 @@ int main(void)
 
         event::EventPool eventPool;
         eventPool.buildEventProducer();
-        eventPool.startProducers();
+        eventPool.start();
 
-        TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-        TIMER_1(event::EN_TIMER_2, 1000, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
+        TIMER(event::EN_TIMER_5, 3000, event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+        TIMER(event::EN_TIMER_2, 1000, event::EN_EVENT_NO_EVENT, [](void){ZLOG << "#### Hi, I am Lambda #### ";}, event::EN_PRIORITY_MED);
+        TIMER(event::EN_TIMER_3, 2000, event::EN_EVENT_PER_JOB_2);
 
         event::EventMsg *event = NULL_PTR;
+        U32 tid = TIMER(4000);
 
         while(1)
         {
-            event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_3);
-
+            event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER | event::EN_SOURCE_ONE_TIMER);
             if (NULL_PTR != event)
             {
-                std::cout << "get event " << event->getEvent() << std::endl;
-                std::cout << "get getEventPriority " << event->getEventPriority() << std::endl;
-                std::cout << "get getEventSource " << event->getEventSource() << std::endl;
-                std::cout << "get event data leng " << event->getLeng() << std::endl;
-                U32 *timerID = static_cast<U32*>(event->getValue());
-                std::cout << "Timer ID " << *timerID << std::endl;
+                ehandler.handleEvent(*event);
+
+                if (event::EN_SOURCE_ONE_TIMER == event->getEventSource())
+                {
+                    CANCEL_TIMER(tid);
+                    tid = TIMER(4000);
+                }
 
                 eventPool.eventQueue.deleteEvent(&event);
             }

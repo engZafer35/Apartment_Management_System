@@ -62,6 +62,12 @@ namespace platform
 {
 DevicesBareMetal::~DevicesBareMetal(void)
 {
+    delete (gpio);
+    delete (uart);
+    delete (timer);
+    delete (adc);
+    delete (m_instance);
+
     m_instance = NULL_PTR;
 }
 

@@ -28,7 +28,7 @@
 #include <unistd.h>
 
 #include "stdio.h"
-
+#include "ExmpSTMEventHandler.hpp"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
@@ -63,24 +63,20 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-void handleEvent(event::EventMsg *event)
+class MyCB
 {
-    switch (event->getEvent())
+public:
+    MyCB() : counter{666}{}
+    void foo(void)
     {
-        case event::EN_EVENT_USER_TIMER:
-        {
-            ZLOG << "get event " << event->getEvent() ;
-            ZLOG << "get getEventPriority " << event->getEventPriority() ;
-            ZLOG << "get getEventSource " << event->getEventSource() ;
-            ZLOG << "get data leng " << event->getLeng() ;
-            U32 *timerID = static_cast<U32*>(event->getValue());
-            ZLOG << "Timer ID " << *timerID ;
+        HAL_GPIO_TogglePin(Led1_GPIO_Port, Led1_Pin);
 
-            HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin);
-            HAL_GPIO_TogglePin(Led2_GPIO_Port, Led2_Pin);
-        }
+        ZLOG << " ---------> my callback <----------------" << counter++;
     }
-}
+
+private:
+    int counter;
+};
 /* USER CODE END 0 */
 
 /**
@@ -122,31 +118,45 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   platform::Platform *device = platform::Platform::getInstance();
+
+  ExmpSTMEventHandler stmHandler;
+
   device->buildPlatform();
 //
     ZLOGW << "[I] Building Platform SUCCESS, Thanks $$$";
 //
     event::EventPool eventPool;
     eventPool.buildEventProducer();
+    eventPool.start();
     event::EventMsg *event = NULL_PTR;
 //
 //
-    TIMER_1(event::EN_TIMER_5, 1000, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
-//    TIMER_1(event::EN_TIMER_2, 1500, [](void){ZLOG << "Timer Event Callback Funct Timer:1500ms";}, event::EN_PRIORITY_MED);
-//    TIMER_1(event::EN_TIMER_2, 5000);
 
-    HAL_GPIO_TogglePin(Led2_GPIO_Port, Led2_Pin);
+    MyCB cb; //test callback class
+
+    TIMER(event::EN_TIMER_5, 300,event::EN_EVENT_PER_JOB_1, /*std::bind(&MyCB::foo, &cb),*/NULL_PTR, event::EN_PRIORITY_HIG);
+    TIMER(event::EN_TIMER_2, 100, event::EN_EVENT_NO_EVENT, [](void){HAL_GPIO_TogglePin(Led4_GPIO_Port, Led4_Pin); ZLOG << "#### Hi, I am Lambda #### ";}, event::EN_PRIORITY_MED);
+    TIMER(event::EN_TIMER_3, 200, event::EN_EVENT_PER_JOB_2);
+    U32 tid = TIMER(400);
+    U32 tid2 = TIMER(300);
+
   while (1)
   {
-      event = eventPool.eventQueue.waithEvent(1200, event::EN_SOURCE_3);
+      event = eventPool.eventQueue.waithEvent(0, event::EN_SOURCE_PER_TIMER | event::EN_SOURCE_ONE_TIMER);
 
       if (NULL_PTR != event)
       {
-          handleEvent(event);
-          eventPool.eventQueue.deleteEvent(&event);
+          stmHandler.handleEvent(*event);
 
-//                TIMER_CANCEL_1(*timerID);
+          if (event::EN_SOURCE_ONE_TIMER == event->getEventSource())
+          {
+              CANCEL_TIMER(tid);
+              tid = TIMER(390);
+          }
+
+          eventPool.eventQueue.deleteEvent(&event);
       }
+
     /* USER CODE END WHILE */
     /* USER CODE BEGIN 3 */
   }

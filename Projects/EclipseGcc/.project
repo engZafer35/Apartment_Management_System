@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>GezGor</name>
+	<name>ApartmentManagementSystem</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -46,4 +46,10 @@
 			<locationURI>PARENT-2-PROJECT_LOC/Resources</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>copy_PARENT</name>
+			<value>$%7BPARENT-2-PROJECT_LOC%7D/zworkspace/Projects/GezGor</value>
+		</variable>
+	</variableList>
 </projectDescription>

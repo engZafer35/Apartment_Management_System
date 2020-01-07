@@ -63,6 +63,7 @@ namespace platform
 {
 UartBareMetal::~UartBareMetal(void)
 {
+    delete (m_instance);
     m_instance = NULL_PTR;
 }
 

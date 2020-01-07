@@ -15,7 +15,9 @@
 /*********************************INCLUDES*************************************/
 #include "EventQueue.hpp"
 #include "Utility.hpp"
+
 #include "TimerEventProducer.hpp"
+#include "UiEventProducer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -64,10 +66,10 @@ public:
     RETURN_STATUS buildEventProducer(void);
 
     /** \brief start all producer to create event */
-    RETURN_STATUS startProducers(void);
+    RETURN_STATUS start(void);
 
     /** \brief stop all producer */
-    RETURN_STATUS stopProducers(void);
+    RETURN_STATUS stop(void);
 
     /**
      * \brief send command to producer
@@ -80,7 +82,8 @@ public:
     /** Event Producers will load events in this event queue*/
     EventQueue eventQueue;
 private:
-    TimerEventProducer *m_tEventProducer;
+    TimerEventProducer *m_timerEventProd;
+    UiEventProducer    *m_uiEventProd;
 };
 
 }//namespace event
