@@ -22,6 +22,7 @@
 #include "IConsole.hpp"
 #include "ISystem.hpp"
 #include "IFileSystem.hpp"
+#include "ProjectConf.hpp"
 
 #if 1//(CURRENT_PLATFORM == PLATFORM_BARE_METAL) //TODO: set active, when ZLogger completed
 

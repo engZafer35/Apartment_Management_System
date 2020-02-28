@@ -1,2 +1,2 @@
-# GezGor
-GezGor Embedded C++ Project
+# Apartment Management System
+Apartment Management System Embedded C++ Project

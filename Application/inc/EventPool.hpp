@@ -21,7 +21,7 @@
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
-
+#define EVENT_POOL() (event::EventPool::getInstance())
 /*******************************TYPE DEFINITIONS ******************************/
 
 /************************* GLOBAL VARIBALE REFERENCES *************************/
@@ -53,10 +53,11 @@ public:
     }EVENT_PRODUCER_COMMAND;
 
 public:
-    /** \brief constructor */
-    EventPool(void);
-
-    ~EventPool(void);
+    /**
+     * \brief get singleton class instance
+     * \return EventPool pointer
+     */
+    static EventPool* const getInstance(void);
 
     /**
      * \brief  build all event producers that system need
@@ -77,13 +78,20 @@ public:
      * \param producer command
      * */
     RETURN_STATUS producerCommand(EVENT_PRODUCER_LIST list, EVENT_PRODUCER_COMMAND cmd);
+private:
+    /** \brief constructor */
+    EventPool(void);
 
+    ~EventPool(void);
 public:
     /** Event Producers will load events in this event queue*/
-    EventQueue eventQueue;
+    EventQueue *eventQueue;
 private:
     TimerEventProducer *m_timerEventProd;
     UiEventProducer    *m_uiEventProd;
+
+    static EventPool* m_instance;
+    static platform::MutexLock *m_mutex;
 };
 
 }//namespace event
