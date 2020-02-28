@@ -1,21 +1,22 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Jan 7, 2020 - 2:03:49 PM
+* #Date         : Jan 7, 2020 - 3:16:55 PM
 * #File Name    : AppWorkingModeManager.hpp
-* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/AppWorkingModeManager.hpp
-*
+* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/inc_/AppWorkingModeManager.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPWORKINGMODEMANAGER_HPP_
-#define APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPWORKINGMODEMANAGER_HPP_
+#ifndef __APP_WORKING_MODE_MANAGER_HPP__
+#define __APP_WORKING_MODE_MANAGER_HPP__
 /*********************************INCLUDES*************************************/
 
-/******************************MACRO DEFINITIONS*******************************/
+/******************************* NAME SPACE ***********************************/
+
+/**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
 
@@ -23,7 +24,10 @@
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
+/************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
-#endif /* APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPWORKINGMODEMANAGER_HPP_ */
+/********************************* CLASS **************************************/
+
+#endif /* __APP_WORKING_MODE_MANAGER_HPP__ */
 
 /********************************* End Of File ********************************/

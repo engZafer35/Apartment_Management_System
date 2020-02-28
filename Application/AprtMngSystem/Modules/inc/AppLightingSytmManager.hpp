@@ -1,21 +1,22 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Jan 7, 2020 - 2:02:39 PM
-* #File Name    : AppLightingSytManager.hpp
-* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/AppLightingSytManager.hpp
-*
+* #Date         : Jan 7, 2020 - 3:14:17 PM
+* #File Name    : AppLightingSytmManager.hpp
+* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/inc_/AppLightingSytmManager.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPLIGHTINGSYTMANAGER_HPP_
-#define APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPLIGHTINGSYTMANAGER_HPP_
+#ifndef __APP_LIGHTING_SYTM_MANAGER_HPP__
+#define __APP_LIGHTING_SYTM_MANAGER_HPP__
 /*********************************INCLUDES*************************************/
 
-/******************************MACRO DEFINITIONS*******************************/
+/******************************* NAME SPACE ***********************************/
+
+/**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
 
@@ -23,7 +24,10 @@
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
+/************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
-#endif /* APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPLIGHTINGSYTMANAGER_HPP_ */
+/********************************* CLASS **************************************/
+
+#endif /* __APP_LIGHTING_SYTM_MANAGER_HPP__ */
 
 /********************************* End Of File ********************************/

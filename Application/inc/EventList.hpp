@@ -48,6 +48,8 @@ typedef enum _EVENT_SOURCE
 
     EN_SOURCE_XX = 0x08,
 
+    EN_SOURCE_EVENT_ALL = 0xFF,
+
 }EVENT_SOURCE;
 
 /** * \brief to create periodic timer use this enum list */

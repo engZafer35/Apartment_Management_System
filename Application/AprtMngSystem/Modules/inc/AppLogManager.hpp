@@ -1,21 +1,22 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Jan 7, 2020 - 2:07:30 PM
+* #Date         : Jan 7, 2020 - 3:14:27 PM
 * #File Name    : AppLogManager.hpp
-* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/AppLogManager.hpp
-*
+* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/inc_/AppLogManager.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPLOGMANAGER_HPP_
-#define APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPLOGMANAGER_HPP_
+#ifndef __APP_LOG_MANAGER_HPP__
+#define __APP_LOG_MANAGER_HPP__
 /*********************************INCLUDES*************************************/
 
-/******************************MACRO DEFINITIONS*******************************/
+/******************************* NAME SPACE ***********************************/
+
+/**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
 
@@ -23,7 +24,10 @@
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
+/************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
-#endif /* APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPLOGMANAGER_HPP_ */
+/********************************* CLASS **************************************/
+
+#endif /* __APP_LOG_MANAGER_HPP__ */
 
 /********************************* End Of File ********************************/

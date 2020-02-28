@@ -1,21 +1,22 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Jan 7, 2020 - 1:59:37 PM
+* #Date         : Jan 7, 2020 - 3:12:12 PM
 * #File Name    : AppBinRecordManager.hpp
-* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/AppBinRecordManager.hpp
-*
+* #File Path    : /ApartmentManagementSystem/Application/AprtMngSystem/Modules/inc/inc_/AppBinRecordManager.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPBINRECORDMANAGER_HPP_
-#define APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPBINRECORDMANAGER_HPP_
+#ifndef __APP_BIN_RECORD_MANAGER_HPP__
+#define __APP_BIN_RECORD_MANAGER_HPP__
 /*********************************INCLUDES*************************************/
 
-/******************************MACRO DEFINITIONS*******************************/
+/******************************* NAME SPACE ***********************************/
+
+/**************************** MACRO DEFINITIONS *******************************/
 
 /*******************************TYPE DEFINITIONS ******************************/
 
@@ -23,7 +24,10 @@
 
 /************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
+/************************* GLOBAL FUNCTION DEFINITIONS ************************/
 
-#endif /* APPLICATION_APRTMNGSYSTEM_MODULES_INC_APPBINRECORDMANAGER_HPP_ */
+/********************************* CLASS **************************************/
+
+#endif /* __APP_BIN_RECORD_MANAGER_HPP__ */
 
 /********************************* End Of File ********************************/
