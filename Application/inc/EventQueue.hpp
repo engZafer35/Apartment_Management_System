@@ -48,7 +48,7 @@ public:
     RETURN_STATUS deleteEvent(EventMsg **event);
 
     /** \brief delete all event that have same event ID */
-    RETURN_STATUS deleteEvents(EVENTS eventID);
+    RETURN_STATUS deleteEvents(EVENT_SOURCE eventID);
 
     /** \brief delete all pending events*/
     RETURN_STATUS deleteAllEvent(void);

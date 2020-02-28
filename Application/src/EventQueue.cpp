@@ -138,7 +138,7 @@ RETURN_STATUS EventQueue::throwEvent(EventMsg *event)
 }
 
 /** \brief delete all event that have same event ID */
-RETURN_STATUS EventQueue::deleteEvents(EVENTS eventID)
+RETURN_STATUS EventQueue::deleteEvents(EVENT_SOURCE eventID)
 {
     m_mutex.lock(); // lock section
     RETURN_STATUS retVal = OK;

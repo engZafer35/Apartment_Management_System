@@ -1,4 +1,3 @@
-# Apartment_Management_System
 
-Apartment_Management_System
- Embedded C++ Project
+# Apartment Management System
+Apartment Management System Embedded C++ Project

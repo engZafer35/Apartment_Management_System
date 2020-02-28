@@ -46,7 +46,7 @@ private:
     BOOL m_isFlying;
 
     platform::Platform &m_platform;
-    event::EventPool m_eventPool;
+    event::EventPool * m_eventPool;
     IEventHandler *m_eventHandler;
 };
 }//namespace redbird

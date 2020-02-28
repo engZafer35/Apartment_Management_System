@@ -42,11 +42,11 @@ typedef enum _EVENT_PRIORITY
 /** \brief Event Source */
 typedef enum _EVENT_SOURCE
 {
-    EN_SOURCE_PER_TIMER = 0x1, //periodic timer
-    EN_SOURCE_ONE_TIMER = 0x2, //one-shot timer
-    EN_SOURCE_CB_TIMER  = 0x4,
-
-    EN_SOURCE_XX = 0x08,
+    EN_SOURCE_PER_TIMER     = 0x01, //periodic timer
+    EN_SOURCE_ONE_TIMER     = 0x02, //one-shot timer
+    EN_SOURCE_CB_TIMER      = 0x04, //
+    EN_SOURCE_EXT_BOAR      = 0X08, //ext board event.(can message)
+    EN_SOURCE_SERIAL_LINE   = 0X10, //ext board event.(can message)
 
     EN_SOURCE_EVENT_ALL = 0xFF,
 

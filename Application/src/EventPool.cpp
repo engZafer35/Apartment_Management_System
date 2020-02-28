@@ -29,16 +29,18 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-
-/***************************** CLASS PRIVATE METHOD ***************************/
-
-/***************************** CLASS PROTECTED METHOD *************************/
-
-/***************************** CLASS PUBLIC METHOD ****************************/
 namespace event
 {
-EventPool::EventPool(void) : m_timerEventProd{NULL_PTR}
-{}
+EventPool* EventPool::m_instance = NULL_PTR;
+platform::MutexLock* EventPool::m_mutex = NULL_PTR;
+}//namespace event
+/***************************** CLASS PRIVATE METHOD ***************************/
+namespace event
+{
+EventPool::EventPool(void) : m_timerEventProd{NULL_PTR}, m_uiEventProd{NULL_PTR}
+{
+    eventQueue = new EventQueue();
+}
 
 EventPool::~EventPool(void)
 {
@@ -47,13 +49,31 @@ EventPool::~EventPool(void)
         delete m_timerEventProd;
     }
 }
+}//namespace event
+/***************************** CLASS PROTECTED METHOD *************************/
+
+/***************************** CLASS PUBLIC METHOD ****************************/
+namespace event
+{
+EventPool* const EventPool::getInstance(void)
+{
+    m_mutex->lock();
+    if (NULL_PTR == m_instance)
+    {
+        m_instance = new EventPool();
+    }
+
+    m_mutex->unlock();
+
+    return m_instance;
+}
 
 RETURN_STATUS EventPool::buildEventProducer(void)
 {
     RETURN_STATUS retVal = OK;
 
     m_timerEventProd = TimerEventProducer::getInstance(); /** < create timer event producer >*/
-    m_timerEventProd->setQueue(&eventQueue);
+    m_timerEventProd->setQueue(eventQueue);
     m_timerEventProd->pause();
     m_timerEventProd->stop();
 
