@@ -135,7 +135,7 @@ private:
     /** pointer for each timer */
     static TimerEventProducer *m_instance;
 
-    platform::MutexLock m_mutex;
+    static platform::MutexLock m_mutex;
 
     volatile BOOL m_start;
 };
