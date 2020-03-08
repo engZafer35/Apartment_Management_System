@@ -30,29 +30,17 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-namespace platform
-{
-UartLinux* UartLinux::m_instance = NULL_PTR;
-}
+
 /***************************** CLASS PRIVATE METHOD ***************************/
 namespace platform
 {
-UartLinux::UartLinux(void)
-{
-
-}
-
 /** \brief hardware receive interrupt callback function */
 void UartLinux::cbReceive(void)
-{
-
-}
+{}
 
 /** \brief hardware send interrupt callback function */
 void UartLinux::cbSend(void)
-{
-
-}
+{}
 
 }//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
@@ -60,25 +48,22 @@ void UartLinux::cbSend(void)
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace platform
 {
-UartLinux::~UartLinux(void)
-{
-    m_instance = NULL_PTR;
-}
+UartLinux::UartLinux(void)
+{}
 
-/** \brief get instance, singleton class*/
-UartLinux* UartLinux::getInstance(void)
-{
-    MutexLockFunc mutex; //guarantee to create just one object
-    if(NULL_PTR == m_instance)
-    {
-        ZLOG << "UartLinux Created";
-        m_instance = new UartLinux();
-    }
-    return m_instance;
-}
+UartLinux::~UartLinux(void)
+{}
 
 /** \brief init uart*/
-RETURN_STATUS UartLinux::init(void)
+RETURN_STATUS UartLinux::open(void)
+{
+    RETURN_STATUS retVal = OK;
+
+    ZLOGF_IF(FAILURE == retVal) << "[E] UartLinux init Error: !!";
+    return retVal;
+}
+/** \brief init uart*/
+RETURN_STATUS UartLinux::close(void)
 {
     RETURN_STATUS retVal = OK;
 

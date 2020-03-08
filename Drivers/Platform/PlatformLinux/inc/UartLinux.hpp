@@ -12,9 +12,10 @@
 /******************************IFNDEF & DEFINE********************************/
 #ifndef __UART_LINUX_HPP__
 #define __UART_LINUX_HPP__
+
 /*********************************INCLUDES*************************************/
 #ifdef __linux
-#include "ICommPeripheral.hpp"
+#include "ISerialBus.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 
@@ -31,16 +32,17 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-class UartLinux : public ICommPeripheral, private NonCopyable
+class UartLinux : public ISerialBus, private NonCopyable
 {
 public:
+    UartLinux(void);
     ~UartLinux(void);
 
-    /** \brief get instance, singleton class*/
-    static UartLinux* getInstance(void);
+    /** \brief open uart*/
+    RETURN_STATUS open(void) override;
 
-    /** \brief init uart*/
-    RETURN_STATUS init(void) override;
+    /** \brief close uart*/
+    RETURN_STATUS close(void) override;
 
     /** \brief send data*/
     RETURN_STATUS send(const void *buff, U32 size, U32 timeout) override;
@@ -49,7 +51,7 @@ public:
     RETURN_STATUS receive(void *buff, U32 size, U32 timeout) override;
 
 private:
-    UartLinux(void);
+
 
     /** \brief hardware receive interrupt callback function */
     void cbReceive(void) override;
@@ -57,8 +59,6 @@ private:
     /** \brief hardware send interrupt callback function */
     void cbSend(void) override;
 
-private:
-    static UartLinux* m_instance;
 };
 
 }//namespace platform

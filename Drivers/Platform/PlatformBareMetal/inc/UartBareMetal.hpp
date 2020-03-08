@@ -14,7 +14,7 @@
 #define __UART_BARE_METAL_HPP__
 /*********************************INCLUDES*************************************/
 #if (CURRENT_PLATFORM == PLATFORM_BARE_METAL)
-#include "ICommPeripheral.hpp"
+#include "ISerialBus.hpp"
 #include "Utility.hpp"
 /******************************* NAME SPACE ***********************************/
 

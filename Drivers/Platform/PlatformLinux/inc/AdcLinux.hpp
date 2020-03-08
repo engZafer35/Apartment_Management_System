@@ -34,23 +34,17 @@ namespace platform
 class AdcLinux : public IADC, private NonCopyable
 {
 public:
+    AdcLinux(void);
     ~AdcLinux(void);
-
-    /** \brief get instance, singleton class*/
-    static AdcLinux* getInstance(void);
 
     /** \brief init ADC channel */
     RETURN_STATUS init(void) override;
 
     /** \brief read ADC value */
     U32 read(void) override;
-
 private:
-    AdcLinux(void);
-
-private:
-    static AdcLinux* m_instance;
-
+    U32 m_adcPort;
+    U32 m_adcChnl;
 };
 }//namespace platform
 #endif //#ifdef __linux

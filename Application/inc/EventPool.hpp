@@ -91,7 +91,7 @@ private:
     UiEventProducer    *m_uiEventProd;
 
     static EventPool* m_instance;
-    static platform::MutexLock *m_mutex;
+    static platform::MutexLock m_mutex;
 };
 
 }//namespace event

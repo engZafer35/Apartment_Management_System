@@ -30,37 +30,19 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-namespace platform
-{
-AdcLinux* AdcLinux::m_instance = NULL_PTR;
-}
-/***************************** CLASS PRIVATE METHOD ***************************/
-namespace platform
-{
-AdcLinux::AdcLinux(void)
-{
 
-}
-}//namespace platform
+/***************************** CLASS PRIVATE METHOD ***************************/
+
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace platform
 {
+AdcLinux::AdcLinux(void) : m_adcPort{0}, m_adcChnl{0}
+{}
+
 AdcLinux::~AdcLinux(void)
-{
-    m_instance = NULL_PTR;
-}
-AdcLinux* AdcLinux::getInstance(void)
-{
-    MutexLockFunc mutex; //guarantee to create just one object
-    if(NULL_PTR == m_instance)
-    {
-        ZLOG << "[I] AdcLinux Created";
-        m_instance = new AdcLinux();
-    }
-    return m_instance;
-}
+{}
 
 /** \brief init ADC channel */
 RETURN_STATUS AdcLinux::init(void)
@@ -73,11 +55,10 @@ RETURN_STATUS AdcLinux::init(void)
 /** \brief read ADC value */
 U32 AdcLinux::read(void)
 {
+    //TODO: implement
     return 666;
 }
 
-
 }//namespace platform
-
 #endif//#ifdef __linux
 /******************************** End Of File *********************************/

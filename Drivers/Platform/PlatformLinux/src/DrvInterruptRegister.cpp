@@ -83,16 +83,15 @@ static void *listenFds(void *arg)
             else  // it is because of timeout
             {
                 platform::delayMs(TIMER_CHECK_CYCLE);
-                platform::TimerLinux::getInstance()->runCallback();
+                platform::Platform::getInstance()->devices->timer->runCallback();
 
                 /* tv value cleared so reset time tick value */
                 tv = tvBackup;
-            }
-        }
+            }        }
         else
         {
             platform::delayMs(TIMER_CHECK_CYCLE);
-            platform::TimerLinux::getInstance()->runCallback();
+            platform::Platform::getInstance()->devices->timer->runCallback();
         }
     }
 

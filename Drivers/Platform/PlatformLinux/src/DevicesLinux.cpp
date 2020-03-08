@@ -49,10 +49,10 @@ namespace platform
 DevicesLinux::DevicesLinux(void) : isDevicesInit{FALSE}
 {
     //create and load peripheral devices
-    gpio  = GpioLinux::getInstance();
-    uart  = UartLinux::getInstance();
-    timer = TimerLinux::getInstance();
-    adc   = AdcLinux::getInstance();
+    gpio  = new GpioLinux();
+    uart  = new UartLinux();
+    timer = new TimerLinux();
+    adc   = new AdcLinux();
 }
 }//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
@@ -89,7 +89,7 @@ RETURN_STATUS DevicesLinux::openDevices(void)
     {
         // init all peripherals here
         retVal |= gpio->init();
-        retVal |= uart->init();
+        retVal |= uart->open();
         retVal |= timer->init();
         retVal |= adc->init();
 

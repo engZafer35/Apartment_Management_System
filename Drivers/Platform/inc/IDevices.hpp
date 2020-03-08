@@ -16,7 +16,7 @@
 #include "GlobalDefinitions.hpp"
 
 #include "IClock.hpp"
-#include "ICommPeripheral.hpp"
+#include "ISerialBus.hpp"
 #include "IADC.hpp"
 #include "IGPIO.hpp"
 #include "ITimer.hpp"
@@ -47,7 +47,7 @@ public:
 public:
     //    IClock          *clock;
     ITimer          *timer;
-    ICommPeripheral *uart;
+    ISerialBus      *uart;
     IADC            *adc;
     IGPIO           *gpio;
 };

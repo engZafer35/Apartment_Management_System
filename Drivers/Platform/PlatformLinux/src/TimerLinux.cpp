@@ -52,38 +52,22 @@ U32 getSysTickCounter(void)
 }
 }
 /***************************** CLASS VARIABLES ********************************/
-namespace platform
-{
-TimerLinux* TimerLinux::m_instance = NULL_PTR;
-}
+
 /***************************** CLASS PRIVATE METHOD ***************************/
 namespace platform
 {
-TimerLinux::TimerLinux(void)
-{
-}
+
 }//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace platform
 {
-TimerLinux::~TimerLinux(void)
-{
-    m_instance = NULL_PTR;
-}
+TimerLinux::TimerLinux(void)
+{}
 
-/** \brief get instance, singleton class*/
-TimerLinux* TimerLinux::getInstance(void)
-{
-    MutexLockFunc mutex; //guarantee to create just one object
-    if(NULL_PTR == m_instance)
-    {
-        ZLOG << "TimerLinux Created";
-        m_instance = new TimerLinux();
-    }
-    return m_instance;
-}
+TimerLinux::~TimerLinux(void)
+{}
 
 /** \brief init TimerLinux */
 RETURN_STATUS TimerLinux::init(void)

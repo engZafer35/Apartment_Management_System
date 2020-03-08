@@ -32,7 +32,7 @@
 namespace event
 {
 EventPool* EventPool::m_instance = NULL_PTR;
-platform::MutexLock* EventPool::m_mutex = NULL_PTR;
+platform::MutexLock EventPool::m_mutex;
 }//namespace event
 /***************************** CLASS PRIVATE METHOD ***************************/
 namespace event
@@ -57,13 +57,13 @@ namespace event
 {
 EventPool* const EventPool::getInstance(void)
 {
-    m_mutex->lock();
+    m_mutex.lock();
     if (NULL_PTR == m_instance)
     {
         m_instance = new EventPool();
     }
 
-    m_mutex->unlock();
+    m_mutex.unlock();
 
     return m_instance;
 }
