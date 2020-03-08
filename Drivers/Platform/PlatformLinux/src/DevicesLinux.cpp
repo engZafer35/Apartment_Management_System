@@ -20,6 +20,7 @@
 #include "UartLinux.hpp"
 #include "GpioLinux.hpp"
 #include "AdcLinux.hpp"
+#include "CanBusLinux.hpp"
 
 #include "DrvInterruptRegister.hpp"
 /****************************** MACRO DEFINITIONS *****************************/
@@ -53,6 +54,7 @@ DevicesLinux::DevicesLinux(void) : isDevicesInit{FALSE}
     uart  = new UartLinux();
     timer = new TimerLinux();
     adc   = new AdcLinux();
+    canbus= new CanBusDevice<EN_CANBUS_INTERNAL_LINE>();
 }
 }//namespace platform
 /***************************** CLASS PROTECTED METHOD *************************/
