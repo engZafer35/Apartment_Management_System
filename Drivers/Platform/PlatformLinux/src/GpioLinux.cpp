@@ -30,39 +30,19 @@
 /***************************** PUBLIC FUNCTIONS  ******************************/
 
 /***************************** CLASS VARIABLES ********************************/
-namespace platform
-{
-GpioLinux* GpioLinux::m_instance = NULL_PTR;
-}
-/***************************** CLASS PRIVATE METHOD ***************************/
-namespace platform
-{
-GpioLinux::GpioLinux(void)
-{
 
-}
-}//namespace platform
+/***************************** CLASS PRIVATE METHOD ***************************/
+
 /***************************** CLASS PROTECTED METHOD *************************/
 
 /***************************** CLASS PUBLIC METHOD ****************************/
 namespace platform
 {
-GpioLinux::~GpioLinux(void)
-{
-    delete (m_instance);
-    m_instance = NULL_PTR;
-}
+GpioLinux::GpioLinux(void) : m_port{0}, m_pin{0}
+{}
 
-/** \brief get instance, singleton class*/
-GpioLinux* GpioLinux::getInstance(void)
-{
-    MutexLockFunc mutex; //guarantee to create just one object
-    if(NULL_PTR == m_instance)
-    {
-        m_instance = new GpioLinux();
-    }
-    return m_instance;
-}
+GpioLinux::~GpioLinux(void)
+{}
 
 /** init all gpio */
 RETURN_STATUS GpioLinux::init(void)

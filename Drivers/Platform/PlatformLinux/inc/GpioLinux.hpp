@@ -34,10 +34,8 @@ namespace platform
 class GpioLinux : public IGPIO, private NonCopyable
 {
 public:
+    GpioLinux(void);
     ~GpioLinux(void);
-
-    /** \brief get instance, singleton class*/
-    static GpioLinux* getInstance(void);
 
     /** init all gpio */
     RETURN_STATUS init(void) override;
@@ -50,12 +48,9 @@ public:
 
     /** set callback function for external interrupt*/
     void setCB(VoidCallback cbFunc) override;
-
 private:
-     GpioLinux(void);
-
-private:
-     static GpioLinux* m_instance;
+    U32 m_port;
+    U32 m_pin;
 };
 
 }//namespace platform

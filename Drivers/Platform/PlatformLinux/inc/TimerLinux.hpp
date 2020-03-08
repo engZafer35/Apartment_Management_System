@@ -37,19 +37,12 @@ class TimerLinux : public ITimer, private NonCopyable
 {
 #define TIMER_CHECK_CYCLE    (100) //hardware timer period Ms
 public:
+    TimerLinux(void);
     ~TimerLinux(void);
-
-    /** \brief get instance, singleton class*/
-    static TimerLinux* getInstance(void);
 
     /** \brief init TimerLinux */
     RETURN_STATUS init(void) override;
 
-private:
-     TimerLinux(void);
-
-private:
-     static TimerLinux* m_instance;
 };
 
 }//namespace platform
