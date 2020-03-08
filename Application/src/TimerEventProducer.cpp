@@ -26,6 +26,7 @@
 namespace event
 {
 TimerEventProducer *TimerEventProducer::m_instance = NULL_PTR;
+platform::MutexLock TimerEventProducer::m_mutex;
 }//namespace event
 /***************************** STATIC FUNCTIONS  ******************************/
 
@@ -117,11 +118,12 @@ TimerEventProducer::~TimerEventProducer(void)
 /** \brief  create TimerEventProducer(singleton)*/
 TimerEventProducer *TimerEventProducer::getInstance(void)
 {
-    platform::MutexLockFunc mutex; /** < guarantee that only one object is created. >*/
+    m_mutex.lock(); /** < guarantee that only one object is created. >*/
     if (NULL_PTR == m_instance)
     {
         m_instance = new TimerEventProducer();
     }
+    m_mutex.unlock();
     return m_instance;
 }
 
