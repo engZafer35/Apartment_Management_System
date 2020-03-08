@@ -1,25 +1,19 @@
 /******************************************************************************
 * #Author       : Zafer Satılmış
 * #Revision     : 1.0
-* #Date         : Nov 16, 2019 - 11:43:48 PM
-* #File Name    : IDevices.hpp
-* #File Path    : /GezGor/Drivers/Platform/inc/IDevices.hpp
+* #Date         : Mar 8, 2020 - 7:29:41 PM
+* #File Name    : CanBusFrame.hpp
+* #File Path    : /ApartmentManagementSystem/Drivers/Platform/inc/CanBusFrame.hpp
 *******************************************************************************/
 
 /******************************************************************************
 * 
 ******************************************************************************/
 /******************************IFNDEF & DEFINE********************************/
-#ifndef __IDEVICES_HPP__
-#define __IDEVICES_HPP__
+#ifndef __CANBUS_FRAME_HPP__
+#define __CANBUS_FRAME_HPP__
 /*********************************INCLUDES*************************************/
 #include "GlobalDefinitions.hpp"
-
-#include "IClock.hpp"
-#include "ISerialBus.hpp"
-#include "IADC.hpp"
-#include "IGPIO.hpp"
-#include "ITimer.hpp"
 /******************************* NAME SPACE ***********************************/
 
 /**************************** MACRO DEFINITIONS *******************************/
@@ -35,24 +29,52 @@
 /********************************* CLASS **************************************/
 namespace platform
 {
-/**
- * \brief All system devices will created in this class
- */
-class IDevices
+class CanBusFrame
 {
 public:
-    virtual ~IDevices(void){}
-    virtual RETURN_STATUS openDevices(void) = 0;
+    enum FRAME_TYPE
+    {
+        EN_CAN_FRAME_UNKNOW,
+        EN_CAN_FRAME_DATA,
+        EN_CAN_FRAME_REQUEST,
+        EN_CAN_FRAME_ERROR,
+        EN_CAN_FRAME_INVALID
+    };
+
+    struct Identifier
+    {
+        U32 id  : 29; /** !< can bus msg ide, supports can-bus CAN2.0B */
+        U32 rtr : 1;  /** !< 0 for data message, 1 for request message */
+        U32 ide : 1;  /** !< 0 for CAN2.0A (11 bit ide), 1 for CAN2.0B(29 bit ide) */
+    };
 
 public:
-    //    IClock          *clock;
-    ITimer          *timer;
-    ISerialBus      *uart;
-    IADC            *adc;
-    IGPIO           *gpio;
-    ISerialBus      *canbus;
+    explicit CanBusFrame(Identifier ide, const U8 data[8]);
+    explicit CanBusFrame(const CanBusFrame &rc) = default;
+
+    ~CanBusFrame(void);
+
+    void setFrameType(FRAME_TYPE type);
+    void setFremeID(U32 id);
+
+    bool isValidFrame(void) const ;
+
+    FRAME_TYPE getFrameType(void) const;
+    U32 getFrameID(void) const;
+
+    bool isExtendedFrame(void) const;
+
+    void setData(const U8 data[8]);
+    void getData(U8 data[8]) const;
+
+private:
+    Identifier m_ide = {0};
+    U8 m_data[8] = {0};
+    FRAME_TYPE m_type;
 };
+
 }//namespace platform
-#endif /* __IDEVICES_HPP__ */
+
+#endif /* __CANBUS_FRAME_HPP__ */
 
 /********************************* End Of File ********************************/
